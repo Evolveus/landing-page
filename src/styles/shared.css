@@ -1,0 +1,85 @@
+/* Page shell */
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  height: 297mm;
+  background: var(--bg-page);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 40px;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--text-main);
+  letter-spacing: -0.4px;
+}
+.logo-icon {
+  width: 22px; height: 22px;
+  background: var(--indigo-600);
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+}
+.logo-icon svg { width: 12px; height: 12px; }
+.header-meta {
+  font-size: 9.5px; font-weight: 700;
+  letter-spacing: 1.5px; color: var(--text-muted);
+  text-transform: uppercase;
+}
+.footer-strip {
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding: 13px 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+.fs-meta { font-size: 9px; font-weight: 600; color: var(--text-light); letter-spacing: 1px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; border: 1px solid transparent;
+}
+.pill.indigo { background: var(--indigo-50); color: var(--indigo-600); border-color: var(--indigo-100); }
+.pill.dark { background: var(--navy-dark); color: #fff; }
+.headline {
+  font-size: 30px; font-weight: 800; color: var(--text-main);
+  line-height: 1.1; letter-spacing: -1px; margin-top: 14px;
+}
+.headline em { font-style: italic; color: var(--indigo-600); }
+.headline-huge {
+  font-size: 60px; line-height: 1.05; font-weight: 800;
+  color: var(--text-main); letter-spacing: -2px; margin-bottom: 14px;
+}
+.headline-huge em { font-style: italic; font-weight: 900; color: var(--indigo-500); }
+.line-heading {
+  font-size: 9px; font-weight: 800; color: #4f46e5;
+  letter-spacing: 1.5px; display: flex; align-items: center;
+  gap: 12px; margin-bottom: 12px; text-transform: uppercase;
+}
+.line-heading::before { content:''; height: 1px; width: 28px; background: #4f46e5; }
+@media print {
+  .page {
+    box-shadow: none;
+    margin: 0;
+    page-break-after: always;
+    break-after: page;
+  }
+}
