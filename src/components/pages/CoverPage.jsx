@@ -28,7 +28,7 @@ export default function CoverPage() {
 
           <div className="p1-stats-strip">
             <div className="ss-item ss-item-main">
-              <strong>3M+</strong><span>Exams Evaluated</span>
+              <strong>2K+</strong><span>Exams Evaluated</span>
             </div>
             <div className="ss-item">
               <strong>80%</strong><span>Faster Grading</span>
@@ -44,24 +44,13 @@ export default function CoverPage() {
           </div>
 
           <div className="p1-trusted">
-            <div className="trusted-text">Trusted by institutions across India</div>
+            <div className="trusted-text">Trusted by</div>
             <div className="trusted-logos">
-              {[
-                { icon: 'diamond', name: 'NEXUS' },
-                { icon: 'circle', name: 'ApexEdu' },
-                { icon: 'rect', name: 'ACADEMY' },
-                { icon: 'tri', name: 'Vanguard' },
-              ].map(({ icon, name }) => (
-                <div key={name} className="t-logo">
-                  <svg viewBox="0 0 120 30">
-                    {icon === 'diamond' && <path d="M10 15 L20 5 L30 15 L20 25 Z" fill="currentColor"/>}
-                    {icon === 'circle' && <circle cx="15" cy="15" r="9" fill="currentColor"/>}
-                    {icon === 'rect' && <rect x="6" y="6" width="18" height="18" rx="4" fill="currentColor"/>}
-                    {icon === 'tri' && <polygon points="15,6 25,24 5,24" fill="currentColor"/>}
-                    <text x="32" y="20" fontFamily="sans-serif" fontWeight="800" fontSize="14" fill="currentColor" letterSpacing="-0.5">{name}</text>
-                  </svg>
-                </div>
-              ))}
+              <div className="t-logo">
+                <svg viewBox="0 0 260 30">
+                  <text x="0" y="20" fontFamily="sans-serif" fontWeight="800" fontSize="14" fill="currentColor" letterSpacing="-0.5">Amrita Vishwa Vidyapeetham</text>
+                </svg>
+              </div>
             </div>
           </div>
         </div>

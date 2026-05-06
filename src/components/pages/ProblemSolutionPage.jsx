@@ -50,7 +50,7 @@ export default function ProblemSolutionPage() {
           <div className="p2-col-head">
             <div className="pill" style={{ background:'#fee2e2', color:'var(--danger)' }}>
               <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg>
-              Today &nbsp; PROBLEM
+              Today's &nbsp; PROBLEM
             </div>
             <h3 className="p2-col-title">Challenges institutions face today</h3>
             <p className="p2-col-sub">Fragmented tools, manual grading, and zero feedback loops produce operational drag and inconsistent outcomes.</p>
