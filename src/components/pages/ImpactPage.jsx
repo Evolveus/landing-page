@@ -16,7 +16,7 @@ const CHART_ROWS = [
 ];
 
 const FEATURES = [
-  { icon:`<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`, title:'True AI grading', desc:'Not just MCQ — descriptive, code, and semantic blanks.' },
+  { icon:`<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`, title:'True AI grading', desc:'Semantic fill-in-the-blank and LLM rubric scoring — capabilities absent from most active learning platforms.' },
   { icon:`<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`, title:'Proctoring that scales', desc:'Lab-grade integrity for 50,000+ student institutions.' },
   { icon:`<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>`, title:'Single platform', desc:'Author → proctor → grade → analyze. No glue code.' },
   { icon:`<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>`, title:'Loop-closing analytics', desc:'Insights feed back into the question bank automatically.' },
@@ -41,7 +41,7 @@ export default function ImpactPage() {
             BUILT FOR REAL-WORLD SCALE
           </div>
           <h1 className="p7-headline">Beyond traditional <em>evaluation.</em></h1>
-          <p className="p7-desc">Evalify goes beyond standard MCQ-based systems — handling descriptive answers, executable code, semantic fill-in-the-blanks, and the full operational lifecycle modern institutions need.</p>
+          <p className="p7-desc">Evalify goes beyond standard MCQ-based systems — handling descriptive answers, executable code, semantic fill-in-the-blanks, and the full operational lifecycle modern institutions need. Most active learning platforms rely entirely on manual evaluation or basic keyword matching.</p>
         </div>
 
         <div className="p7-compare">

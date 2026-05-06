@@ -50,6 +50,25 @@
   padding: 5px 13px; font-size: 9px; font-weight: 700;
   letter-spacing: 0.5px; text-transform: uppercase;
 }
+.p4-ai-methods {
+  margin: 12px 40px 0;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #f0f0ff 0%, #f8f4ff 100%);
+  border: 1px solid #e0e7ff;
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+.p4-aim-label {
+  font-size: 9px; font-weight: 800; color: #6366f1;
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px;
+}
+.p4-aim-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.p4-aim-card {
+  background: #fff; border-radius: 10px; padding: 12px 14px;
+  border: 1px solid #e0e7ff;
+}
+.p4-aim-card-title { font-size: 10.5px; font-weight: 700; color: #0f172a; margin-bottom: 5px; }
+.p4-aim-card-desc { font-size: 9.5px; color: #64748b; line-height: 1.55; }
 .p4-formats {
   margin: 16px 40px 24px;
   padding: 14px 22px;

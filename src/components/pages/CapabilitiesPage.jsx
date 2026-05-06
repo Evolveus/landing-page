@@ -34,6 +34,8 @@ export default function CapabilitiesPage() {
             <li>Create &amp; schedule exams instantly</li>
             <li>Multi-format question support</li>
             <li>Secure, timed environments</li>
+            <li>Negative marking — global or per-question</li>
+            <li>Linear quiz support</li>
           </ul>
         </div>
 
@@ -49,6 +51,7 @@ export default function CapabilitiesPage() {
           <ul className="p4-bullets">
             <li>Real-time cohort dashboards</li>
             <li>Identify weak areas instantly</li>
+            <li>Per-question difficulty breakdown</li>
             <li>Exportable audit-ready reports</li>
           </ul>
           <div className="p4-feat-badge">★ &nbsp;Core Differentiator</div>
@@ -63,10 +66,26 @@ export default function CapabilitiesPage() {
           </div>
           <h3 className="p4-card-title">Security &amp;<br />Compliance</h3>
           <ul className="p4-bullets">
-            <li>Proctored exam environments</li>
-            <li>Role-based access control</li>
-            <li>Audit-ready reporting</li>
+            <li>Kiosk mode + IP/subnet restrictions</li>
+            <li>RBAC — faculty, admin, student roles</li>
+            <li>Full audit logs with score override tracking</li>
           </ul>
+        </div>
+      </div>
+
+      <div className="p4-ai-methods">
+        <div className="p4-aim-label">AI EVALUATION METHODS</div>
+        <div className="p4-aim-cards">
+          {[
+            { title: 'Descriptive', desc: 'LLM-scored per rubric criterion. Faculty defines weights and guidelines; Evalify applies them consistently at scale.' },
+            { title: 'Coding', desc: 'Submitted code executed against isolated test cases. Partial credit awarded based on number of tests passed.' },
+            { title: 'Semantic Fill-in-the-Blank', desc: 'Accepts synonyms and semantically equivalent answers — not just exact matches. No manual review needed.' },
+          ].map(({ title, desc }) => (
+            <div key={title} className="p4-aim-card">
+              <div className="p4-aim-card-title">{title}</div>
+              <div className="p4-aim-card-desc">{desc}</div>
+            </div>
+          ))}
         </div>
       </div>
 

@@ -10,7 +10,7 @@ export default function AdvancedPage() {
       <div className="p5-top">
         <div className="line-heading">THE REASON INSTITUTIONS SWITCH</div>
         <h2 className="headline">Most platforms can grade an MCQ.<br /><em>Evalify</em> grades the essay too.</h2>
-        <p className="p5-desc">Long-form descriptive answers are where manual grading hurts — hours per paper, inconsistent rubric application, no audit trail. Our descriptive evaluator changes the math.</p>
+        <p className="p5-desc">Long-form descriptive answers are where manual grading hurts — hours per paper, inconsistent rubric application, no audit trail. Faculty define mark-allocation guidelines per criterion; Evalify applies them at scale. Our descriptive evaluator changes the math.</p>
       </div>
 
       <div className="p5-main-card">
@@ -189,7 +189,7 @@ function QuestionBankCard() {
         ))}
       </div>
       <div className="p5-bc-list">
-        {['Centralized, taggable, reusable','Per-student randomization','AI authoring from syllabus PDFs'].map(l => (
+        {['Centralized, taggable, reusable','Per-student randomization','AI authoring from syllabus PDFs','Synonyms & semantically equivalent answers accepted'].map(l => (
           <div key={l} className="p5-bc-list-item"><svg viewBox="0 0 24 24" width="9" height="9" stroke="var(--indigo-600)" strokeWidth="2.5" fill="none"><path d="M20 6L9 17l-5-5"/></svg>{l}</div>
         ))}
       </div>

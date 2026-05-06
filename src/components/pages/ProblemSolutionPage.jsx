@@ -13,10 +13,10 @@ const ProblemFeature = ({ icon, title, desc }) => (
 );
 
 const PROBLEMS = [
-  { icon: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>`, title: 'Manual evaluation', desc: 'OMR sheet handling, spreadsheet juggling — every cycle without automation.' },
+  { icon: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>`, title: 'No AI in the grading loop', desc: 'Most platforms stop at OMR and spreadsheets. Descriptive answers mean manual labour — no AI, no consistency, no scale.' },
   { icon: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>`, title: 'No real-time insight', desc: 'Faculty wait days for compiled reports; weak areas surface only after the term ends.' },
   { icon: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>`, title: 'Scale breaks workflows', desc: 'Lab-by-lab coordination, multiple invigilators, and brittle exam software at scale.' },
-  { icon: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>`, title: 'One-size-fits-all', desc: 'Standard rubrics ignore individual learners; personalisation is hard to operationalise.' },
+  { icon: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>`, title: 'Platforms stuck without AI', desc: 'Competitors offer static rubrics at best. No LLM-graded essays, no semantic fill-in-the-blank, no coding auto-evaluation — just keyword matching.' },
 ];
 
 const SOLUTIONS = [
@@ -35,7 +35,7 @@ export default function ProblemSolutionPage() {
         <div className="p2-headline-col">
           <div className="line-heading">THE SHIFT</div>
           <h2 className="headline p2-headline">
-            The education<br />ecosystem is<br />evolving —<br /><em>evaluation</em> hasn't<br />kept up.
+            Active learning<br />has evolved.<br />Evaluation<br />platforms haven't —<br /><em>especially on AI.</em>
           </h2>
         </div>
         <div className="p2-desc-col">
@@ -90,6 +90,7 @@ export default function ProblemSolutionPage() {
             { metric: 'Grading time per exam', before: '6 hrs', after: '6 min' },
             { metric: 'Tools needed per assessment', before: '6+ apps', after: '1 platform' },
             { metric: 'Result visibility for faculty', before: 'Days later', after: 'Real-time' },
+            { metric: 'AI-powered evaluation', before: 'None', after: 'Descriptive · Coding · Semantic FIB' },
           ].map(({ metric, before, after }, i, arr) => (
             <div key={metric} style={{ display: 'contents' }}>
               <div className="p2-shift-item">
