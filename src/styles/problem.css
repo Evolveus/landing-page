@@ -39,7 +39,7 @@
   color: #fff;
 }
 .p2-col-head { margin-bottom: 10px; }
-.p2-col-title { font-size: 20px; font-weight: 800; line-height: 1.2; margin-top: 10px; }
+.p2-col-title { font-size: 25px; font-weight: 800; line-height: 1.2; margin-top: 10px; }
 .p2-col.dark .p2-col-title { color: #fff; }
 .p2-col.dark .p2-col-title em { color: #818cf8; font-style: italic; }
 .p2-col-sub { font-size: 12px; margin-top: 8px; line-height: 1.5; color: var(--text-muted); margin-bottom: 14px; }
