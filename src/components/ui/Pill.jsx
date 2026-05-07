@@ -1,4 +1,4 @@
-export default function Pill({ children, variant = 'indigo', style }) {
+export default function Pill({ children, variant = "indigo", style }) {
   return (
     <div className={`pill ${variant}`} style={style}>
       {children}
