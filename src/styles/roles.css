@@ -1,0 +1,134 @@
+.page.p6 { background: var(--paper); }
+
+.p6-stage {
+  flex: 1;
+  padding: 14mm 24mm 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.p6-top { margin-bottom: 28px; }
+
+.p6-headline {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 50px;
+  letter-spacing: -2px;
+  line-height: 1.0;
+  color: var(--ink);
+  margin-top: 18px;
+  margin-bottom: 14px;
+}
+.p6-headline em { font-style: italic; color: var(--violet); }
+
+.p6-lede {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  max-width: 60ch;
+}
+
+.p6-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin-top: 8px;
+  margin-bottom: 6mm;
+}
+
+.p6-col {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 20px 22px 0;
+  border-right: 1px solid var(--rule);
+}
+.p6-col:last-child { border-right: none; padding-right: 0; }
+.p6-col:not(:first-child) { padding-left: 20px; }
+
+.p6-col-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.p6-col-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-soft);
+  letter-spacing: 0.5px;
+}
+
+.p6-col-role {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.6px;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.p6-col-quote {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 14px;
+  position: relative;
+}
+.p6-col-mark {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--violet);
+  line-height: 0.5;
+  margin-right: 4px;
+  vertical-align: -0.05em;
+}
+
+.p6-col-body {
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+.p6-col-duties {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px dashed var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.p6-col-duties-cap { color: var(--violet); }
+
+.p6-col-duties ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.p6-col-duties li {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--text);
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+.p6-col-duties li::before {
+  content: '';
+  width: 5px; height: 1px;
+  background: var(--ink);
+  flex-shrink: 0;
+}

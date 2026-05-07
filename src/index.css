@@ -1,38 +1,68 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,500;0,600;0,700;0,800;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --bg-page: #f8fafc;
+  /* Surfaces */
+  --paper: #faf9f6;
+  --ink: #0b0b10;
+  --ink-2: #1a1a22;
+  --rule: #e8e6df;
+  --rule-strong: #2a2a33;
+
+  /* Text */
+  --text: #14141a;
+  --text-muted: #6b6b78;
+  --text-soft: #9a9aa6;
+
+  /* Accents */
+  --indigo: #4338ca;
+  --indigo-soft: #eef0ff;
+  --crimson: #c4302b;
+  --crimson-soft: #fdf2f1;
+  --emerald: #047857;
+  --emerald-soft: #ecfdf5;
+  --amber: #b45309;
+  --violet: #6d28d9;
+
+  /* Type */
+  --serif: 'Fraunces', 'Times New Roman', serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+
+  /* Legacy aliases — keep so old refs don't break */
+  --bg-page: var(--paper);
   --bg-card: #ffffff;
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --text-light: #94a3b8;
-  --indigo-50: #eef2ff;
-  --indigo-100: #e0e7ff;
-  --indigo-500: #6366f1;
-  --indigo-600: #4f46e5;
-  --indigo-900: #312e81;
-  --navy-dark: #0a0a1a;
-  --navy-light: #1e1e38;
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --font-sans: 'Plus Jakarta Sans', 'Inter', sans-serif;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.08);
+  --text-main: var(--text);
+  --text-light: var(--text-soft);
+  --indigo-50: var(--indigo-soft);
+  --indigo-100: #e0e3f9;
+  --indigo-500: var(--indigo);
+  --indigo-600: var(--indigo);
+  --indigo-900: #2a2380;
+  --navy-dark: var(--ink);
+  --navy-light: var(--ink-2);
+  --success: var(--emerald);
+  --danger: var(--crimson);
+  --warning: var(--amber);
+  --font-sans: var(--sans);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --shadow-soft: 0 12px 40px -12px rgba(11,11,16,0.08);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-font-smoothing: antialiased; font-family: var(--font-sans); }
+html { -webkit-font-smoothing: antialiased; font-family: var(--sans); }
 body {
-  background: #cbd5e1;
+  background: #d9d6cd;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
   padding: 2rem;
-  font-family: var(--font-sans);
+  font-family: var(--sans);
+  color: var(--text);
 }
 svg { stroke-linecap: round; stroke-linejoin: round; }
+em { font-style: italic; }
+
 @media print {
   body { background: none; padding: 0; gap: 0; }
 }

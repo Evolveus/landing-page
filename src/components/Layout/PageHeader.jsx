@@ -1,11 +1,12 @@
-import Logo from '../ui/Logo';
-
-export default function PageHeader({ label, light = false }) {
+export default function PageHeader({ folio, light = false }) {
   return (
-    <div className="header">
-      <Logo light={light} />
-      <div className="header-meta" style={light ? { color: 'rgba(255,255,255,0.35)' } : {}}>
-        {label}
+    <div className="brand-strip">
+      <div className={`wordmark${light ? ' wordmark--light' : ''}`}>
+        <span className="mark" />
+        Evalify
+      </div>
+      <div className={`folio${light ? ' folio--light' : ''}`}>
+        {folio} <span className="of">/ 07</span>
       </div>
     </div>
   );

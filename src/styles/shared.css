@@ -1,80 +1,187 @@
-/* Page shell */
+/* ========== Page shell ========== */
 .page {
   width: 210mm;
   min-height: 297mm;
   height: 297mm;
-  background: var(--bg-page);
+  background: var(--paper);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 24px 60px -20px rgba(11,11,16,0.18);
   display: flex;
   flex-direction: column;
-  font-family: var(--font-sans);
+  font-family: var(--sans);
+  color: var(--text);
 }
-.header {
+
+/* ========== Brand strip (top) ========== */
+.brand-strip {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 28px 40px;
-  position: relative;
-  z-index: 10;
+  padding: 22mm 24mm 0;
   flex-shrink: 0;
 }
-.logo {
+
+.wordmark {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 800;
-  font-size: 14px;
-  color: var(--text-main);
-  letter-spacing: -0.4px;
+  gap: 9px;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+  font-family: var(--sans);
 }
-.logo-icon {
-  width: 22px; height: 22px;
-  background: var(--indigo-600);
-  border-radius: 5px;
-  display: flex; align-items: center; justify-content: center;
+.wordmark .mark {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  position: relative;
 }
-.logo-icon svg { width: 12px; height: 12px; }
-.header-meta {
-  font-size: 9.5px; font-weight: 700;
-  letter-spacing: 1.5px; color: var(--text-muted);
+.wordmark .mark::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: var(--ink);
+  border-radius: 50%;
+}
+.wordmark--light { color: rgba(255,255,255,0.92); }
+.wordmark--light .mark { border-color: rgba(255,255,255,0.92); }
+.wordmark--light .mark::before { background: rgba(255,255,255,0.92); }
+
+.folio {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.folio .of { color: var(--text-soft); }
+.folio--light { color: rgba(255,255,255,0.55); }
+.folio--light .of { color: rgba(255,255,255,0.3); }
+
+/* ========== Bottom edge / colophon ========== */
+.colophon {
+  margin-top: auto;
+  padding: 12mm 24mm 16mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-soft);
+  letter-spacing: 0.3px;
+}
+.colophon .rule {
+  position: absolute;
+  left: 24mm; right: 24mm; bottom: 22mm;
+  height: 1px;
+  background: var(--rule);
+}
+.colophon--light { color: rgba(255,255,255,0.35); }
+.colophon--light .rule { background: rgba(255,255,255,0.1); }
+
+/* ========== Editorial primitives ========== */
+.kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.kicker::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--ink);
+}
+.kicker--light { color: rgba(255,255,255,0.7); }
+.kicker--light::before { background: rgba(255,255,255,0.4); }
+.kicker--accent { color: var(--indigo); }
+.kicker--accent::before { background: var(--indigo); }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
 }
-.footer-strip {
-  border-top: 1px solid rgba(0,0,0,0.05);
-  padding: 13px 40px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-shrink: 0;
-  margin-top: auto;
+
+.display {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -2.5px;
+  color: var(--ink);
+  line-height: 0.95;
 }
-.fs-meta { font-size: 9px; font-weight: 600; color: var(--text-light); letter-spacing: 1px; }
-.pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 12px; border-radius: 20px;
-  font-size: 9px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; border: 1px solid transparent;
-}
-.pill.indigo { background: var(--indigo-50); color: var(--indigo-600); border-color: var(--indigo-100); }
-.pill.dark { background: var(--navy-dark); color: #fff; }
+
 .headline {
-  font-size: 30px; font-weight: 800; color: var(--text-main);
-  line-height: 1.1; letter-spacing: -1px; margin-top: 14px;
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -1.2px;
+  color: var(--ink);
+  line-height: 1.05;
 }
-.headline em { font-style: italic; color: var(--indigo-600); }
-.headline-huge {
-  font-size: 60px; line-height: 1.05; font-weight: 800;
-  color: var(--text-main); letter-spacing: -2px; margin-bottom: 14px;
+.headline em {
+  font-style: italic;
+  font-weight: 400;
 }
-.headline-huge em { font-style: italic; font-weight: 900; color: var(--indigo-500); }
-.line-heading {
-  font-size: 9px; font-weight: 800; color: #4f46e5;
-  letter-spacing: 1.5px; display: flex; align-items: center;
-  gap: 12px; margin-bottom: 12px; text-transform: uppercase;
+
+.lede {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  font-weight: 400;
+  max-width: 56ch;
 }
-.line-heading::before { content:''; height: 1px; width: 28px; background: #4f46e5; }
+
+.body-text {
+  font-family: var(--sans);
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--text);
+  font-weight: 400;
+}
+
+.caption {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-soft);
+  letter-spacing: 0.4px;
+}
+
+.hairline { height: 1px; background: var(--rule); border: 0; }
+.hairline--ink { background: var(--ink); }
+.hairline--light { background: rgba(255,255,255,0.12); }
+
+/* dropcap */
+.dropcap::first-letter {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 56px;
+  float: left;
+  line-height: 0.85;
+  margin: 4px 8px 0 0;
+  color: var(--ink);
+}
+
+/* numerals — large stat */
+.numeral {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -2px;
+  color: var(--ink);
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
 @media print {
   .page {
     box-shadow: none;
