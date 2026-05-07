@@ -63,6 +63,91 @@ body {
 svg { stroke-linecap: round; stroke-linejoin: round; }
 em { font-style: italic; }
 
+.export-controls {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 32px);
+}
+
+.design-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  background: rgba(250, 249, 246, 0.96);
+  border: 1px solid rgba(11, 11, 16, 0.12);
+  box-shadow: 0 12px 32px -18px rgba(11, 11, 16, 0.34);
+}
+
+.design-switcher button,
+.export-button {
+  border: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.design-switcher button {
+  background: transparent;
+  color: #39423f;
+  padding: 9px 12px;
+}
+
+.design-switcher button:hover {
+  background: #ece8dc;
+}
+
+.design-switcher button.is-active {
+  background: #183b35;
+  color: #fff;
+}
+
+.export-button {
+  background: #183b35;
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 12px 32px -16px rgba(24, 59, 53, 0.55);
+}
+
+.export-button:disabled {
+  background: #64748b;
+  cursor: not-allowed;
+}
+
+.brochure-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22mm;
+  padding-top: 56px;
+}
+
 @media print {
+  @page { size: A4 portrait; margin: 0; }
   body { background: none; padding: 0; gap: 0; }
+  .export-controls { display: none !important; }
+  .brochure-view { gap: 0; padding-top: 0; }
+}
+
+@media (max-width: 900px) {
+  .export-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .design-switcher {
+    max-width: calc(100vw - 32px);
+    overflow-x: auto;
+  }
 }

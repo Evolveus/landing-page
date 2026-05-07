@@ -9,9 +9,50 @@ import CapabilitiesPage from './components/pages/CapabilitiesPage';
 import AdvancedPage from './components/pages/AdvancedPage';
 import RolesPage from './components/pages/RolesPage';
 import ImpactPage from './components/pages/ImpactPage';
+import {
+  BoldMinimal,
+  EditorialInstitutional,
+  ModernAcademic,
+  StructuredEnterprise,
+} from './components/concepts/ConceptBrochures';
+
+const DESIGNS = [
+  { id: 'original', label: 'Original', filename: 'evalify-original-brochure' },
+  { id: 'editorial', label: 'Editorial Institutional', filename: 'evalify-editorial-institutional' },
+  { id: 'enterprise', label: 'Structured Enterprise', filename: 'evalify-structured-enterprise' },
+  { id: 'academic', label: 'Modern Academic', filename: 'evalify-modern-academic' },
+  { id: 'bold', label: 'Bold Minimal', filename: 'evalify-bold-minimal' },
+];
+
+function OriginalBrochure() {
+  return (
+    <>
+      <CoverPage />
+      <ProblemSolutionPage />
+      <SystemFlowPage />
+      <CapabilitiesPage />
+      <AdvancedPage />
+      <RolesPage />
+      <ImpactPage />
+    </>
+  );
+}
+
+function SelectedDesign({ id }) {
+  if (id === 'editorial') return <EditorialInstitutional />;
+  if (id === 'enterprise') return <StructuredEnterprise />;
+  if (id === 'academic') return <ModernAcademic />;
+  if (id === 'bold') return <BoldMinimal />;
+  return <OriginalBrochure />;
+}
 
 export default function App() {
   const brochureRef = useRef(null);
+  const [selectedDesign, setSelectedDesign] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const designId = params.get('design');
+    return DESIGNS.find((design) => design.id === designId) || DESIGNS[0];
+  });
   const [exporting, setExporting] = useState(false);
 
   const exportPDF = async () => {
@@ -22,7 +63,7 @@ export default function App() {
         import('jspdf'),
       ]);
 
-      const pages = brochureRef.current.querySelectorAll('.page');
+      const pages = brochureRef.current.querySelectorAll('.page, .concept-page');
       const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
 
       for (let i = 0; i < pages.length; i++) {
@@ -37,35 +78,47 @@ export default function App() {
         pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
       }
 
-      pdf.save('evalify-brochure-2026.pdf');
+      pdf.save(`${selectedDesign.filename}.pdf`);
     } finally {
       setExporting(false);
     }
   };
 
+  const selectDesign = (design) => {
+    setSelectedDesign(design);
+    const url = new URL(window.location.href);
+    if (design.id === 'original') {
+      url.searchParams.delete('design');
+    } else {
+      url.searchParams.set('design', design.id);
+    }
+    window.history.replaceState({}, '', url);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <>
-      {/* Export Button */}
-      <div style={{
-        position: 'fixed', top: 20, right: 20, zIndex: 9999,
-        display: 'flex', gap: 10,
-      }}>
+      <div className="export-controls">
+        <div className="design-switcher" aria-label="Brochure design selector">
+          {DESIGNS.map((design) => (
+            <button
+              key={design.id}
+              type="button"
+              className={design.id === selectedDesign.id ? 'is-active' : ''}
+              onClick={() => selectDesign(design)}
+            >
+              {design.label}
+            </button>
+          ))}
+        </div>
+
         <button
           onClick={exportPDF}
           disabled={exporting}
-          style={{
-            background: exporting ? '#64748b' : '#4f46e5',
-            color: '#fff', border: 'none',
-            padding: '10px 22px', borderRadius: 8,
-            fontFamily: 'var(--font-sans)', fontSize: 13,
-            fontWeight: 700, cursor: exporting ? 'not-allowed' : 'pointer',
-            boxShadow: '0 4px 16px rgba(79,70,229,0.35)',
-            display: 'flex', alignItems: 'center', gap: 8,
-            transition: 'background 0.2s',
-          }}
+          className="export-button"
         >
           {exporting ? (
-            <>⏳ Exporting…</>
+            <>Exporting...</>
           ) : (
             <>
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -77,15 +130,8 @@ export default function App() {
         </button>
       </div>
 
-      {/* Brochure */}
-      <div ref={brochureRef}>
-        <CoverPage />
-        <ProblemSolutionPage />
-        <SystemFlowPage />
-        <CapabilitiesPage />
-        <AdvancedPage />
-        <RolesPage />
-        <ImpactPage />
+      <div ref={brochureRef} className="brochure-view" key={selectedDesign.id}>
+        <SelectedDesign id={selectedDesign.id} />
       </div>
     </>
   );
