@@ -163,13 +163,13 @@
 .hairline--light { background: rgba(255,255,255,0.12); }
 
 /* dropcap */
-.dropcap::first-letter {
+.dropcap-letter {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 56px;
   float: left;
-  line-height: 0.85;
-  margin: 4px 8px 0 0;
+  line-height: 0.78;
+  margin: 0 8px 0 0;
   color: var(--ink);
 }
 

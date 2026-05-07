@@ -42,7 +42,7 @@ export default function CoverPage() {
           </div>
 
           <div className="p1-trusted">
-            <div className="caption">In partnership with</div>
+            <div className="caption">Trusted by</div>
             <img
               src="/Amrita_Logo_Banner.svg"
               alt="Amrita Vishwa Vidyapeetham"

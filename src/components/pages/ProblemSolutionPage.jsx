@@ -43,8 +43,8 @@ export default function ProblemSolutionPage() {
           Most evaluation tools <em>didn't.</em>
         </h2>
 
-        <p className="p2-lede dropcap">
-          Modern institutions still stitch assessment together by hand — paper
+        <p className="p2-lede">
+          <span className="dropcap-letter">M</span>odern institutions still stitch assessment together by hand — paper
           for some courses, half a dozen quiz apps for others, spreadsheets to
           glue it all back. It scales by adding people, not by adding
           intelligence. Evolveus replaces that stack with a single platform
