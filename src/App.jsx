@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./index.css";
 import "./styles/shared.css";
 
@@ -9,63 +9,16 @@ import CapabilitiesPage from "./components/pages/CapabilitiesPage";
 import AdvancedPage from "./components/pages/AdvancedPage";
 import RolesPage from "./components/pages/RolesPage";
 import ImpactPage from "./components/pages/ImpactPage";
-import {
-  BoldMinimal,
-  EditorialInstitutional,
-  ModernAcademic,
-  StructuredEnterprise,
-} from "./components/concepts/ConceptBrochures";
-
-const DESIGNS = [
-  { id: "original", label: "Original", filename: "evolveus-original-brochure" },
-  {
-    id: "editorial",
-    label: "Editorial Institutional",
-    filename: "evolveus-editorial-institutional",
-  },
-  {
-    id: "enterprise",
-    label: "Structured Enterprise",
-    filename: "evolveus-structured-enterprise",
-  },
-  {
-    id: "academic",
-    label: "Modern Academic",
-    filename: "evolveus-modern-academic",
-  },
-  { id: "bold", label: "Bold Minimal", filename: "evolveus-bold-minimal" },
-];
-
-function OriginalBrochure() {
-  return (
-    <>
-      <CoverPage />
-      <ProblemSolutionPage />
-      <SystemFlowPage />
-      <CapabilitiesPage />
-      <AdvancedPage />
-      <RolesPage />
-      <ImpactPage />
-    </>
-  );
-}
-
-function SelectedDesign({ id }) {
-  if (id === "editorial") return <EditorialInstitutional />;
-  if (id === "enterprise") return <StructuredEnterprise />;
-  if (id === "academic") return <ModernAcademic />;
-  if (id === "bold") return <BoldMinimal />;
-  return <OriginalBrochure />;
-}
 
 export default function App() {
   const brochureRef = useRef(null);
-  const [selectedDesign, setSelectedDesign] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    const designId = params.get("design");
-    return DESIGNS.find((design) => design.id === designId) || DESIGNS[0];
-  });
   const [exporting, setExporting] = useState(false);
+
+  useEffect(() => {
+    if (window.location.pathname === "/") {
+      window.history.replaceState({}, "", "/brochure");
+    }
+  }, []);
 
   const exportPDF = async () => {
     setExporting(true);
@@ -75,9 +28,7 @@ export default function App() {
         import("jspdf"),
       ]);
 
-      const pages = brochureRef.current.querySelectorAll(
-        ".page, .concept-page",
-      );
+      const pages = brochureRef.current.querySelectorAll(".page");
       const pdf = new jsPDF({
         unit: "mm",
         format: "a4",
@@ -96,40 +47,15 @@ export default function App() {
         pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
       }
 
-      pdf.save(`${selectedDesign.filename}.pdf`);
+      pdf.save("evalify-brochure.pdf");
     } finally {
       setExporting(false);
     }
   };
 
-  const selectDesign = (design) => {
-    setSelectedDesign(design);
-    const url = new URL(window.location.href);
-    if (design.id === "original") {
-      url.searchParams.delete("design");
-    } else {
-      url.searchParams.set("design", design.id);
-    }
-    window.history.replaceState({}, "", url);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <>
       <div className="export-controls">
-        <div className="design-switcher" aria-label="Brochure design selector">
-          {DESIGNS.map((design) => (
-            <button
-              key={design.id}
-              type="button"
-              className={design.id === selectedDesign.id ? "is-active" : ""}
-              onClick={() => selectDesign(design)}
-            >
-              {design.label}
-            </button>
-          ))}
-        </div>
-
         <button
           onClick={exportPDF}
           disabled={exporting}
@@ -157,8 +83,14 @@ export default function App() {
         </button>
       </div>
 
-      <div ref={brochureRef} className="brochure-view" key={selectedDesign.id}>
-        <SelectedDesign id={selectedDesign.id} />
+      <div ref={brochureRef} className="brochure-view">
+        <CoverPage />
+        <ProblemSolutionPage />
+        <SystemFlowPage />
+        <CapabilitiesPage />
+        <AdvancedPage />
+        <RolesPage />
+        <ImpactPage />
       </div>
     </>
   );
