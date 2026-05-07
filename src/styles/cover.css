@@ -99,7 +99,7 @@
   padding-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 12px;
 }
 .p1-partner {
   font-family: var(--serif);
@@ -107,6 +107,12 @@
   font-size: 13px;
   color: var(--ink);
   letter-spacing: -0.2px;
+}
+
+.p1-partner-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
 }
 
 /* Right side — figure */

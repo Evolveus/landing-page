@@ -11,12 +11,6 @@ export default function CoverPage() {
 
       <div className="p1-stage">
         <div className="p1-left">
-          <div className="p1-issue">
-            <span className="p1-issue-vol">Vol. 02</span>
-            <span className="p1-issue-dot">·</span>
-            <span>2026 Edition</span>
-          </div>
-
           <h1 className="p1-display">
             <span>Evaluation,</span>
             <span><em>evolved.</em></span>
@@ -44,7 +38,7 @@ export default function CoverPage() {
 
           <div className="p1-trusted">
             <div className="caption">In partnership with</div>
-            <div className="p1-partner">Amrita Vishwa Vidyapeetham</div>
+            <img src="/Amrita_Logo_Banner.svg" alt="Amrita Vishwa Vidyapeetham" className="p1-partner-logo" />
           </div>
         </div>
 

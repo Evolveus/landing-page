@@ -27,7 +27,7 @@ const PILLARS = [
   },
 ];
 
-const FORMATS = ['Multiple choice', 'Descriptive', 'Coding', 'Fill-in-the-blank'];
+const FORMATS = ['Multiple choice', 'Descriptive', 'Coding', 'Fill-in-the-blank', 'Match the following', 'File Upload'];
 
 export default function CapabilitiesPage() {
   return (

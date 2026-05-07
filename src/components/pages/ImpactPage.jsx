@@ -42,10 +42,9 @@ export default function ImpactPage() {
         <blockquote className="p7-quote">
           <p>
             <span className="p7-q-mark">"</span>
-            Evalify cut our mid-term turnaround from three days to under thirty minutes.
-            The grading on descriptive answers is consistent in a way manual review simply isn't.
+            It's a real upgrade from MS Forms. We have far more flexibility and control over how exams are conducted — and that matters a lot when you're running assessments at scale.
           </p>
-          <footer>— Faculty, Department of Computer Science · Amrita Vishwa Vidyapeetham</footer>
+          <footer>— Faculty, School of AI · Amrita Vishwa Vidyapeetham</footer>
         </blockquote>
 
         <div className="p7-close">
@@ -79,7 +78,7 @@ export default function ImpactPage() {
       </div>
 
       <div className="p7-foot">
-        <span>EVALIFY · v2.4 · 2026 Edition</span>
+        <span>EVALIFY · 2026</span>
         <span>End — 07 / 07</span>
       </div>
     </div>
