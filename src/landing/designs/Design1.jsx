@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '../_shared/Icon';
 import { useScrollY, useReveal } from '../_shared/useParallax';
 import './Design1.css';
@@ -50,6 +50,45 @@ const PILLARS = [
     icon: 'refresh',
     title: 'Continuous Auto-Save',
     desc: 'Answers sync to server in real time. Network drops or refreshes never lose progress.',
+  },
+];
+
+const WORKFLOW = [
+  {
+    id: 'admin',
+    label: 'Academic setup',
+    icon: 'building',
+    title: 'Institution administration that matches campus structure.',
+    desc: 'Departments, semesters, batches, courses, instructors, students, and labs are managed centrally instead of scattered across spreadsheets.',
+    points: ['Bulk course creation', 'Batch and student assignment', 'Lab IP subnet configuration'],
+    image: '/bankQuestions.png',
+  },
+  {
+    id: 'banks',
+    label: 'Question banks',
+    icon: 'database',
+    title: 'Reusable banks with curriculum metadata built in.',
+    desc: 'Faculty organise banks by course, semester, topic, difficulty, Bloom level, and CO1-CO8 mapping, then share controlled access with colleagues.',
+    points: ['Topic-wise organisation', 'Shared access controls', 'Spreadsheet MCQ upload'],
+    image: '/questionCreation.png',
+  },
+  {
+    id: 'delivery',
+    label: 'Secure delivery',
+    icon: 'shieldCheck',
+    title: 'Every assessment can be tuned to the exam setting.',
+    desc: 'Password protection, fullscreen, kiosk validation, lab restrictions, shuffled questions, auto-submit, and linear flow are all first-class quiz controls.',
+    points: ['Fullscreen violation tracking', 'Kiosk and lab locks', 'Auto-submit and recovery'],
+    image: '/quizView.png',
+  },
+  {
+    id: 'results',
+    label: 'Results',
+    icon: 'chart',
+    title: 'Evaluation, submissions, and outcomes in one review surface.',
+    desc: 'Faculty can inspect student-wise and question-wise responses, violation history, submission status, manual overrides, and result publication.',
+    points: ['Student-wise response review', 'Question performance analytics', 'Manual override tracking'],
+    image: '/studentDashboard.png',
   },
 ];
 
@@ -123,6 +162,33 @@ const ROLES = [
 ];
 
 const LANGS = ['Python', 'Java', 'C++', 'JavaScript', 'C', 'Octave', 'Scala'];
+
+const CONTROL_GROUPS = [
+  {
+    id: 'access',
+    label: 'Access',
+    icon: 'key',
+    options: ['Password gate', 'Selected courses', 'Individual students', 'Batch alignment'],
+  },
+  {
+    id: 'integrity',
+    label: 'Integrity',
+    icon: 'shield',
+    options: ['Fullscreen required', 'Kiosk validation', 'Lab subnet lock', 'Violation ledger'],
+  },
+  {
+    id: 'flow',
+    label: 'Flow',
+    icon: 'layers',
+    options: ['Linear navigation', 'Shuffle questions', 'Shuffle options', 'Auto-submit'],
+  },
+  {
+    id: 'grading',
+    label: 'Grading',
+    icon: 'award',
+    options: ['MCQ partial marking', 'Negative marking', 'Coding partial marks', 'Manual override'],
+  },
+];
 
 function HeroParallax() {
   const y = useScrollY();
@@ -210,6 +276,101 @@ function CodingPanel() {
         </div>
         <div className="d1-cp-bar-wrap">
           <div className="d1-cp-progress" style={{ width: step >= 5 ? '80%' : `${(step / 5) * 80}%` }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WorkflowExplorer() {
+  const [active, setActive] = useState(WORKFLOW[0].id);
+  const item = WORKFLOW.find(w => w.id === active) ?? WORKFLOW[0];
+  return (
+    <div className="d1-workflow">
+      <div className="d1-workflow-tabs" role="tablist" aria-label="Platform workflow">
+        {WORKFLOW.map(w => (
+          <button
+            key={w.id}
+            role="tab"
+            aria-selected={w.id === item.id}
+            className={`d1-workflow-tab ${w.id === item.id ? 'is-active' : ''}`}
+            onClick={() => setActive(w.id)}
+          >
+            <Icon name={w.icon} size={16} />
+            <span>{w.label}</span>
+          </button>
+        ))}
+      </div>
+      <div className="d1-workflow-body">
+        <div className="d1-workflow-copy">
+          <div className="d1-workflow-kicker">Selected module</div>
+          <h3>{item.title}</h3>
+          <p>{item.desc}</p>
+          <div className="d1-workflow-points">
+            {item.points.map(point => (
+              <span key={point}>
+                <Icon name="check" size={13} />
+                {point}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="d1-workflow-shot">
+          <img src={item.image} alt={`${item.label} interface preview`} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QuizControlConsole() {
+  const [active, setActive] = useState('integrity');
+  const group = CONTROL_GROUPS.find(g => g.id === active) ?? CONTROL_GROUPS[1];
+  const activeCount = group.options.length;
+  return (
+    <div className="d1-control-console">
+      <div className="d1-control-head">
+        <div>
+          <span>Quiz control stack</span>
+          <strong>{group.label}</strong>
+        </div>
+        <div className="d1-control-score">{activeCount}/4</div>
+      </div>
+      <div className="d1-control-segments" role="tablist" aria-label="Quiz controls">
+        {CONTROL_GROUPS.map(g => (
+          <button
+            key={g.id}
+            role="tab"
+            aria-selected={g.id === active}
+            className={g.id === active ? 'is-active' : ''}
+            onClick={() => setActive(g.id)}
+          >
+            <Icon name={g.icon} size={15} />
+            {g.label}
+          </button>
+        ))}
+      </div>
+      <div className="d1-control-list">
+        {group.options.map((option, i) => (
+          <label key={option} className="d1-control-option">
+            <input type="checkbox" checked readOnly />
+            <span className="d1-control-check"><Icon name="check" size={12} /></span>
+            <span>{option}</span>
+            <em>{String(i + 1).padStart(2, '0')}</em>
+          </label>
+        ))}
+      </div>
+      <div className="d1-control-preview">
+        <div className="d1-control-preview-row">
+          <span>Publish state</span>
+          <strong>Ready</strong>
+        </div>
+        <div className="d1-control-preview-row">
+          <span>Result visibility</span>
+          <strong>Hidden until review</strong>
+        </div>
+        <div className="d1-control-preview-bar">
+          <span style={{ width: `${68 + activeCount * 6}%` }} />
         </div>
       </div>
     </div>
@@ -316,6 +477,9 @@ export default function Design1({ onBrochure }) {
               </Reveal>
             ))}
           </div>
+          <Reveal delay={180}>
+            <WorkflowExplorer />
+          </Reveal>
         </div>
       </section>
 
@@ -381,6 +545,9 @@ export default function Design1({ onBrochure }) {
               </Reveal>
             ))}
           </div>
+          <Reveal delay={180}>
+            <QuizControlConsole />
+          </Reveal>
         </div>
       </section>
 

@@ -17,26 +17,38 @@ const ROLES = [
   },
   {
     n: "02",
-    role: "Student",
-    quote: "A quiet exam interface. Answers that don't get lost.",
-    body: "Distraction-free environment with continuous server sync — no progress lost on dropped Wi-Fi. Real-time timer, auto-submit, instant feedback on objective questions.",
+    role: "Manager",
+    quote: "Keep semester execution aligned without owning every exam.",
+    body: "Semester managers oversee courses, instructors, batches, quiz planning, and cohort progress across their academic window.",
     duties: [
-      "Clean exam UI · dark mode",
-      "Auto-saved every few seconds",
-      "Real-time timer",
-      "Instant objective results",
+      "Semester oversight",
+      "Course + instructor mapping",
+      "Batch coordination",
+      "Progress review",
     ],
   },
   {
     n: "03",
+    role: "Student",
+    quote: "A quiet exam interface. Answers that don't get lost.",
+    body: "A clear dashboard for live, upcoming, completed, and missed quizzes, then a focused timer-based exam room with saved answers.",
+    duties: [
+      "Course + quiz dashboard",
+      "Section-aware navigation",
+      "Real-time timer",
+      "Manual or auto-submit",
+    ],
+  },
+  {
+    n: "04",
     role: "Administrator",
     quote: "Full visibility. Granular control. Defensible at every level.",
-    body: "Manage institutions, departments, and users from one console. RBAC across faculty / student / admin. Audit logs track every score override and exam edit.",
+    body: "Manage departments, semesters, batches, users, courses, labs, and platform access from one console with institutional separation.",
     duties: [
-      "Multi-institution console",
-      "RBAC, fine-grained",
-      "Platform health dashboard",
-      "Full audit trail",
+      "Departments + batches",
+      "Users + role status",
+      "Labs + IP subnets",
+      "Tenant-aware access",
     ],
   },
 ];
@@ -52,12 +64,12 @@ export default function RolesPage() {
           <h2 className="p6-headline">
             One platform.
             <br />
-            <em>Three rooms.</em>
+            <em>Four rooms.</em>
           </h2>
           <p className="p6-lede">
-            Faculty, students, and administrators each see a workspace built for
-            their job — never a one-size-fits-all dashboard with three logins on
-            top.
+            Administrators, semester managers, faculty, and students each see a
+            workspace built for their job — never a one-size-fits-all dashboard
+            with role names pasted on top.
           </p>
         </div>
 

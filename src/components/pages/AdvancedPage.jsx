@@ -11,8 +11,8 @@ const RUBRIC = [
 
 const STATS = [
   { num: "6 hr", sub: "6 min", cap: "Cycle turnaround" },
-  { num: "97%", sub: "— ", cap: "Rubric criteria addressed" },
-  { num: "3×", sub: "— ", cap: "Consistency vs. manual" },
+  { num: "7", sub: "— ", cap: "Coding languages" },
+  { num: "8", sub: "— ", cap: "Question formats" },
   { num: "100%", sub: "— ", cap: "Audit-ready, by default" },
 ];
 
@@ -123,8 +123,12 @@ export default function AdvancedPage() {
                   not keyword counting.
                 </li>
                 <li>
-                  Customisable rubrics per question — define criteria, weights,
-                  key concepts.
+                  Coding support — boilerplate, driver code, reference
+                  solutions, visible and hidden test cases.
+                </li>
+                <li>
+                  Rich question content — images, files, LaTeX, preview, and
+                  protected attachment access.
                 </li>
                 <li>
                   Full audit trail — rubric, score, and rationale on every

@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import { Icon } from '../_shared/Icon';
 import { useScrollY, useReveal } from '../_shared/useParallax';
 import './Design3.css';

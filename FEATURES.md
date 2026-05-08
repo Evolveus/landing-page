@@ -1,29 +1,31 @@
-# Evalify Feature Overview
+# EvolveUs Feature Overview
 
-Evalify is a complete digital assessment platform for educational institutions. It helps institutions plan courses, manage users, create question banks, conduct secure online exams, evaluate submissions, and review student performance from one centralized system.
+EvolveUs is a complete digital assessment platform for educational institutions. It helps institutions plan courses, manage users, create question banks, conduct secure online exams, evaluate submissions, and review student performance from one centralized system.
 
 The platform is designed for day-to-day academic use by administrators, semester managers, faculty members, and students. It supports both regular classroom assessments and controlled lab-based examinations.
 
 ## Key Benefits for Institutions
 
+- Battle-tested platform experience with 2,000+ quizzes conducted and 200,000+ student responses processed.
 - Centralized management of departments, semesters, batches, courses, users, labs, question banks, quizzes, submissions, and results.
 - Role-based access for administrators, managers, faculty, and students so each user sees only the tools relevant to them.
 - Structured academic setup that matches institutional workflows: departments, batches, semesters, courses, instructors, students, and labs.
 - Secure quiz delivery with password protection, fullscreen mode, kiosk mode, lab/IP-based restrictions, and violation tracking.
 - Reusable question banks that reduce repeated faculty effort and improve consistency across assessments.
-- Support for multiple question formats, including objective, descriptive, file upload, matching, fill-in-the-blank, and coding questions.
+- Support beyond MCQs, including objective, descriptive, long-form, file upload, matching, fill-in-the-blank, and coding questions that assess reasoning, articulation, and applied understanding.
 - Result dashboards and detailed evaluation views for faster academic review.
 - Student-friendly dashboards showing active, upcoming, completed, and missed quizzes.
 - Scalable deployment support for institution-owned infrastructure.
 
 ## Institution Administration
 
-Evalify gives the institution a dedicated administrative layer to manage the academic structure.
+EvolveUs gives the institution a dedicated administrative layer to manage the academic structure.
 
 ### User Management
 
 - Create, update, search, and manage users.
 - Support for multiple roles: company, admin, manager, faculty, and student.
+- Provide superuser and admin-level platform control across institutions, departments, users, and exams.
 - Maintain user status and profile information.
 - Assign students to batches.
 - View and manage user records from a central dashboard.
@@ -88,7 +90,7 @@ Faculty members and semester managers get tools to manage assessments efficientl
 
 ## Question Bank Management
 
-Evalify includes reusable question banks so faculty can build and maintain high-quality assessment material over time.
+EvolveUs includes reusable question banks so faculty can build and maintain high-quality assessment material over time.
 
 ### Question Banks
 
@@ -109,7 +111,7 @@ Evalify includes reusable question banks so faculty can build and maintain high-
 
 ### Supported Question Types
 
-Evalify supports a wide range of assessment formats:
+EvolveUs supports a wide range of assessment formats:
 
 - Single-correct multiple choice questions.
 - Multiple-correct multiple choice questions.
@@ -140,7 +142,7 @@ Questions can include academic metadata that helps institutions align assessment
 
 ## Quiz and Exam Creation
 
-Evalify supports the full quiz creation workflow from planning to publication.
+EvolveUs supports the full quiz creation workflow from planning to publication.
 
 ### Quiz Details
 
@@ -177,6 +179,7 @@ Institutions can configure exams based on the level of control required:
 - Publish or hide results.
 - Password-protect quizzes.
 - Enable auto-submit at the end of the exam.
+- Configure negative marking globally or at the question level.
 - Enable or disable calculator access.
 - Enable fullscreen mode.
 - Enable kiosk mode.
@@ -186,7 +189,7 @@ Institutions can configure exams based on the level of control required:
 
 ## Secure Exam Delivery
 
-Evalify includes multiple controls to help institutions conduct controlled online examinations.
+EvolveUs includes multiple controls to help institutions conduct controlled online examinations.
 
 ### Fullscreen Enforcement
 
@@ -198,9 +201,9 @@ Evalify includes multiple controls to help institutions conduct controlled onlin
 
 The platform can track and record exam violations, including:
 
-- Tab switching.
+- Tab switching, detected and logged in real time.
 - Window focus loss.
-- Fullscreen exit.
+- Fullscreen exit, captured and flagged with a return-to-fullscreen prompt.
 - Suspicious window resizing.
 - Copy, paste, and cut attempts.
 - Right-click/context-menu attempts.
@@ -213,12 +216,14 @@ The platform can track and record exam violations, including:
 
 - Restrict exams to an approved kiosk environment.
 - Block access if the required kiosk validation is missing.
+- Prevent access to other applications or resources during the exam.
 - Useful for institution-managed exam browsers or controlled lab environments.
 
 ### Lab and Network Restriction
 
 - Restrict quizzes to selected labs.
 - Validate student access using configured lab IP subnets.
+- Lock exams to specific networks or lab environments so students can only attempt from authorized locations.
 - Helps ensure certain exams can only be attempted from approved campus locations.
 
 ## Student Exam Experience
@@ -243,6 +248,7 @@ Students get a focused exam interface designed for clarity and reliability.
 ### Exam Interface
 
 - Timer-based exam experience.
+- Clean, distraction-free exam interface with dark mode support.
 - Question navigation panel.
 - Section-aware question display.
 - Answer saving during the exam.
@@ -262,7 +268,7 @@ Students can answer different question types in suitable formats:
 
 ## Coding Assessment Features
 
-Evalify supports programming-based assessments for technical courses.
+EvolveUs supports programming-based assessments for technical courses.
 
 - Coding questions with configurable programming languages.
 - Support for languages such as Java, Python, C++, JavaScript, C, Octave, and Scala.
@@ -275,13 +281,16 @@ Evalify supports programming-based assessments for technical courses.
 
 ## Evaluation and Results
 
-Evalify helps faculty review outcomes at both student and question level.
+EvolveUs helps faculty review outcomes at both student and question level.
 
 ### Evaluation Settings
 
+- Configure automated scoring across supported question types.
 - Configure MCQ partial marking.
 - Configure fixed or percentage-based negative marking.
 - Configure coding partial marking.
+- Configure descriptive answer evaluation guidelines and marking criteria for open-ended responses.
+- Evaluate fill-in-the-blank answers with support for synonyms and semantically equivalent responses where enabled.
 - Store evaluation settings per quiz.
 
 ### Result Management
@@ -289,10 +298,14 @@ Evalify helps faculty review outcomes at both student and question level.
 - View quiz result statistics.
 - View student-wise responses.
 - View question-wise responses.
+- Analyze per-student and per-question performance breakdowns.
+- Identify class-wide weak areas and learning gaps.
+- Review question-level difficulty trends to refine assessments over time.
 - Open detailed student result pages.
 - Review individual question performance.
 - Update evaluation results manually where required.
 - Track submission status and evaluation status.
+- Export reports for faculty, administration, accreditation, and audit needs.
 
 ### Submission Tracking
 
@@ -303,13 +316,14 @@ Evalify helps faculty review outcomes at both student and question level.
 
 ## Dashboards and Reporting Views
 
-Evalify provides dashboards for different institutional roles.
+EvolveUs provides dashboards for different institutional roles.
 
 ### Admin Dashboard
 
 - Overview of total users and active users.
 - Count of students, faculty, and admins.
 - Department, batch, semester, and course summaries.
+- Real-time visualization of platform health, usage metrics, and performance.
 - Quick navigation to user, batch, course, and academic setup areas.
 
 ### Faculty Dashboard
@@ -327,7 +341,7 @@ Evalify provides dashboards for different institutional roles.
 
 ## Content Creation Tools
 
-Evalify includes rich content tools so faculty can create more expressive questions.
+EvolveUs includes rich content tools so faculty can create more expressive questions.
 
 - Rich text editor for question content.
 - Formatting tools such as bold, italic, lists, block quotes, code, and horizontal rules.
@@ -347,7 +361,7 @@ Evalify includes rich content tools so faculty can create more expressive questi
 
 ## Security and Access Control
 
-Evalify is built around controlled access and institutional data separation.
+EvolveUs is built around controlled access and institutional data separation.
 
 - Role-based access control.
 - Protected routes for authenticated users.
@@ -357,10 +371,11 @@ Evalify is built around controlled access and institutional data separation.
 - Secure file upload workflows.
 - Password-protected quiz access.
 - Kiosk and lab restrictions for high-stakes exams.
+- Audit logs for faculty actions, exam modifications, and score overrides.
 
 ## Deployment and Operations Readiness
 
-Evalify is prepared for institutional deployment and operations.
+EvolveUs is prepared for institutional deployment and operations.
 
 - Web-based access for administrators, faculty, and students.
 - Can be deployed on institution-managed infrastructure.
@@ -373,4 +388,4 @@ Evalify is prepared for institutional deployment and operations.
 
 ## Summary
 
-Evalify gives institutions a complete assessment management system, from academic setup to secure exam delivery and result analysis. It reduces manual work for administrators and faculty, improves exam control, supports diverse question formats, and gives students a clear, organized assessment experience.
+EvolveUs gives institutions a complete assessment management system, from academic setup to secure exam delivery and result analysis. It reduces manual work for administrators and faculty, improves exam control, supports diverse question formats, and gives students a clear, organized assessment experience.

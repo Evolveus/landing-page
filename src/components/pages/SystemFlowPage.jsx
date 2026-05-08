@@ -7,13 +7,13 @@ const STEPS = [
     num: "01",
     verb: "Author",
     title: "Question Creation",
-    desc: "Build banks across formats. Bulk-upload from Excel, or generate exam-ready questions from a syllabus PDF.",
+    desc: "Build topic-wise banks across formats. Add difficulty, Bloom level, CO1-CO8 mapping, solutions, marks, and negative marks.",
   },
   {
     num: "02",
     verb: "Configure",
     title: "Exam Setup",
-    desc: "Time limits, attempt rules, randomised ordering, negative marking, subnet-based access — set once, applied everywhere.",
+    desc: "Set duration, schedule, sections, participants, lab access, password gates, shuffle rules, linear flow, and result visibility.",
   },
   {
     num: "03",
@@ -25,20 +25,20 @@ const STEPS = [
     num: "04",
     verb: "Evaluate",
     title: "Automated Grading",
-    desc: "MCQ, LLM-graded descriptive, coding test cases, semantic fill-in-the-blank — without manual intervention.",
+    desc: "MCQ, descriptive, fill-in-the-blank, matching, file upload, and coding submissions move into the right review path.",
     flagship: true,
   },
   {
     num: "05",
     verb: "Analyse",
     title: "Insight Surface",
-    desc: "Per-student breakdowns, class-wide trends, exportable audit-ready reports — faculty act on data, not just collect it.",
+    desc: "Per-student responses, question performance, submission status, score overrides, and violation records sit in one view.",
   },
   {
     num: "06",
-    verb: "Refine",
-    title: "Continuous Loop",
-    desc: "Weak-topic signals from analytics feed back into question generation. Each cycle, the exam bank sharpens.",
+    verb: "Operate",
+    title: "Deployment Loop",
+    desc: "Self-hosted readiness, secure file storage, background auto-submit jobs, and durable exam state keep the system dependable.",
   },
 ];
 

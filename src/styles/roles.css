@@ -32,7 +32,7 @@
 .p6-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
   margin-top: 8px;
@@ -42,11 +42,11 @@
 .p6-col {
   display: flex;
   flex-direction: column;
-  padding: 22px 20px 22px 0;
+  padding: 20px 14px 20px 0;
   border-right: 1px solid var(--rule);
 }
 .p6-col:last-child { border-right: none; padding-right: 0; }
-.p6-col:not(:first-child) { padding-left: 20px; }
+.p6-col:not(:first-child) { padding-left: 14px; }
 
 .p6-col-head {
   display: flex;
@@ -66,7 +66,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-weight: 400;
-  font-size: 26px;
+  font-size: 23px;
   letter-spacing: -0.6px;
   color: var(--ink);
   line-height: 1;
@@ -75,7 +75,7 @@
 .p6-col-quote {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: 15.5px;
   letter-spacing: -0.6px;
   line-height: 1.2;
   color: var(--ink);
@@ -93,7 +93,7 @@
 }
 
 .p6-col-body {
-  font-size: 11px;
+  font-size: 10px;
   line-height: 1.7;
   color: var(--text-muted);
   margin-bottom: 18px;
@@ -118,7 +118,7 @@
 }
 .p6-col-duties li {
   font-family: var(--mono);
-  font-size: 9.5px;
+  font-size: 8.7px;
   color: var(--text);
   letter-spacing: 0.2px;
   display: flex;
