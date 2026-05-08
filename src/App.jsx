@@ -9,16 +9,18 @@ import CapabilitiesPage from "./components/pages/CapabilitiesPage";
 import AdvancedPage from "./components/pages/AdvancedPage";
 import RolesPage from "./components/pages/RolesPage";
 import ImpactPage from "./components/pages/ImpactPage";
+import LandingPage from "./landing/LandingPage";
 
 export default function App() {
   const brochureRef = useRef(null);
   const [exporting, setExporting] = useState(false);
+  const [view, setView] = useState(() =>
+    window.location.pathname === "/brochure" ? "brochure" : "landing"
+  );
 
   useEffect(() => {
-    if (window.location.pathname === "/") {
-      window.history.replaceState({}, "", "/brochure");
-    }
-  }, []);
+    window.history.replaceState({}, "", view === "brochure" ? "/brochure" : "/");
+  }, [view]);
 
   const exportPDF = async () => {
     setExporting(true);
@@ -27,14 +29,8 @@ export default function App() {
         import("html2canvas"),
         import("jspdf"),
       ]);
-
       const pages = brochureRef.current.querySelectorAll(".page");
-      const pdf = new jsPDF({
-        unit: "mm",
-        format: "a4",
-        orientation: "portrait",
-      });
-
+      const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
       for (let i = 0; i < pages.length; i++) {
         const canvas = await html2canvas(pages[i], {
           scale: 2,
@@ -46,33 +42,32 @@ export default function App() {
         if (i > 0) pdf.addPage();
         pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
       }
-
       pdf.save("evalify-brochure.pdf");
     } finally {
       setExporting(false);
     }
   };
 
+  if (view === "landing") {
+    return <LandingPage onBrochure={() => setView("brochure")} />;
+  }
+
   return (
     <>
       <div className="export-controls">
         <button
-          onClick={exportPDF}
-          disabled={exporting}
+          onClick={() => setView("landing")}
           className="export-button"
+          style={{ marginRight: 8 }}
         >
+          ← Home
+        </button>
+        <button onClick={exportPDF} disabled={exporting} className="export-button">
           {exporting ? (
-            <>Exporting...</>
+            "Exporting..."
           ) : (
             <>
-              <svg
-                viewBox="0 0 24 24"
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-              >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
@@ -82,7 +77,6 @@ export default function App() {
           )}
         </button>
       </div>
-
       <div ref={brochureRef} className="brochure-view">
         <CoverPage />
         <ProblemSolutionPage />
