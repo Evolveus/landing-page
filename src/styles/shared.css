@@ -25,7 +25,7 @@
 .wordmark {
   display: flex;
   align-items: center;
-  gap: 9px;
+  /* gap: 1px; */
   font-weight: 700;
   font-size: 13px;
   color: var(--ink);
@@ -33,21 +33,11 @@
   font-family: var(--sans);
 }
 .wordmark .mark {
-  width: 18px; height: 18px;
-  border: 1.5px solid var(--ink);
-  border-radius: 50%;
-  position: relative;
-}
-.wordmark .mark::before {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  background: var(--ink);
-  border-radius: 50%;
+  height: 36px;
+  width: auto;
+  display: block;
 }
 .wordmark--light { color: rgba(255,255,255,0.92); }
-.wordmark--light .mark { border-color: rgba(255,255,255,0.92); }
-.wordmark--light .mark::before { background: rgba(255,255,255,0.92); }
 
 .folio {
   font-family: var(--mono);
