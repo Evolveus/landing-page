@@ -6,7 +6,7 @@ export default function PageHeader({ folio, light = false }) {
         Evolveus
       </div>
       <div className={`folio${light ? " folio--light" : ""}`}>
-        {folio} <span className="of">/ 08</span>
+        {folio} <span className="of">/ 09</span>
       </div>
     </div>
   );

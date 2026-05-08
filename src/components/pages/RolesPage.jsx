@@ -56,11 +56,11 @@ const ROLES = [
 export default function RolesPage() {
   return (
     <div className="page p6">
-      <PageHeader folio="07" />
+      <PageHeader folio="08" />
 
       <div className="p6-stage">
         <div className="p6-top">
-          <div className="kicker">Chapter VI — The People</div>
+          <div className="kicker">Chapter VII — The People</div>
           <h2 className="p6-headline">
             One platform.
             <br />

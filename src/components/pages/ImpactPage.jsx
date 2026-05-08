@@ -12,10 +12,10 @@ export default function ImpactPage() {
   return (
     <div className="page p7">
       <div className="p7-glow" aria-hidden />
-      <PageHeader folio="08" light />
+      <PageHeader folio="09" light />
 
       <div className="p7-stage">
-        <div className="kicker kicker--light">Chapter VII — Close</div>
+        <div className="kicker kicker--light">Chapter VIII — Close</div>
 
         <div className="p7-hero">
           <div className="p7-hero-num">
@@ -95,7 +95,7 @@ export default function ImpactPage() {
 
       <div className="p7-foot">
         <span>EVOLVEUS · 2026</span>
-        <span>End — 08 / 08</span>
+        <span>End — 09 / 09</span>
       </div>
     </div>
   );

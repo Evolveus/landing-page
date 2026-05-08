@@ -8,6 +8,7 @@ import SystemFlowPage from "./components/pages/SystemFlowPage";
 import CapabilitiesPage from "./components/pages/CapabilitiesPage";
 import AdvancedPage from "./components/pages/AdvancedPage";
 import CodingPage from "./components/pages/CodingPage";
+import StudentPage from "./components/pages/StudentPage";
 import RolesPage from "./components/pages/RolesPage";
 import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
@@ -114,6 +115,7 @@ export default function App() {
         <CapabilitiesPage />
         <AdvancedPage />
         <CodingPage />
+        <StudentPage />
         <RolesPage />
         <ImpactPage />
       </div>
