@@ -93,7 +93,7 @@ export default function ImpactPage() {
       </div>
 
       <div className="p7-foot">
-        <span>EVALIFY · 2026</span>
+        <span>EVOLVEUS · 2026</span>
         <span>End — 07 / 07</span>
       </div>
     </div>
