@@ -12,10 +12,10 @@ export default function ImpactPage() {
   return (
     <div className="page p7">
       <div className="p7-glow" aria-hidden />
-      <PageHeader folio="07" light />
+      <PageHeader folio="08" light />
 
       <div className="p7-stage">
-        <div className="kicker kicker--light">Chapter VI — Close</div>
+        <div className="kicker kicker--light">Chapter VII — Close</div>
 
         <div className="p7-hero">
           <div className="p7-hero-num">
@@ -46,9 +46,10 @@ export default function ImpactPage() {
         <blockquote className="p7-quote">
           <p>
             <span className="p7-q-mark">"</span>
-            It's a real upgrade from MS Forms. We have far more flexibility and
-            control over how exams are conducted — and that matters a lot when
-            you're running assessments at scale.
+            Evolveus replaced our existing system overnight, and the difference
+            is stark. What used to take three days now takes thirty minutes, and
+            students can actually reflect on their performance while it still
+            matters."
           </p>
           <footer>— Faculty, School of AI · Amrita Vishwa Vidyapeetham</footer>
         </blockquote>
@@ -94,7 +95,7 @@ export default function ImpactPage() {
 
       <div className="p7-foot">
         <span>EVOLVEUS · 2026</span>
-        <span>End — 07 / 07</span>
+        <span>End — 08 / 08</span>
       </div>
     </div>
   );
