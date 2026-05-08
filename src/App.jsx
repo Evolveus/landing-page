@@ -11,20 +11,21 @@ import CodingPage from "./components/pages/CodingPage";
 import RolesPage from "./components/pages/RolesPage";
 import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
+import ThemesPage from "./landing/ThemesPage";
 
 export default function App() {
   const brochureRef = useRef(null);
   const [exporting, setExporting] = useState(false);
-  const [view, setView] = useState(() =>
-    window.location.pathname === "/brochure" ? "brochure" : "landing",
-  );
+  const [view, setView] = useState(() => {
+    const path = window.location.pathname;
+    if (path === "/brochure") return "brochure";
+    if (path === "/themes") return "themes";
+    return "landing";
+  });
 
   useEffect(() => {
-    window.history.replaceState(
-      {},
-      "",
-      view === "brochure" ? "/brochure" : "/",
-    );
+    const paths = { brochure: "/brochure", themes: "/themes", landing: "/" };
+    window.history.replaceState({}, "", paths[view] ?? "/");
   }, [view]);
 
   const exportPDF = async () => {
@@ -58,7 +59,16 @@ export default function App() {
   };
 
   if (view === "landing") {
-    return <LandingPage onBrochure={() => setView("brochure")} />;
+    return <LandingPage onBrochure={() => setView("brochure")} onThemes={() => setView("themes")} />;
+  }
+
+  if (view === "themes") {
+    return (
+      <ThemesPage
+        onBrochure={() => setView("brochure")}
+        onHome={() => setView("landing")}
+      />
+    );
   }
 
   return (
