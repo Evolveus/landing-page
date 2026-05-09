@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run pages:fallback",
+    "pages:fallback": "node scripts/create-pages-fallback.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
