@@ -550,7 +550,7 @@ function RolesSection() {
       <div className="d5-section-inner">
         <Reveal>
           <div className="d5-section-head">
-            <div className="d5-eyebrow">CHAPTER FIVE · ROLES</div>
+            <div className="d5-eyebrow">CHAPTER SEVEN · ROLES</div>
             <h2 className="d5-h2">
               Built for every person
               <br />
@@ -602,7 +602,7 @@ function FeedbackSection() {
       <div className="d5-section-inner">
         <Reveal>
           <div className="d5-section-head">
-            <div className="d5-eyebrow">CHAPTER EIGHT · IN THEIR WORDS</div>
+            <div className="d5-eyebrow">CHAPTER NINE · IN THEIR WORDS</div>
             <h2 className="d5-h2">
               What faculty and administrators
               <br />
@@ -1269,7 +1269,7 @@ export default function Design5Hybrid({ onBrochure, onThemes }) {
         <div className="d5-section-inner">
           <Reveal>
             <div className="d5-section-head">
-              <div className="d5-eyebrow">CHAPTER SEVEN · CONTENT TOOLS</div>
+              <div className="d5-eyebrow">CHAPTER EIGHT · CONTENT TOOLS</div>
               <h2 className="d5-h2">
                 Questions built for
                 <br />
@@ -1302,7 +1302,7 @@ export default function Design5Hybrid({ onBrochure, onThemes }) {
         </div>
       </section>
 
-      <SectionDivider label="CHAPTER EIGHT" />
+      <SectionDivider label="CHAPTER NINE" />
 
       {/* ── FEEDBACK ───────────────────────────────────────── */}
       <FeedbackSection />
