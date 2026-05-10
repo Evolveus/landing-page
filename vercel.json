@@ -1,0 +1,21 @@
+{
+  "framework": "vite",
+  "buildCommand": "bun run build",
+  "installCommand": "bun install",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/brochure",
+      "destination": "/"
+    },
+    {
+      "source": "/themes",
+      "destination": "/"
+    }
+  ],
+  "functions": {
+    "api/contact.js": {
+      "maxDuration": 10
+    }
+  }
+}

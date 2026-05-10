@@ -319,6 +319,14 @@ const BLOOM_BARS = [
   { name: "Create", pct: 1 },
 ];
 
+const CONTACT_INITIAL_VALUES = {
+  email: "",
+  name: "",
+  organisationName: "",
+  numberOfStudents: "",
+  contactNumber: "",
+};
+
 const TESTIMONIALS = [
   {
     role: "Head of CSE Dept",
@@ -657,10 +665,60 @@ function FeedbackSection() {
 }
 
 // ─── Main component ───────────────────────────────────────────
-export default function Design5Hybrid({ onBrochure, onThemes }) {
+export default function Design5Hybrid({ onBrochure }) {
   const y = useScrollY();
   const codingRef = useRef(null);
   const codingOffset = useParallaxOffset(codingRef, 0.08);
+  const [contactValues, setContactValues] = useState(CONTACT_INITIAL_VALUES);
+  const [contactStatus, setContactStatus] = useState({
+    state: "idle",
+    message: "",
+  });
+
+  const scrollToContact = () => {
+    document
+      .getElementById("d5-contact")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const updateContactField = (event) => {
+    const { name, value } = event.target;
+    setContactValues((current) => ({ ...current, [name]: value }));
+  };
+
+  const submitContactForm = async (event) => {
+    event.preventDefault();
+    setContactStatus({ state: "submitting", message: "" });
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactValues),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(result.message || "Unable to send your request right now.");
+      }
+
+      setContactValues(CONTACT_INITIAL_VALUES);
+      setContactStatus({
+        state: "success",
+        message:
+          result.message ||
+          "Your request has been sent. Please check your email for acknowledgement.",
+      });
+    } catch (error) {
+      setContactStatus({
+        state: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Unable to send your request right now.",
+      });
+    }
+  };
 
   return (
     <div className="d5">
@@ -693,7 +751,7 @@ export default function Design5Hybrid({ onBrochure, onThemes }) {
           </div>
           <div className="d5-nav-right">
             <button className="d5-nav-ghost" onClick={onBrochure}>Brochure</button>
-            <button className="d5-nav-cta">Schedule Demo</button>
+            <button className="d5-nav-cta" onClick={scrollToContact}>Schedule Demo</button>
           </div>
         </div>
       </nav>
@@ -739,7 +797,7 @@ export default function Design5Hybrid({ onBrochure, onThemes }) {
               to secure exam delivery, AI-assisted grading, and performance analytics.
             </p>
             <div className="d5-split-hero-actions">
-              <button className="d5-cta-primary">
+              <button className="d5-cta-primary" onClick={scrollToContact}>
                 Schedule a Demonstration
                 <Icon name="arrowRight" size={14} />
               </button>
@@ -1308,7 +1366,7 @@ export default function Design5Hybrid({ onBrochure, onThemes }) {
       <FeedbackSection />
 
       {/* ── CTA ────────────────────────────────────────────── */}
-      <section className="d5-cta">
+      <section className="d5-cta" id="d5-contact">
         <div className="d5-section-inner">
           <Reveal>
             <div className="d5-trust-row">
@@ -1354,15 +1412,90 @@ export default function Design5Hybrid({ onBrochure, onThemes }) {
               AI evaluation, performance analytics, and deployment options. No commitment. No generic
               demo — we tailor it to your institution's workflows.
             </p>
-            <div className="d5-cta-btns">
-              <button className="d5-cta-primary">
-                Schedule a Demonstration
-                <Icon name="arrowRight" size={14} />
-              </button>
-              <button className="d5-cta-text" onClick={onBrochure}>
-                <Icon name="download" size={14} /> Download Brochure
-              </button>
-            </div>
+            <form className="d5-contact-form" onSubmit={submitContactForm}>
+              <div className="d5-contact-grid">
+                <label className="d5-contact-field">
+                  <span>Name</span>
+                  <input
+                    type="text"
+                    name="name"
+                    value={contactValues.name}
+                    onChange={updateContactField}
+                    autoComplete="name"
+                    required
+                  />
+                </label>
+                <label className="d5-contact-field">
+                  <span>Email</span>
+                  <input
+                    type="email"
+                    name="email"
+                    value={contactValues.email}
+                    onChange={updateContactField}
+                    autoComplete="email"
+                    required
+                  />
+                </label>
+                <label className="d5-contact-field">
+                  <span>Organisation name</span>
+                  <input
+                    type="text"
+                    name="organisationName"
+                    value={contactValues.organisationName}
+                    onChange={updateContactField}
+                    autoComplete="organization"
+                    required
+                  />
+                </label>
+                <label className="d5-contact-field">
+                  <span>Number of students</span>
+                  <input
+                    type="number"
+                    name="numberOfStudents"
+                    value={contactValues.numberOfStudents}
+                    onChange={updateContactField}
+                    min="1"
+                    step="1"
+                    inputMode="numeric"
+                    required
+                  />
+                </label>
+                <label className="d5-contact-field d5-contact-field--wide">
+                  <span>Contact number</span>
+                  <input
+                    type="tel"
+                    name="contactNumber"
+                    value={contactValues.contactNumber}
+                    onChange={updateContactField}
+                    autoComplete="tel"
+                    required
+                  />
+                </label>
+              </div>
+
+              <div className="d5-contact-actions">
+                <button
+                  className="d5-cta-primary"
+                  type="submit"
+                  disabled={contactStatus.state === "submitting"}
+                >
+                  {contactStatus.state === "submitting" ? "Sending..." : "Send Request"}
+                  <Icon name="arrowRight" size={14} />
+                </button>
+                <button className="d5-cta-text" type="button" onClick={onBrochure}>
+                  <Icon name="download" size={14} /> Download Brochure
+                </button>
+              </div>
+
+              {contactStatus.message && (
+                <div
+                  className={`d5-contact-message d5-contact-message--${contactStatus.state}`}
+                  role={contactStatus.state === "error" ? "alert" : "status"}
+                >
+                  {contactStatus.message}
+                </div>
+              )}
+            </form>
           </Reveal>
         </div>
       </section>
@@ -1404,8 +1537,8 @@ export default function Design5Hybrid({ onBrochure, onThemes }) {
               <div className="d5-footer-col-title">Company</div>
               <a href="#d5-platform">About</a>
               <a onClick={onBrochure} style={{ cursor: "pointer" }}>Brochure</a>
-              <a href="#d5-platform">Schedule Demo</a>
-              <a href="#d5-platform">Contact</a>
+              <a href="#d5-contact">Schedule Demo</a>
+              <a href="#d5-contact">Contact</a>
             </div>
           </div>
 
