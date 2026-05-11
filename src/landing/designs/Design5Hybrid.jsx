@@ -1638,49 +1638,6 @@ export default function Design5Hybrid({ onBrochure }) {
       <section className="d5-cta" id="d5-contact">
         <div className="d5-section-inner">
           <Reveal>
-            <div className="d5-trust-row">
-              <div className="d5-trust-item">
-                <Icon name="shieldCheck" size={18} className="d5-trust-icon" />
-                <div>
-                  <div className="d5-trust-t">Data sovereignty</div>
-                  <div className="d5-trust-d">
-                    Self-host on your infrastructure. Student data never leaves
-                    your network.
-                  </div>
-                </div>
-              </div>
-              <div className="d5-trust-item">
-                <Icon name="refresh" size={18} className="d5-trust-icon" />
-                <div>
-                  <div className="d5-trust-t">We maintain it</div>
-                  <div className="d5-trust-d">
-                    Platform updates, patches, and ops handled by our team on
-                    any deployment.
-                  </div>
-                </div>
-              </div>
-              <div className="d5-trust-item">
-                <Icon name="lock" size={18} className="d5-trust-icon" />
-                <div>
-                  <div className="d5-trust-t">Role-based access</div>
-                  <div className="d5-trust-d">
-                    Every user sees only what their role requires. Row-level
-                    data separation.
-                  </div>
-                </div>
-              </div>
-              <div className="d5-trust-item">
-                <Icon name="globe" size={18} className="d5-trust-icon" />
-                <div>
-                  <div className="d5-trust-t">Your AI provider</div>
-                  <div className="d5-trust-d">
-                    BYOK — connect OpenAI, Anthropic, Google, Azure, or any
-                    compatible endpoint.
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div className="d5-cta-rule" />
             <div className="d5-cta-eyebrow">SCHEDULE A DEMONSTRATION</div>
             <h2 className="d5-cta-h">
