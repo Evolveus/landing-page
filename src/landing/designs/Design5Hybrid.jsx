@@ -1278,42 +1278,6 @@ export default function Design5Hybrid({ onBrochure }) {
               </div>
             </Reveal>
           </div>
-
-          {/* Bottom spec strips */}
-          <Reveal>
-            <div className="d5-coding-specs">
-              {[
-                {
-                  i: "cpu",
-                  t: "Sandboxed execution",
-                  d: "Isolated container per run",
-                },
-                { i: "eye", t: "Hidden test cases", d: "Prevents hardcoding" },
-                { i: "gauge", t: "Partial marking", d: "Per test-case credit" },
-                {
-                  i: "fileText",
-                  t: "Driver code",
-                  d: "Boilerplate & reference",
-                },
-                {
-                  i: "globe",
-                  t: "7 languages",
-                  d: "Py · Java · C++ · JS · C · Oct · Sc",
-                },
-                {
-                  i: "clock",
-                  t: "Per-question limits",
-                  d: "Time & memory configurable",
-                },
-              ].map((f) => (
-                <div key={f.t} className="d5-coding-spec-item">
-                  <Icon name={f.i} size={16} className="d5-coding-spec-icon" />
-                  <div className="d5-coding-spec-t">{f.t}</div>
-                  <div className="d5-coding-spec-d">{f.d}</div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
         </div>
       </section>
 
