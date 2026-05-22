@@ -77,7 +77,7 @@ export default function ImpactPage() {
           <div className="p7-close-r">
             <div className="p7-contact-row">
               <span className="p7-contact-key">Email</span>
-              <span className="p7-contact-val">info@evolveus.in</span>
+              <span className="p7-contact-val">aksay@evolveus.in</span>
             </div>
             <div className="p7-contact-row">
               <span className="p7-contact-key">Phone</span>
