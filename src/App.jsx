@@ -43,7 +43,8 @@ export default function App() {
         orientation: "portrait",
       });
       for (let i = 0; i < pages.length; i++) {
-        const canvas = await html2canvas(pages[i], {
+        const page = pages[i];
+        const canvas = await html2canvas(page, {
           scale: 2,
           useCORS: true,
           logging: false,
@@ -52,6 +53,16 @@ export default function App() {
         const imgData = canvas.toDataURL("image/jpeg", 0.98);
         if (i > 0) pdf.addPage();
         pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
+
+        const pageRect = page.getBoundingClientRect();
+        page.querySelectorAll("[data-pdf-link]").forEach((el) => {
+          const elRect = el.getBoundingClientRect();
+          const x = ((elRect.left - pageRect.left) / pageRect.width) * 210;
+          const y = ((elRect.top - pageRect.top) / pageRect.height) * 297;
+          const w = (elRect.width / pageRect.width) * 210;
+          const h = (elRect.height / pageRect.height) * 297;
+          pdf.link(x, y, w, h, { url: el.dataset.pdfLink });
+        });
       }
       pdf.save("evolveus-brochure.pdf");
     } finally {

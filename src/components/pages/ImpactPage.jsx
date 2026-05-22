@@ -65,11 +65,14 @@ export default function ImpactPage() {
               <em>We'll tailor it to your departments.</em>
             </h2>
             <div className="p7-close-cta">
-              <a href="#" className="p7-btn">
+              <a
+                href="https://evolveus.in/#d5-contact"
+                className="p7-btn"
+                data-pdf-link="https://evolveus.in/#d5-contact"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Book a demo →
-              </a>
-              <a href="#" className="p7-btn-text">
-                Download datasheet
               </a>
             </div>
           </div>
