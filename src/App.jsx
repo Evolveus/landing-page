@@ -22,12 +22,12 @@ export default function App() {
     const path = window.location.pathname;
     if (path === "/brochure") return "brochure";
     if (path === "/themes") return "themes";
-    if (path === "/presentation") return "presentation";
+    if (path === "/ppt" || path === "/presentation") return "presentation";
     return "landing";
   });
 
   useEffect(() => {
-    const paths = { brochure: "/brochure", themes: "/themes", landing: "/", presentation: "/presentation" };
+    const paths = { brochure: "/brochure", themes: "/themes", landing: "/", presentation: "/ppt" };
     window.history.replaceState({}, "", paths[view] ?? "/");
   }, [view]);
 
@@ -81,7 +81,6 @@ export default function App() {
       <LandingPage
         onBrochure={() => setView("brochure")}
         onThemes={() => setView("themes")}
-        onPresentation={() => setView("presentation")}
       />
     );
   }
