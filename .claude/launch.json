@@ -3,8 +3,9 @@
   "configurations": [
     {
       "name": "evolveus-brochure",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "/Users/aksaykanthan/Library/Application Support/Zed/node/node-v24.11.0-darwin-arm64/bin/node",
+      "runtimeArgs": ["node_modules/vite/bin/vite.js", "--port", "5173"],
+      "cwd": "/Users/aksaykanthan/evolveus/landing-page",
       "port": 5173
     }
   ]

@@ -11,6 +11,10 @@
     {
       "source": "/themes",
       "destination": "/"
+    },
+    {
+      "source": "/presentation",
+      "destination": "/"
     }
   ],
   "functions": {

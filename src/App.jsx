@@ -13,6 +13,7 @@ import RolesPage from "./components/pages/RolesPage";
 import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
 import ThemesPage from "./landing/ThemesPage";
+import PresentationPage from "./presentation/PresentationPage";
 
 export default function App() {
   const brochureRef = useRef(null);
@@ -21,11 +22,12 @@ export default function App() {
     const path = window.location.pathname;
     if (path === "/brochure") return "brochure";
     if (path === "/themes") return "themes";
+    if (path === "/presentation") return "presentation";
     return "landing";
   });
 
   useEffect(() => {
-    const paths = { brochure: "/brochure", themes: "/themes", landing: "/" };
+    const paths = { brochure: "/brochure", themes: "/themes", landing: "/", presentation: "/presentation" };
     window.history.replaceState({}, "", paths[view] ?? "/");
   }, [view]);
 
@@ -70,8 +72,18 @@ export default function App() {
     }
   };
 
+  if (view === "presentation") {
+    return <PresentationPage onHome={() => setView("landing")} />;
+  }
+
   if (view === "landing") {
-    return <LandingPage onBrochure={() => setView("brochure")} onThemes={() => setView("themes")} />;
+    return (
+      <LandingPage
+        onBrochure={() => setView("brochure")}
+        onThemes={() => setView("themes")}
+        onPresentation={() => setView("presentation")}
+      />
+    );
   }
 
   if (view === "themes") {

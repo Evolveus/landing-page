@@ -748,7 +748,7 @@ function FeedbackSection() {
 }
 
 // ─── Main component ───────────────────────────────────────────
-export default function Design5Hybrid({ onBrochure }) {
+export default function Design5Hybrid({ onBrochure, onPresentation }) {
   const y = useScrollY();
   const codingRef = useRef(null);
   const codingOffset = useParallaxOffset(codingRef, 0.08);
@@ -865,6 +865,9 @@ export default function Design5Hybrid({ onBrochure }) {
             <a href="#d5-deploy">Deployment</a>
           </div>
           <div className="d5-nav-right">
+            <button className="d5-nav-ghost" onClick={onPresentation}>
+              Presentation
+            </button>
             <button className="d5-nav-ghost" onClick={onBrochure}>
               Brochure
             </button>
