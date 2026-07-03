@@ -14,6 +14,7 @@ import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
 import ThemesPage from "./landing/ThemesPage";
 import PresentationPage from "./presentation/PresentationPage";
+import FlyerPage from "./flyer/FlyerPage";
 
 export default function App() {
   const brochureRef = useRef(null);
@@ -23,11 +24,12 @@ export default function App() {
     if (path === "/brochure") return "brochure";
     if (path === "/themes") return "themes";
     if (path === "/ppt" || path === "/presentation") return "presentation";
+    if (path === "/flyer") return "flyer";
     return "landing";
   });
 
   useEffect(() => {
-    const paths = { brochure: "/brochure", themes: "/themes", landing: "/", presentation: "/ppt" };
+    const paths = { brochure: "/brochure", themes: "/themes", landing: "/", presentation: "/ppt", flyer: "/flyer" };
     window.history.replaceState({}, "", paths[view] ?? "/");
   }, [view]);
 
@@ -74,6 +76,10 @@ export default function App() {
 
   if (view === "presentation") {
     return <PresentationPage onHome={() => setView("landing")} />;
+  }
+
+  if (view === "flyer") {
+    return <FlyerPage onHome={() => setView("landing")} />;
   }
 
   if (view === "landing") {
