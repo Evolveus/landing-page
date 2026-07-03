@@ -15,6 +15,10 @@ import LandingPage from "./landing/LandingPage";
 import ThemesPage from "./landing/ThemesPage";
 import PresentationPage from "./presentation/PresentationPage";
 import FlyerPage from "./flyer/FlyerPage";
+import FlyerV1 from "./flyer/FlyerV1";
+import FlyerV2 from "./flyer/FlyerV2";
+import FlyerV3 from "./flyer/FlyerV3";
+import FlyerV4 from "./flyer/FlyerV4";
 
 export default function App() {
   const brochureRef = useRef(null);
@@ -24,12 +28,26 @@ export default function App() {
     if (path === "/brochure") return "brochure";
     if (path === "/themes") return "themes";
     if (path === "/ppt" || path === "/presentation") return "presentation";
+    if (path === "/flyer/v1") return "flyer-v1";
+    if (path === "/flyer/v2") return "flyer-v2";
+    if (path === "/flyer/v3") return "flyer-v3";
+    if (path === "/flyer/v4") return "flyer-v4";
     if (path === "/flyer") return "flyer";
     return "landing";
   });
 
   useEffect(() => {
-    const paths = { brochure: "/brochure", themes: "/themes", landing: "/", presentation: "/ppt", flyer: "/flyer" };
+    const paths = {
+      brochure: "/brochure",
+      themes: "/themes",
+      landing: "/",
+      presentation: "/ppt",
+      flyer: "/flyer",
+      "flyer-v1": "/flyer/v1",
+      "flyer-v2": "/flyer/v2",
+      "flyer-v3": "/flyer/v3",
+      "flyer-v4": "/flyer/v4",
+    };
     window.history.replaceState({}, "", paths[view] ?? "/");
   }, [view]);
 
@@ -80,6 +98,22 @@ export default function App() {
 
   if (view === "flyer") {
     return <FlyerPage onHome={() => setView("landing")} />;
+  }
+
+  if (view === "flyer-v1") {
+    return <FlyerV1 onHome={() => setView("landing")} />;
+  }
+
+  if (view === "flyer-v2") {
+    return <FlyerV2 onHome={() => setView("landing")} />;
+  }
+
+  if (view === "flyer-v3") {
+    return <FlyerV3 onHome={() => setView("landing")} />;
+  }
+
+  if (view === "flyer-v4") {
+    return <FlyerV4 onHome={() => setView("landing")} />;
   }
 
   if (view === "landing") {
