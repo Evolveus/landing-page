@@ -5,9 +5,8 @@ import "./FlyerPage.css";
 const STATS = [
   { n: "2,000+", l: "Quizzes run" },
   { n: "200K+", l: "Responses scored" },
+  { n: "99.9%", l: "Uptime SLA" },
   { n: "8", l: "Question types" },
-  { n: "7", l: "Languages" },
-  { n: "12", l: "Proctor signals" },
 ];
 
 const PILLARS = [
@@ -49,23 +48,29 @@ const PILLARS = [
   },
 ];
 
-const ROLES = [
-  {
-    icon: "building",
-    name: "Administrator",
-    desc: "Manage academic structure, users and roles, lab access, and platform-wide metrics.",
-  },
-  {
-    icon: "edit",
-    name: "Faculty",
-    desc: "Build question banks, design exams, configure evaluation, review AI grades and export results.",
-  },
-  {
-    icon: "graduation",
-    name: "Student",
-    desc: "A focused exam experience with timer, auto-sync, in-browser code editor and clear results.",
-  },
-];
+const AI_EVAL = {
+  icon: "brain",
+  title: "AI evaluation, on your terms",
+  body: "Descriptive answers and fill-in-the-blanks graded by the model you choose — OpenAI, Anthropic, Google, Azure, or any OpenAI-compatible endpoint.",
+  bullets: [
+    "Bring your own key — responses never leave your evaluation call",
+    "Rubric-based scoring returned with transparent reasoning",
+    "Semantic matching accepts synonyms and equivalent phrasing",
+    "Faculty reviews and can override every AI score",
+  ],
+};
+
+const PERFORMANCE = {
+  icon: "bolt",
+  title: "Built for scale & uptime",
+  body: "Engineered to stay fast and online through peak exam load, on infrastructure you can trust.",
+  bullets: [
+    "99.9% availability with zero-touch failover",
+    "Low-latency editor and sub-second answer sync",
+    "Continuous autosave — network drops never lose progress",
+    "Isolated sandboxes and tenant-level data separation",
+  ],
+};
 
 const DEPLOY = [
   {
@@ -78,17 +83,6 @@ const DEPLOY = [
     name: "Self-Hosted",
     tag: "Your servers, your data. On-premise or private cloud with full data sovereignty — we maintain it for you.",
   },
-];
-
-const CHIPS = [
-  "Single & multi-choice MCQ",
-  "True / False",
-  "Descriptive",
-  "Fill-in-the-blank",
-  "Match-the-following",
-  "File upload",
-  "Coding",
-  "Negative & partial marking",
 ];
 
 export default function FlyerPage({ onHome }) {
@@ -211,50 +205,45 @@ export default function FlyerPage({ onHome }) {
           ))}
         </div>
 
-        {/* Roles + Deployment */}
+        {/* AI Evaluation + Performance */}
+        <div className="fl-section-label">Where Evolveus goes further</div>
         <div className="fl-cols">
-          <div>
-            <div className="fl-section-label">Built for every role</div>
-            <div className="fl-roles">
-              {ROLES.map((r) => (
-                <div className="fl-role" key={r.name}>
-                  <div className="fl-role-icon">
-                    <Icon name={r.icon} size={12} strokeWidth={1.9} />
-                  </div>
-                  <div>
-                    <div className="fl-role-name">{r.name}</div>
-                    <div className="fl-role-desc">{r.desc}</div>
-                  </div>
+          {[AI_EVAL, PERFORMANCE].map((f) => (
+            <div className="fl-feature" key={f.title}>
+              <div className="fl-feature-head">
+                <div className="fl-feature-icon">
+                  <Icon name={f.icon} size={15} strokeWidth={1.9} />
                 </div>
-              ))}
+                <div className="fl-feature-title">{f.title}</div>
+              </div>
+              <div className="fl-feature-body">{f.body}</div>
+              <ul className="fl-feature-list">
+                {f.bullets.map((b) => (
+                  <li key={b}>
+                    <Icon name="check" size={11} strokeWidth={2.4} />
+                    {b}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-          <div>
-            <div className="fl-section-label">Deploy your way</div>
-            <div className="fl-deploy">
-              {DEPLOY.map((d) => (
-                <div className="fl-deploy-card" key={d.name}>
-                  <div className="fl-deploy-head">
-                    <span className="fl-deploy-icon">
-                      <Icon name={d.icon} size={13} strokeWidth={1.9} />
-                    </span>
-                    <span className="fl-deploy-name">{d.name}</span>
-                  </div>
-                  <div className="fl-deploy-tag">{d.tag}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* Question types chips */}
-        <div className="fl-section-label">Eight question formats</div>
-        <div className="fl-chips">
-          {CHIPS.map((c) => (
-            <span className="fl-chip" key={c}>
-              <Icon name="check" size={10} strokeWidth={2.4} />
-              {c}
-            </span>
+        {/* Deployment */}
+        <div className="fl-section-label" style={{ marginTop: 22 }}>
+          Deploy your way
+        </div>
+        <div className="fl-deploy-row">
+          {DEPLOY.map((d) => (
+            <div className="fl-deploy-card" key={d.name}>
+              <div className="fl-deploy-head">
+                <span className="fl-deploy-icon">
+                  <Icon name={d.icon} size={13} strokeWidth={1.9} />
+                </span>
+                <span className="fl-deploy-name">{d.name}</span>
+              </div>
+              <div className="fl-deploy-tag">{d.tag}</div>
+            </div>
           ))}
         </div>
 
@@ -273,7 +262,7 @@ export default function FlyerPage({ onHome }) {
             </div>
             <div className="fl-footer-line">
               <Icon name="edit" size={12} strokeWidth={1.9} />
-              aksaykanthan@gmail.com
+              aksay@evolveus.in
             </div>
           </div>
         </div>

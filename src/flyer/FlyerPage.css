@@ -185,7 +185,7 @@
 /* ── Stats strip ────────────────────────────────────────────── */
 .fl-stats {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   border: 1px solid var(--fl-line-2);
   background: var(--fl-paper);
   margin: 20px 0;
@@ -276,7 +276,7 @@
   color: var(--fl-ink-2);
 }
 
-/* ── Two-column: roles + deployment ─────────────────────────── */
+/* ── Two-column feature blocks ──────────────────────────────── */
 .fl-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -284,80 +284,85 @@
   margin-top: 22px;
 }
 
-.fl-roles { display: flex; flex-direction: column; gap: 11px; }
-.fl-role {
+.fl-feature {
+  border: 1px solid var(--fl-line-2);
+  border-radius: 8px;
+  background: var(--fl-paper);
+  padding: 14px 15px 15px;
   display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  padding-bottom: 11px;
-  border-bottom: 1px dotted var(--fl-line-2);
+  flex-direction: column;
 }
-.fl-role:last-child { border-bottom: 0; padding-bottom: 0; }
-.fl-role-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
-  background: var(--fl-ink);
-  color: var(--fl-paper);
+.fl-feature-head { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+.fl-feature-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--fl-green);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 1px;
 }
-.fl-role-name {
+.fl-feature-title {
+  font-family: "Playfair Display", Georgia, serif;
   font-weight: 700;
-  font-size: 10.5px;
+  font-size: 14px;
   color: var(--fl-ink);
+  line-height: 1.1;
 }
-.fl-role-desc {
-  font-size: 8.6px;
+.fl-feature-body {
+  font-size: 9px;
+  line-height: 1.5;
+  color: var(--fl-ink-2);
+  margin: 2px 0 10px;
+}
+.fl-feature-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.fl-feature-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 8.8px;
   line-height: 1.4;
-  color: var(--fl-ink-3);
-  margin-top: 1px;
+  color: var(--fl-ink-2);
 }
+.fl-feature-list li svg { color: var(--fl-green); flex-shrink: 0; margin-top: 1px; }
 
-.fl-deploy { display: flex; flex-direction: column; gap: 13px; }
+/* ── Deployment row ─────────────────────────────────────────── */
+.fl-deploy-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
 .fl-deploy-card {
   border: 1px solid var(--fl-line-2);
-  border-radius: 6px;
-  padding: 13px 13px;
+  border-radius: 8px;
+  padding: 12px 14px;
   background: var(--fl-paper);
 }
-.fl-deploy-head { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
-.fl-deploy-icon { color: var(--fl-green); display: flex; }
+.fl-deploy-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.fl-deploy-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--fl-green-bg);
+  color: var(--fl-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 .fl-deploy-name {
   font-weight: 700;
-  font-size: 10.5px;
+  font-size: 11px;
   color: var(--fl-ink);
 }
 .fl-deploy-tag {
-  font-size: 8.6px;
-  line-height: 1.4;
+  font-size: 8.8px;
+  line-height: 1.45;
   color: var(--fl-ink-2);
 }
-
-/* ── Feature chips row ──────────────────────────────────────── */
-.fl-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 22px;
-}
-.fl-chip {
-  font-size: 8.6px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--fl-ink-2);
-  background: var(--fl-green-bg);
-  border: 1px solid #cfe0c8;
-  padding: 6px 11px;
-  border-radius: 20px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-.fl-chip svg { color: var(--fl-green); }
 
 /* ── Footer / contact band ──────────────────────────────────── */
 .fl-spacer { flex: 1; min-height: 8px; }
