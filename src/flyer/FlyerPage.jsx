@@ -2,13 +2,6 @@ import { useRef, useState } from "react";
 import { Icon } from "../landing/_shared/Icon";
 import "./FlyerPage.css";
 
-const STATS = [
-  { n: "2,000+", l: "Quizzes run" },
-  { n: "200K+", l: "Responses scored" },
-  { n: "99.9%", l: "Uptime SLA" },
-  { n: "8", l: "Question types" },
-];
-
 const PILLARS = [
   {
     n: "I",
@@ -139,9 +132,6 @@ export default function FlyerPage({ onHome }) {
         {/* Masthead */}
         <div className="fl-masthead">
           <div className="fl-brand">
-            <div className="fl-brand-mark">
-              <Icon name="checkCircle" size={17} strokeWidth={2} />
-            </div>
             <div>
               <div className="fl-brand-name">Evolveus</div>
               <div className="fl-brand-sub">Assessment Platform</div>
@@ -176,16 +166,6 @@ export default function FlyerPage({ onHome }) {
             AI-assisted grading and performance analytics — Evolveus runs the
             entire assessment lifecycle in one place.
           </p>
-        </div>
-
-        {/* Stats */}
-        <div className="fl-stats">
-          {STATS.map((s) => (
-            <div className="fl-stat" key={s.l}>
-              <div className="fl-stat-n">{s.n}</div>
-              <div className="fl-stat-l">{s.l}</div>
-            </div>
-          ))}
         </div>
 
         {/* Pillars */}
