@@ -675,6 +675,7 @@ body:has(.rg){
   font-size: 15px;
   color: var(--ink-70);
 }
+.rg-role-list li:last-child{ border-bottom: 0; }
 .rg-role-list li span{
   font-family: var(--mono);
   font-size: 11px;
@@ -731,6 +732,7 @@ body:has(.rg){
   font-size: 15px;
   color: var(--ink-70);
 }
+.rg-sig-list li:last-child{ border-bottom: 0; }
 .rg-sig-list li b{
   font-family: var(--mono);
   font-size: 11px;
@@ -790,6 +792,7 @@ body:has(.rg){
   font-size: 14.8px;
   color: var(--ink-70);
 }
+.rg-mode-list li:last-child{ border-bottom: 0; }
 .rg-mode-list li svg{ color: var(--brand); flex-shrink: 0; transform: translateY(2px); }
 
 .rg-sub{
@@ -824,6 +827,7 @@ body:has(.rg){
   font-size: 14.8px;
   color: var(--ink-70);
 }
+.rg-mast-list li:last-child{ border-bottom: 0; }
 .rg-mast-list li .rg-bub{ transform: translateY(-1px); }
 
 
@@ -998,9 +1002,13 @@ body:has(.rg){
   gap: clamp(32px, 5vw, 80px);
   align-items: center;
   padding: clamp(38px, 4.4vw, 62px) 0;
-  border-top: 1px solid var(--rule);
 }
-.rg-mrow:last-child{ border-bottom: 1px solid var(--rule); }
+/* Only the gap BETWEEN rows carries a rule. The section head already draws a
+   hairline above the first row and the next section draws one below the last,
+   so bordering every row stacked two lines a stone's throw apart. */
+.rg-mrow + .rg-mrow{ border-top: 1px solid var(--rule); }
+.rg-mrow:first-child{ padding-top: 0; }
+.rg-mrow:last-child{ padding-bottom: 0; }
 .rg-mrow--flip .rg-mrow-text{ order: 2; }
 .rg-mrow--flip .rg-mrow-art{ order: 1; }
 .rg-mrow h3{
