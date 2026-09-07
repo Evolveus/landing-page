@@ -656,3 +656,219 @@ export const BRAND_LOGO = {
   mark: '/evolveus-mark.png',
   markLight: '/evolveus-mark-light.png',
 };
+
+/* ─────────────────────────────────────────────────────────────
+   COMPARISON PAGE
+
+   A college almost never compares EvolveUs against one named
+   product. It compares EvolveUs against a *kind* of tool it already
+   has — a form, its LMS, a coding-test service, a proctoring vendor.
+   So this page compares categories, and names well-known products
+   only as examples of the category they belong to.
+
+   The rule for everything below: describe what each kind of tool was
+   BUILT for. Never assert that a named vendor lacks a named feature.
+   Vendors ship; a claim that is true this quarter becomes a liability
+   the next one. Every EvolveUs column entry is backed by FEATURES.md.
+   ───────────────────────────────────────────────────────────── */
+
+export const COMPARE_HERO = {
+  eyebrow: 'How EvolveUs compares',
+  headline: 'What are you comparing it against?',
+  sub: 'Most colleges are not choosing between two examination platforms. They are deciding whether the tools already on campus — a form, the LMS, a coding-test service — are enough to run a real examination. This page is an honest answer to that.',
+  note: 'Including the cases where the answer is no, and you should keep what you have.',
+};
+
+/* The four things a college actually weighs EvolveUs against. */
+export const COMPARE_ALTERNATIVES = [
+  {
+    id: 'forms',
+    icon: 'checkSquare',
+    label: 'Free form tools',
+    examples: 'Google Forms, Microsoft Forms',
+    built: 'Built to collect answers from anyone, quickly and free.',
+    gap: 'A form has no invigilator, no concept of a batch or a semester, and no way to mark a written answer. It is excellent for a class poll and unsuited to an examination that decides a grade.',
+  },
+  {
+    id: 'lms',
+    icon: 'bookOpen',
+    label: 'LMS quiz modules',
+    examples: 'Moodle, Google Classroom, Canvas',
+    built: 'Built to deliver a course: material, assignments, discussion, and a quiz alongside them.',
+    gap: 'The quiz is one feature among many, so supervision, coding questions, and outcome attainment usually arrive as add-ons, plugins, and spreadsheets your department maintains itself.',
+  },
+  {
+    id: 'judge',
+    icon: 'terminal',
+    label: 'Coding-test platforms',
+    examples: 'HackerRank, HackerEarth',
+    built: 'Built to screen engineers for a job, at scale, on code alone.',
+    gap: 'They are strong at exactly the thing they do. But a semester examination is not only code, and their unit of thought is a candidate in a hiring funnel, not a student in a batch under a syllabus.',
+  },
+  {
+    id: 'proctor',
+    icon: 'eye',
+    label: 'Proctoring and hiring suites',
+    examples: 'Mercer | Mettl, Talview',
+    built: 'Built to supervise high-stakes tests for employers and certification bodies.',
+    gap: 'Supervision is genuinely their strength. What they are not built around is your academic year — course outcomes, internal marks, and a head of department asking which topic a class did badly on.',
+  },
+];
+
+export const COMPARE_COLUMNS = [
+  { id: 'evolveus', label: 'EvolveUs', sub: 'Examinations for colleges' },
+  { id: 'forms', label: 'Form tools', sub: 'Google, Microsoft Forms' },
+  { id: 'lms', label: 'LMS quizzes', sub: 'Moodle, Classroom' },
+  { id: 'judge', label: 'Coding tests', sub: 'HackerRank, HackerEarth' },
+  { id: 'proctor', label: 'Proctoring suites', sub: 'Mettl, Talview' },
+];
+
+/* v: 'full' | 'part' | 'none' — how squarely the category is built for the row. */
+export const COMPARE_ROWS = [
+  {
+    id: 'structure',
+    criterion: 'Shaped like a college',
+    detail: 'Departments, programmes, batches, semesters and courses are the setup, not a naming convention.',
+    cells: {
+      evolveus: { v: 'full', t: 'The academic structure is step one' },
+      forms: { v: 'none', t: 'A form has no batches' },
+      lms: { v: 'part', t: 'Courses and enrolment, yes' },
+      judge: { v: 'part', t: 'Organised around candidates' },
+      proctor: { v: 'part', t: 'Organised around campaigns' },
+    },
+  },
+  {
+    id: 'supervision',
+    criterion: 'Exams actually supervised',
+    detail: 'Full-screen held, a locked browser, restricted lab access, and every violation recorded against the attempt.',
+    cells: {
+      evolveus: { v: 'full', t: 'Logged against the attempt' },
+      forms: { v: 'none', t: 'No supervision at all' },
+      lms: { v: 'part', t: 'Usually a paid add-on' },
+      judge: { v: 'full', t: 'Core to their product' },
+      proctor: { v: 'full', t: 'Core to their product' },
+    },
+  },
+  {
+    id: 'descriptive',
+    criterion: 'Written answers graded automatically',
+    detail: 'Long answers read against the rubric your own faculty wrote, returned with a mark and a reason.',
+    cells: {
+      evolveus: { v: 'full', t: 'Faculty approve every mark' },
+      forms: { v: 'none', t: 'Exact-match answers only' },
+      lms: { v: 'none', t: 'Marked by hand, script by script' },
+      judge: { v: 'none', t: 'Built for code, not prose' },
+      proctor: { v: 'part', t: 'Varies by vendor' },
+    },
+  },
+  {
+    id: 'coding',
+    criterion: 'Coding answers graded by running them',
+    detail: 'Students write and run code in the browser; programs are tested against hidden cases and marked on the spot.',
+    cells: {
+      evolveus: { v: 'full', t: 'Seven languages, partial marks' },
+      forms: { v: 'none', t: 'Not possible' },
+      lms: { v: 'part', t: 'Usually a plugin' },
+      judge: { v: 'full', t: 'Their strongest ground' },
+      proctor: { v: 'part', t: 'Often a bolt-on module' },
+    },
+  },
+  {
+    id: 'mixed',
+    criterion: 'One paper, every kind of question',
+    detail: 'Objective, descriptive and coding questions in the same paper, with one mark sheet at the end.',
+    cells: {
+      evolveus: { v: 'full', t: 'Eight question types' },
+      forms: { v: 'part', t: 'Objective only, in practice' },
+      lms: { v: 'part', t: 'Mixed papers, but no code' },
+      judge: { v: 'part', t: 'Coding-led by design' },
+      proctor: { v: 'part', t: 'Depends on the module bought' },
+    },
+  },
+  {
+    id: 'bank',
+    criterion: "Question bank tagged by Bloom's level and course outcome",
+    detail: 'Reusable questions carrying the tags a report later needs, uploaded in bulk from a spreadsheet.',
+    cells: {
+      evolveus: { v: 'full', t: "Bloom's and CO on every question" },
+      forms: { v: 'none', t: 'No reusable bank' },
+      lms: { v: 'part', t: 'Banks yes, tagging left to you' },
+      judge: { v: 'part', t: 'Tagged by skill, not outcome' },
+      proctor: { v: 'part', t: 'Tagged by competency' },
+    },
+  },
+  {
+    id: 'attainment',
+    criterion: 'Reports a head of department can act on',
+    detail: 'Results rolled up by topic and course outcome, for a class and across a batch, not just a list of marks.',
+    cells: {
+      evolveus: { v: 'full', t: 'Topic and outcome attainment' },
+      forms: { v: 'none', t: 'A spreadsheet of responses' },
+      lms: { v: 'part', t: 'Attainment maths ends in Excel' },
+      judge: { v: 'none', t: 'Reports on hiring readiness' },
+      proctor: { v: 'none', t: 'Reports on the candidate' },
+    },
+  },
+  {
+    id: 'hosting',
+    criterion: 'Can run on your own campus servers',
+    detail: 'Student records stay inside the institution, on infrastructure your IT department controls.',
+    cells: {
+      evolveus: { v: 'full', t: 'Our cloud or yours' },
+      forms: { v: 'none', t: 'Vendor cloud only' },
+      lms: { v: 'full', t: 'Self-hosting is the norm' },
+      judge: { v: 'part', t: 'Enterprise terms vary' },
+      proctor: { v: 'part', t: 'Enterprise terms vary' },
+    },
+  },
+  {
+    id: 'roles',
+    criterion: 'A seat each for the office, faculty and students',
+    detail: 'Administration sets up the college, faculty run their own assessments, students see only their own work.',
+    cells: {
+      evolveus: { v: 'full', t: 'Three separated roles' },
+      forms: { v: 'none', t: 'An editor and a respondent' },
+      lms: { v: 'full', t: 'Roles are core to an LMS' },
+      judge: { v: 'part', t: 'Recruiter and candidate' },
+      proctor: { v: 'part', t: 'Recruiter and candidate' },
+    },
+  },
+];
+
+/* Said plainly, because a comparison page nobody believes is worth nothing. */
+export const COMPARE_HONEST = [
+  {
+    icon: 'checkSquare',
+    title: 'You only need to collect answers',
+    body: 'A weekly practice quiz that carries no marks does not need supervision, a rubric, or an attainment report. A free form is the right tool, and we will say so.',
+  },
+  {
+    icon: 'users',
+    title: 'You are hiring, not teaching',
+    body: 'For placement drives and screening at scale, a hiring platform is built around exactly that problem. EvolveUs is built around the semester.',
+  },
+  {
+    icon: 'bookOpen',
+    title: 'Your LMS already carries the course',
+    body: 'If material, assignments and discussion live in your LMS and it is working, keep it. Colleges usually bring in EvolveUs for the examination alone and leave the LMS where it is.',
+  },
+];
+
+/* What a college is usually replacing, in its own words. */
+export const COMPARE_REPLACES = [
+  'Question papers assembled by hand each semester',
+  'Answer scripts carried between faculty for correction',
+  'Marks copied from scripts into a departmental spreadsheet',
+  'Course-outcome attainment worked out manually before an audit',
+  'A separate coding-test service bought only for the lab exam',
+  'Invigilation that ends the moment the exam moves online',
+];
+
+export const COMPARE_NOTE =
+  'This page compares categories of tool by what they were designed to do, not the current feature list of any one vendor. Products change; confirm specifics with each vendor before you decide. Every claim in the EvolveUs column is something we will demonstrate live.';
+
+export const COMPARE_CTA = {
+  eyebrow: 'Judge it yourself',
+  headline: 'Put it beside whatever you use now.',
+  sub: 'Send us the paper you set last semester. We will run it through EvolveUs and show you the supervision log, the corrected scripts, and the report your department would have received.',
+};

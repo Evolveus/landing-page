@@ -1,0 +1,278 @@
+/* ═══════════════════════════════════════════════════════════════
+   COMPARE — the comparison page, built on the Register system.
+
+   register.css supplies the ink, the paper, the rules and the type.
+   This file only adds what the comparison itself needs: the marking
+   bubble in three states, and the grid that reads like a marking
+   scheme. Same rules as the parent system — hairlines, no gradients
+   on content, no shadows, no glass.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── The mark ──────────────────────────────────────────
+   Three states of one answer-sheet bubble: filled, half filled,
+   empty. Colour alone never carries the meaning — the fill does,
+   and every cell also states its verdict in text. */
+.cm-mark{
+  display: inline-block;
+  flex: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid var(--ink-25);
+  position: relative;
+  overflow: hidden;
+}
+.cm-mark.is-full{ background: var(--brand); border-color: var(--brand); }
+.cm-mark.is-part{ border-color: var(--brand); }
+.cm-mark.is-part::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  background: var(--brand);
+}
+.cm-mark.is-none{ border-color: var(--ink-25); background: transparent; }
+
+/* Visually hidden, still read aloud.
+
+   Its host must be a containing block. Left to position against the
+   section, these spans sit at their static position inside a grid that
+   is 940px wide, escape the scroller's clipping, and give the whole
+   page a horizontal scrollbar on a phone. */
+.cm-sr{
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Hero ──────────────────────────────────────────────── */
+.cm-hero h1{
+  font-size: clamp(40px, 6.6vw, 92px);
+  margin: 0 0 clamp(26px, 3vw, 38px);
+  max-width: 16ch;
+}
+.cm-hero h1 em{ font-style: normal; color: var(--brand); }
+
+.cm-hero-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+  padding-bottom: clamp(64px, 7vw, 104px);
+}
+.cm-hero-note{
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding-top: 6px;
+  color: var(--ink-45);
+  font-size: 15px;
+  line-height: 1.55;
+  border-left: 1px solid var(--rule);
+  padding-left: clamp(18px, 2vw, 28px);
+}
+.cm-hero-note svg{ flex: none; color: var(--brand); margin-top: 3px; }
+
+/* ── §01 The alternatives ──────────────────────────────── */
+.cm-alts{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.cm-alt{ background: var(--paper); padding: clamp(26px, 2.8vw, 40px); }
+.cm-alt-top{ display: flex; align-items: center; gap: 12px; color: var(--brand); }
+.cm-alt-top .rg-mono{ color: var(--ink); letter-spacing: 0.13em; }
+.cm-alt-ico{
+  display: grid;
+  place-items: center;
+  width: 38px; height: 38px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.cm-alt-eg{
+  margin-top: 14px !important;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-45);
+}
+.cm-alt-h{
+  font-size: clamp(19px, 1.6vw, 23px);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  margin: 16px 0 0;
+  max-width: 26ch;
+}
+.cm-alt-gap{ margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--rule-soft); }
+.cm-alt-gaplabel{ display: block; color: var(--brand); margin-bottom: 10px; font-size: 10.5px; }
+.cm-alt-gap p{ font-size: 15px; line-height: 1.62; color: var(--ink-70); }
+
+/* ── §02 The grid ──────────────────────────────────────── */
+.cm-key{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 30px;
+  padding-bottom: 22px;
+  color: var(--ink-45);
+  font-size: 13.5px;
+}
+.cm-key-item{ display: inline-flex; align-items: center; gap: 10px; }
+
+/* The grid scrolls sideways rather than shrinking its text. */
+.cm-scroll{
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  scrollbar-width: thin;
+}
+.cm-scroll:focus-visible{ outline: 2px solid var(--brand); outline-offset: 2px; }
+
+.cm-grid{
+  position: relative;
+  width: 100%;
+  min-width: 940px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.cm-grid thead th{
+  padding: 18px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: bottom;
+  font-weight: 600;
+}
+.cm-th-crit{ width: 30%; min-width: 260px; }
+.cm-th-crit .rg-mono{ color: var(--ink-45); }
+.cm-th{ width: 14%; }
+.cm-th-l{ display: block; font-size: 15.5px; letter-spacing: -0.01em; }
+.cm-th-s{
+  display: block;
+  margin-top: 5px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+
+/* The EvolveUs column is tinted down its whole height, so the eye can
+   hold its place across nine rows without a border every time. */
+.cm-th.is-own{ color: var(--brand); }
+.cm-th.is-own .cm-th-s{ color: var(--brand); opacity: 0.75; }
+.cm-th.is-own,
+.cm-cell.is-own{ background: var(--brand-wash); }
+
+.cm-grid tbody tr{ border-bottom: 1px solid var(--rule-soft); }
+.cm-grid tbody tr:last-child{ border-bottom: 0; }
+
+/* The row header stays a real table cell so the columns keep their
+   widths; the flex row lives one level in. */
+.cm-crit{
+  padding: 20px 22px 20px 16px;
+  font-weight: 400;
+  vertical-align: top;
+}
+.cm-crit-in{ display: flex; gap: 14px; }
+.cm-crit-n{
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--brand);
+  padding-top: 3px;
+}
+.cm-crit-h{
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.32;
+  letter-spacing: -0.012em;
+}
+.cm-crit-d{
+  display: block;
+  margin-top: 7px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-45);
+  max-width: 42ch;
+}
+
+.cm-cell{ position: relative; padding: 20px 16px; vertical-align: top; }
+.cm-cell-t{
+  display: block;
+  margin-top: 11px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-45);
+  max-width: 20ch;
+}
+.cm-cell.is-own .cm-cell-t{ color: var(--ink-70); }
+.cm-cell.is-none .cm-cell-t{ color: var(--ink-25); }
+
+.cm-note{
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 26px !important;
+  padding-top: 22px;
+  border-top: 1px solid var(--rule-soft);
+  max-width: 88ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-45);
+}
+.cm-note svg{ flex: none; margin-top: 2px; color: var(--brand); }
+
+/* ── §03 When not to buy this ──────────────────────────── */
+.cm-honest{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border-block: 1px solid var(--rule);
+}
+.cm-hon{ background: var(--paper); padding: clamp(26px, 2.6vw, 36px) clamp(22px, 2.2vw, 32px); }
+.cm-hon-ico{
+  display: grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--brand);
+  margin-bottom: 20px;
+}
+.cm-hon h3{ margin: 0 0 12px; }
+.cm-hon p{ font-size: 15px; line-height: 1.62; color: var(--ink-70); }
+
+/* ── §04 What it replaces ──────────────────────────────── */
+.cm-repl{ border-top: 1px solid var(--rule); }
+.cm-repl li{
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 8px;
+  padding: 19px 4px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.cm-repl-n{ font-family: var(--mono); font-size: 11.5px; color: var(--brand); }
+.cm-repl-t{
+  font-size: clamp(16px, 1.5vw, 19.5px);
+  font-weight: 500;
+  letter-spacing: -0.014em;
+}
+.cm-repl .cm-mark{ justify-self: end; }
+
+/* ── Narrow screens ────────────────────────────────────── */
+@media (max-width: 980px){
+  .cm-hero-grid{ grid-template-columns: minmax(0, 1fr); }
+  .cm-hero-note{ border-left: 0; border-top: 1px solid var(--rule); padding-left: 0; padding-top: 20px; }
+  .cm-alts{ grid-template-columns: minmax(0, 1fr); }
+  .cm-honest{ grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 620px){
+  .cm-repl li{ grid-template-columns: 40px minmax(0, 1fr) 20px; }
+}

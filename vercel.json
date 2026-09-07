@@ -35,6 +35,38 @@
     {
       "source": "/6",
       "destination": "/"
+    },
+    {
+      "source": "/compare",
+      "destination": "/"
+    },
+    {
+      "source": "/7",
+      "destination": "/"
+    },
+    {
+      "source": "/ppt",
+      "destination": "/"
+    },
+    {
+      "source": "/flyer",
+      "destination": "/"
+    },
+    {
+      "source": "/flyer/v1",
+      "destination": "/"
+    },
+    {
+      "source": "/flyer/v2",
+      "destination": "/"
+    },
+    {
+      "source": "/flyer/v3",
+      "destination": "/"
+    },
+    {
+      "source": "/flyer/v4",
+      "destination": "/"
     }
   ],
   "functions": {
