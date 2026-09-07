@@ -1,491 +1,402 @@
 import { Icon } from '../_shared/Icon';
-import { useScrollY, useReveal } from '../_shared/useParallax';
+import { useReveal } from '../_shared/useParallax';
+import { DesignSwitcher } from '../_shared/DesignSwitcher';
+import { ContactForm } from '../_shared/ContactForm';
+import {
+  BRAND,
+  NAV_LINKS,
+  HERO,
+  STATS,
+  PILLARS,
+  QUESTION_TYPES,
+  ROLES,
+  SECURITY_SIGNALS,
+  SECURITY_FEATURES,
+  AI_STEPS,
+  AI_MODELS,
+  AI_HIGHLIGHTS,
+  DEPLOY_MODES,
+  CONTENT_TOOLS,
+  CTA,
+  FOOTER,
+} from '../content';
 import './Design3.css';
 
-const FEATURES = [
-  { icon: 'code', title: 'Coding evaluation', desc: 'Real code execution against test cases. Sandboxed. Partial marks. Hidden cases.' },
-  { icon: 'shieldCheck', title: 'Live proctoring', desc: 'Tab, fullscreen, copy-paste, kiosk, IP — every violation logged in real time.' },
-  { icon: 'brain', title: 'AI grading', desc: 'Descriptive and fill-in-blank answers evaluated for synonyms and semantic match.' },
-  { icon: 'database', title: 'Question banks', desc: 'Reusable, topic-organised, taxonomy-tagged. Bulk upload via spreadsheet.' },
-  { icon: 'chart', title: 'Analytics', desc: 'Per-student, per-question, class-wide. Exportable for accreditation.' },
-  { icon: 'users', title: 'Role-based access', desc: 'Admin, Manager, Faculty, Student — each with their own dashboard.' },
-  { icon: 'building', title: 'Institution setup', desc: 'Departments, batches, semesters, courses, labs — managed centrally.' },
-  { icon: 'refresh', title: 'Auto-save & resume', desc: 'Continuous answer sync. Network drops never lose progress.' },
-  { icon: 'pin', title: 'Lab restriction', desc: 'IP/subnet enforcement keeps high-stakes exams campus-only.' },
-];
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 
-const QTYPES = [
-  { i: 'check', n: 'Single MCQ' },
-  { i: 'check', n: 'Multiple MCQ' },
-  { i: 'check', n: 'True / False' },
-  { i: 'edit', n: 'Descriptive' },
-  { i: 'edit', n: 'Fill-in-blank' },
-  { i: 'layers', n: 'Match-the-following' },
-  { i: 'upload', n: 'File upload' },
-  { i: 'code', n: 'Coding' },
-];
-
-const LANGS = ['Python', 'Java', 'C++', 'JavaScript', 'C', 'Octave', 'Scala'];
-
-const VIOLATIONS = [
-  'Tab switching', 'Fullscreen exit', 'Copy / paste / cut', 'Right-click',
-  'DevTools shortcuts', 'Print / save', 'Screenshot attempts', 'Window focus loss',
-  'Suspicious resize', 'Kiosk validation', 'IP / subnet check', 'Restricted shortcuts',
-];
-
-function Reveal({ children, className = '', delay = 0 }) {
+function Reveal({ children, className = '', as: As = 'div', delay = 0 }) {
   const [ref, visible] = useReveal();
   return (
-    <div
+    <As
       ref={ref}
-      className={`d3-reveal ${visible ? 'is-visible' : ''} ${className}`}
+      className={`p3-reveal ${visible ? 'is-visible' : ''} ${className}`}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
+    </As>
+  );
+}
+
+function ChapterMark({ numeral, kicker }) {
+  return (
+    <div className="p3-chapter-mark">
+      <span className="p3-chapter-numeral">{numeral}</span>
+      <span className="p3-chapter-rule" />
+      <span className="p3-chapter-kicker">{kicker}</span>
     </div>
   );
 }
 
-function HeroVisual() {
-  const y = useScrollY();
+function Figure({ src, alt, caption, className = '' }) {
   return (
-    <div className="d3-hero-visual">
-      <div
-        className="d3-hv-card d3-hv-card-main"
-        style={{ transform: `translateY(${y * -0.06}px)` }}
-      >
-        <div className="d3-hv-bar">
-          <div className="d3-hv-dots"><span /><span /><span /></div>
-          <span className="d3-hv-url">evolveus.in / faculty</span>
-        </div>
-        <img src="/staffDashboard.png" alt="Faculty dashboard" className="d3-hv-img" />
+    <figure className={`p3-figure ${className}`}>
+      <div className="p3-figure-frame">
+        <img src={src} alt={alt} loading="lazy" />
       </div>
-
-      <div
-        className="d3-hv-card d3-hv-card-float"
-        style={{ transform: `translateY(${y * -0.14}px)` }}
-      >
-        <div className="d3-hv-float-head">
-          <div className="d3-hv-float-icon"><Icon name="code" size={16} /></div>
-          <div>
-            <div className="d3-hv-float-title">Coding · Python</div>
-            <div className="d3-hv-float-sub">CS301 · Binary Tree</div>
-          </div>
-          <div className="d3-hv-float-score">8.0<span>/10</span></div>
-        </div>
-        <div className="d3-hv-tcs">
-          {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className={`d3-hv-tc ${i === 4 ? 'fail' : 'pass'}`}>
-              <Icon name={i === 4 ? 'alert' : 'check'} size={12} />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div
-        className="d3-hv-card d3-hv-card-stats"
-        style={{ transform: `translateY(${y * -0.1}px)` }}
-      >
-        <div className="d3-hv-stat-icon"><Icon name="shieldCheck" size={18} /></div>
-        <div>
-          <div className="d3-hv-stat-n">100%</div>
-          <div className="d3-hv-stat-l">violations logged</div>
-        </div>
-      </div>
-    </div>
+      <figcaption>{caption}</figcaption>
+    </figure>
   );
 }
 
-export default function Design3({ onBrochure }) {
-  const y = useScrollY();
-
+function BrandMark({ size = 28 }) {
   return (
-    <div className="d3">
-      <div className="d3-bg-shape d3-bg-shape-1" style={{ transform: `translateY(${y * 0.08}px)` }} />
-      <div className="d3-bg-shape d3-bg-shape-2" style={{ transform: `translateY(${y * -0.05}px)` }} />
+    <svg width={size} height={size} viewBox="0 0 28 28" aria-hidden="true">
+      <circle cx="14" cy="14" r="12.5" fill="none" stroke="#7a1f2b" strokeWidth="1.3" />
+      <circle cx="14" cy="14" r="9" fill="none" stroke="#7a1f2b" strokeWidth="0.6" />
+      <text x="14" y="18.5" textAnchor="middle" fontFamily="'Playfair Display', serif" fontSize="13" fill="#1a1a1a">E</text>
+    </svg>
+  );
+}
+
+export default function Design3({ active, onNavigate }) {
+  return (
+    <div className="p3">
+      <DesignSwitcher active={active} onNavigate={onNavigate} />
 
       {/* NAV */}
-      <nav className="d3-nav">
-        <div className="d3-nav-inner">
-          <div className="d3-logo">
-            <span className="d3-logo-mark">
-              <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-                <circle cx="16" cy="16" r="13" fill="none" stroke="#0d3b4a" strokeWidth="2" />
-                <path d="M10 16 L14 20 L22 12" stroke="#e07856" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <span className="d3-logo-name">Evolveus</span>
+      <nav className="p3-nav">
+        <div className="p3-nav-inner">
+          <a href="#top" className="p3-brand">
+            <BrandMark />
+            <span className="p3-brand-name">{BRAND.name}</span>
+          </a>
+          <div className="p3-nav-links">
+            {NAV_LINKS.map((l) => (
+              <a key={l.href} href={l.href}>{l.label}</a>
+            ))}
           </div>
-          <div className="d3-nav-links">
-            <a href="#d3-features">Platform</a>
-            <a href="#d3-coding">Coding</a>
-            <a href="#d3-security">Security</a>
-            <a href="#d3-analytics">Analytics</a>
-          </div>
-          <div className="d3-nav-right">
-            <button className="d3-nav-ghost" onClick={onBrochure}>Brochure</button>
-            <button className="d3-nav-cta">
-              Book a demo <Icon name="arrowRight" size={14} />
-            </button>
-          </div>
+          <a href="#contact" className="p3-nav-cta">{HERO.primaryCta}</a>
         </div>
       </nav>
 
       {/* HERO */}
-      <section className="d3-hero">
-        <div className="d3-hero-inner">
-          <div className="d3-hero-text">
-            <div className="d3-eyebrow">
-              <span className="d3-eyebrow-dot" />
-              Trusted by higher education institutions
-            </div>
-            <h1 className="d3-h1">
-              Examinations,<br />
-              <em>reimagined</em> for the<br />
-              digital classroom.
-            </h1>
-            <p className="d3-lede">
-              Evolveus is a complete digital assessment platform — coding evaluation,
-              proctoring, AI-assisted grading, and analytics — built for daily use by
-              faculty, semester managers, and administrators.
-            </p>
-            <div className="d3-hero-actions">
-              <button className="d3-cta-primary">
-                Book a demo <Icon name="arrowRight" size={15} />
-              </button>
-              <button className="d3-cta-text" onClick={onBrochure}>
-                <Icon name="bookOpen" size={16} /> Read the brochure
-              </button>
+      <header className="p3-hero" id="top">
+        <div className="p3-hero-inner">
+          <div className="p3-hero-text">
+            <p className="p3-eyebrow">{HERO.eyebrow}</p>
+            <h1 className="p3-h1">{HERO.headline}</h1>
+            <p className="p3-lede">{HERO.sub}</p>
+            <div className="p3-hero-actions">
+              <a href="#contact" className="p3-btn-primary">{HERO.primaryCta}</a>
+              <a href="#platform" className="p3-btn-secondary">
+                {HERO.secondaryCta}
+                <Icon name="arrowRight" size={14} />
+              </a>
             </div>
           </div>
-          <HeroVisual />
+
+          <div className="p3-hero-figures">
+            <Figure
+              src="/quiz.png"
+              alt="Examination interface"
+              caption="Fig. 1. Examination interface."
+              className="p3-figure-main"
+            />
+            <Figure
+              src="/quizView.png"
+              alt="Question navigation panel"
+              caption="Fig. 2. Question navigation panel."
+              className="p3-figure-inset"
+            />
+          </div>
         </div>
 
-        {/* trust strip */}
-        <div className="d3-hero-strip">
-          <div className="d3-hero-strip-inner">
-            <div className="d3-strip-label">Battle-tested at scale</div>
-            {[
-              { n: '2,000+', l: 'Quizzes conducted' },
-              { n: '200,000+', l: 'Responses scored' },
-              { n: '8', l: 'Question types' },
-              { n: '7', l: 'Languages supported' },
-              { n: '100%', l: 'Auto-graded coverage' },
-            ].map(s => (
-              <div key={s.l} className="d3-strip-stat">
-                <div className="d3-strip-n">{s.n}</div>
-                <div className="d3-strip-l">{s.l}</div>
+        <div className="p3-stats">
+          <div className="p3-stats-inner">
+            {STATS.map((s) => (
+              <div key={s.l} className="p3-stat">
+                <div className="p3-stat-n">{s.n}</div>
+                <div className="p3-stat-l">{s.l}</div>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* FEATURES GRID */}
-      <section className="d3-features" id="d3-features">
-        <div className="d3-section-inner">
-          <Reveal>
-            <div className="d3-section-head">
-              <p className="d3-eyebrow d3-eyebrow-coral"><span className="d3-eyebrow-dot" /> The Platform</p>
-              <h2 className="d3-h2">A single system for the<br />entire assessment lifecycle.</h2>
-            </div>
-          </Reveal>
-          <div className="d3-feat-grid">
-            {FEATURES.map((f, i) => (
-              <Reveal key={f.title} delay={i * 50}>
-                <article className="d3-feat-card">
-                  <div className="d3-feat-icon">
-                    <Icon name={f.icon} size={22} strokeWidth={1.6} />
-                  </div>
-                  <h3 className="d3-feat-title">{f.title}</h3>
-                  <p className="d3-feat-desc">{f.desc}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CODING SPOTLIGHT */}
-      <section className="d3-coding" id="d3-coding">
-        <div className="d3-section-inner">
-          <div className="d3-coding-grid">
-            <div>
-              <Reveal>
-                <p className="d3-eyebrow d3-eyebrow-coral"><span className="d3-eyebrow-dot" /> Coding Assessment</p>
-                <h2 className="d3-h2">
-                  Code submitted.<br />
-                  <em>Marks awarded</em> — instantly.
-                </h2>
-                <p className="d3-section-sub">
-                  Faculty define visible and hidden test cases. Evolveus runs each
-                  submission in a sandboxed container, verifies output, and awards
-                  partial marks based on cases passed.
-                </p>
-              </Reveal>
-              <Reveal delay={100}>
-                <div className="d3-coding-points">
-                  {[
-                    { i: 'cpu', t: 'Sandboxed execution', d: 'Isolated containers with time and memory limits' },
-                    { i: 'eye', t: 'Hidden test cases', d: 'Catch edge conditions and hardcoded answers' },
-                    { i: 'gauge', t: 'Partial marking', d: 'Proportional scoring — pass 4/5 → get 80%' },
-                    { i: 'fileText', t: 'Driver & boilerplate code', d: 'Pre-fill function signatures and reference solutions' },
-                  ].map(p => (
-                    <div key={p.t} className="d3-coding-point">
-                      <span className="d3-cp-icon"><Icon name={p.i} size={16} /></span>
-                      <div>
-                        <div className="d3-cp-t">{p.t}</div>
-                        <div className="d3-cp-d">{p.d}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="d3-langs">
-                  <span className="d3-langs-label">Supported languages</span>
-                  <div className="d3-langs-list">
-                    {LANGS.map(l => <span key={l} className="d3-lang-chip">{l}</span>)}
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-            <Reveal delay={150}>
-              <div className="d3-result-card">
-                <div className="d3-rc-head">
-                  <div>
-                    <div className="d3-rc-tag">SUBMISSION RESULT</div>
-                    <div className="d3-rc-title">Binary Search Tree Validation</div>
-                  </div>
-                  <div className="d3-rc-lang"><Icon name="code" size={13} /> Python 3.11</div>
-                </div>
-                <div className="d3-rc-tests">
-                  {[
-                    { id: 'TC-01', s: 'pass', ms: '12ms', p: '2/2' },
-                    { id: 'TC-02', s: 'pass', ms: '8ms', p: '2/2' },
-                    { id: 'TC-03', s: 'pass', ms: '15ms', p: '2/2' },
-                    { id: 'TC-04', s: 'fail', ms: '9ms', p: '0/2', m: 'expected [1,2,3], got [1,3,2]' },
-                    { id: 'TC-05', s: 'pass', ms: '11ms', p: '2/2' },
-                  ].map(t => (
-                    <div key={t.id} className={`d3-rc-tc d3-rc-${t.s}`}>
-                      <div className="d3-rc-tc-row">
-                        <span className="d3-rc-tc-icon">
-                          <Icon name={t.s === 'pass' ? 'check' : 'alert'} size={13} />
-                        </span>
-                        <span className="d3-rc-tc-id">{t.id}</span>
-                        <span className="d3-rc-tc-ms">{t.ms}</span>
-                        <span className="d3-rc-tc-pts">{t.p}</span>
-                      </div>
-                      {t.m && <div className="d3-rc-tc-msg">{t.m}</div>}
-                    </div>
-                  ))}
-                </div>
-                <div className="d3-rc-foot">
-                  <div>
-                    <div className="d3-rc-foot-label">Final score</div>
-                    <div className="d3-rc-foot-bar">
-                      <div className="d3-rc-foot-fill" style={{ width: '80%' }} />
-                    </div>
-                  </div>
-                  <div className="d3-rc-foot-score">8.0<span>/10</span></div>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* QUESTION TYPES + SECURITY (split) */}
-      <section className="d3-split">
-        <div className="d3-section-inner">
-          <div className="d3-split-grid">
+      <main>
+        {/* I. PLATFORM */}
+        <section className="p3-section" id="platform">
+          <div className="p3-section-inner">
             <Reveal>
-              <div className="d3-split-card d3-split-types">
-                <p className="d3-eyebrow d3-eyebrow-coral"><span className="d3-eyebrow-dot" /> Question Formats</p>
-                <h3 className="d3-h3">Eight types. Mix in any exam.</h3>
-                <div className="d3-types-list">
-                  {QTYPES.map((q, i) => (
-                    <div key={q.n} className="d3-type-row">
-                      <span className="d3-type-n">{String(i + 1).padStart(2, '0')}</span>
-                      <span className="d3-type-icon"><Icon name={q.i} size={14} /></span>
-                      <span className="d3-type-name">{q.n}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <ChapterMark numeral={ROMAN[0]} kicker="The platform" />
+              <h2 className="p3-h2">Six pillars of the assessment lifecycle.</h2>
             </Reveal>
-            <Reveal delay={120}>
-              <div className="d3-split-card d3-split-sec" id="d3-security">
-                <p className="d3-eyebrow d3-eyebrow-coral"><span className="d3-eyebrow-dot" /> Proctoring</p>
-                <h3 className="d3-h3">Twelve violation signals.</h3>
-                <p className="d3-split-sub">
-                  Detected, timestamped, and surfaced in audit reports. Subnet-locked
-                  exams enforce campus-only access.
-                </p>
-                <div className="d3-viol-grid">
-                  {VIOLATIONS.map(v => (
-                    <div key={v} className="d3-viol-tag">
-                      <Icon name="check" size={11} className="d3-viol-tag-icon" />
-                      {v}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
 
-      {/* ANALYTICS / DASHBOARDS */}
-      <section className="d3-analytics" id="d3-analytics">
-        <div className="d3-section-inner">
-          <Reveal>
-            <div className="d3-section-head">
-              <p className="d3-eyebrow d3-eyebrow-coral"><span className="d3-eyebrow-dot" /> Dashboards</p>
-              <h2 className="d3-h2">A view for every role.</h2>
-              <p className="d3-section-sub">
-                Administrators see institution-wide health. Faculty see their courses
-                and quizzes. Students see only what's relevant. Every role gets the
-                tools they need — nothing more.
-              </p>
+            <div className="p3-pillars">
+              {PILLARS.map((p, i) => (
+                <Reveal key={p.n} delay={i * 40} as="article" className="p3-pillar">
+                  <div className="p3-pillar-head">
+                    <span className="p3-pillar-num">No. {p.n}</span>
+                    <span className="p3-pillar-icon"><Icon name={p.icon} size={20} strokeWidth={1.5} /></span>
+                  </div>
+                  <h3 className="p3-pillar-title">{p.title}</h3>
+                  <p className="p3-pillar-body">{p.body}</p>
+                  <ul className="p3-pillar-bullets">
+                    {p.bullets.map((b) => (
+                      <li key={b}>{b}</li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
             </div>
-          </Reveal>
-          <div className="d3-roles-grid">
-            {[
-              {
-                role: 'Administrator',
-                icon: 'building',
-                src: '/staffDashboard.png',
-                items: [
-                  'Total users · active users',
-                  'Department, batch, semester health',
-                  'Course summary',
-                  'Audit logs and platform metrics',
-                ],
-              },
-              {
-                role: 'Faculty',
-                icon: 'edit',
-                src: '/bankQuestions.png',
-                items: [
-                  'Active, upcoming, completed quizzes',
-                  'Question bank coverage',
-                  'Student reach across courses',
-                  'Quick navigation to creation tools',
-                ],
-              },
-              {
-                role: 'Student',
-                icon: 'graduation',
-                src: '/studentDashboard.png',
-                items: [
-                  'Live and upcoming quiz cards',
-                  'Completed and missed tracking',
-                  'Active courses',
-                  'Distraction-free exam interface',
-                ],
-              },
-            ].map((r, i) => (
-              <Reveal key={r.role} delay={i * 100}>
-                <article className="d3-role-card">
-                  <div className="d3-role-img">
-                    <img src={r.src} alt={`${r.role} dashboard`} />
-                  </div>
-                  <div className="d3-role-body">
-                    <div className="d3-role-head">
-                      <span className="d3-role-icon"><Icon name={r.icon} size={16} /></span>
-                      <span className="d3-role-name">{r.role}</span>
-                    </div>
-                    <ul className="d3-role-list">
-                      {r.items.map(it => (
-                        <li key={it}>
-                          <Icon name="check" size={12} className="d3-role-check" />
-                          {it}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* CONTENT TOOLS */}
-      <section className="d3-content">
-        <div className="d3-section-inner">
-          <div className="d3-content-grid">
-            <Reveal>
-              <p className="d3-eyebrow d3-eyebrow-coral"><span className="d3-eyebrow-dot" /> Content & Quality</p>
-              <h2 className="d3-h2">Built for academic depth.</h2>
-              <p className="d3-section-sub">
-                Rich content tools, taxonomy mapping, and bulk workflows reduce
-                faculty effort while improving consistency across assessments.
-              </p>
-            </Reveal>
-            <div className="d3-content-bullets">
-              {[
-                { i: 'edit', t: 'Rich-text editor', d: 'Bold, italic, lists, code blocks, quotes, horizontal rules' },
-                { i: 'bookOpen', t: 'LaTeX support', d: 'Render mathematical and scientific notation in questions' },
-                { i: 'upload', t: 'Image & file upload', d: 'Embed media; accept file submissions where permitted' },
-                { i: 'tag', t: "Bloom's taxonomy", d: 'Tag every question — Remember through Create' },
-                { i: 'flag', t: 'Course outcome mapping', d: 'CO1–CO8 alignment for accreditation reporting' },
-                { i: 'database', t: 'Bulk MCQ upload', d: 'Spreadsheet-based creation with row-level validation' },
-                { i: 'share', t: 'Bank sharing', d: 'Share question banks across faculty with controlled access' },
-                { i: 'filter', t: 'Topic organization', d: 'Group questions by topic for filtered selection' },
-              ].map((c, i) => (
-                <Reveal key={c.t} delay={i * 50}>
-                  <div className="d3-content-bullet">
-                    <span className="d3-cb-icon"><Icon name={c.i} size={16} /></span>
+            <Reveal className="p3-tools" delay={80}>
+              <h3 className="p3-tools-title">Question content tools</h3>
+              <div className="p3-tools-row">
+                {CONTENT_TOOLS.map((t) => (
+                  <div key={t.title} className="p3-tool">
+                    <span className="p3-tool-icon"><Icon name={t.icon} size={17} strokeWidth={1.5} /></span>
                     <div>
-                      <div className="d3-cb-t">{c.t}</div>
-                      <div className="d3-cb-d">{c.d}</div>
+                      <div className="p3-tool-title">{t.title}</div>
+                      <div className="p3-tool-desc">{t.desc}</div>
                     </div>
                   </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* II. QUESTION TYPES */}
+        <section className="p3-section p3-section-alt" id="question-types">
+          <div className="p3-section-inner">
+            <Reveal>
+              <ChapterMark numeral={ROMAN[1]} kicker="Question types" />
+              <h2 className="p3-h2">Eight formats, one grading pipeline.</h2>
+            </Reveal>
+
+            <Reveal delay={60}>
+              <div className="p3-qtable">
+                <div className="p3-qtable-head">
+                  <span>No.</span>
+                  <span>Type</span>
+                  <span>Description</span>
+                  <span>Grading</span>
+                </div>
+                {QUESTION_TYPES.map((q) => (
+                  <div key={q.num} className="p3-qrow">
+                    <span className="p3-qrow-num">{q.num}</span>
+                    <span className="p3-qrow-label">
+                      <Icon name={q.icon} size={16} strokeWidth={1.5} />
+                      {q.label}
+                    </span>
+                    <span className="p3-qrow-desc">{q.desc}</span>
+                    <span className="p3-qrow-grading">{q.grading}</span>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* III. ROLES */}
+        <section className="p3-section" id="roles">
+          <div className="p3-section-inner">
+            <Reveal>
+              <ChapterMark numeral={ROMAN[2]} kicker="Roles" />
+              <h2 className="p3-h2">A dedicated view for every seat at the institution.</h2>
+            </Reveal>
+
+            <div className="p3-roles">
+              {ROLES.map((r, i) => (
+                <Reveal key={r.id} delay={i * 60} as="article" className="p3-role">
+                  <Figure
+                    src={r.src}
+                    alt={`${r.label} dashboard`}
+                    caption={`Fig. ${3 + i}. ${r.label} dashboard.`}
+                    className="p3-role-figure"
+                  />
+                  <div className="p3-role-head">
+                    <span className="p3-role-icon"><Icon name={r.icon} size={18} strokeWidth={1.5} /></span>
+                    <h3 className="p3-role-title">{r.label}</h3>
+                  </div>
+                  <p className="p3-role-summary">{r.summary}</p>
+                  <ul className="p3-role-list">
+                    {r.features.map((f) => (
+                      <li key={f}>{f}</li>
+                    ))}
+                  </ul>
                 </Reveal>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA */}
-      <section className="d3-cta">
-        <div className="d3-cta-card">
-          <Reveal>
-            <p className="d3-eyebrow d3-eyebrow-coral"><span className="d3-eyebrow-dot" /> Get started</p>
-            <h2 className="d3-cta-h">
-              Schedule a demo for<br />
-              <em>your institution.</em>
-            </h2>
-            <p className="d3-cta-sub">
-              Our team will walk through coding evaluation, proctoring, analytics,
-              and deployment options. Free, no commitment.
-            </p>
-            <div className="d3-cta-btns">
-              <button className="d3-cta-primary d3-cta-lg">
-                Book a demo <Icon name="arrowRight" size={15} />
-              </button>
-              <button className="d3-cta-text" onClick={onBrochure}>
-                <Icon name="download" size={15} /> Download brochure
-              </button>
+        {/* IV. SECURITY */}
+        <section className="p3-section p3-section-alt" id="security">
+          <div className="p3-section-inner">
+            <Reveal>
+              <ChapterMark numeral={ROMAN[3]} kicker="Security" />
+              <h2 className="p3-h2">Examination integrity, enforced and logged.</h2>
+            </Reveal>
+
+            <div className="p3-security-grid">
+              <Reveal delay={40} className="p3-security-features">
+                {SECURITY_FEATURES.map((f) => (
+                  <div key={f.title} className="p3-sec-feature">
+                    <span className="p3-sec-icon"><Icon name={f.icon} size={19} strokeWidth={1.5} /></span>
+                    <div>
+                      <div className="p3-sec-title">{f.title}</div>
+                      <div className="p3-sec-desc">{f.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </Reveal>
+
+              <Reveal delay={100} className="p3-signals">
+                <h3 className="p3-signals-title">Violation signals monitored</h3>
+                <ul className="p3-signals-list">
+                  {SECURITY_SIGNALS.map((s) => (
+                    <li key={s}>{s}</li>
+                  ))}
+                </ul>
+              </Reveal>
             </div>
-          </Reveal>
-        </div>
-      </section>
+          </div>
+        </section>
+
+        {/* V. AI EVALUATION */}
+        <section className="p3-section" id="ai-evaluation">
+          <div className="p3-section-inner">
+            <Reveal>
+              <ChapterMark numeral={ROMAN[4]} kicker="AI evaluation" />
+              <h2 className="p3-h2">Descriptive answers, evaluated against a faculty rubric.</h2>
+            </Reveal>
+
+            <div className="p3-ai-steps">
+              {AI_STEPS.map((s, i) => (
+                <Reveal key={s.num} delay={i * 50} as="div" className="p3-ai-step">
+                  <div className="p3-ai-step-num">{s.num}</div>
+                  <div className="p3-ai-step-rule" />
+                  <div className="p3-ai-step-body">
+                    <span className="p3-ai-step-icon"><Icon name={s.icon} size={17} strokeWidth={1.5} /></span>
+                    <h3 className="p3-ai-step-title">{s.title}</h3>
+                    <p className="p3-ai-step-desc">{s.desc}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+
+            <div className="p3-ai-lower">
+              <Reveal delay={60} className="p3-ai-models">
+                <h3 className="p3-ai-sub-title">Supported model providers</h3>
+                <ul className="p3-models-list">
+                  {AI_MODELS.map((m) => (
+                    <li key={m.name}>
+                      <span className="p3-model-name">{m.name}</span>
+                      <span className="p3-model-sub">{m.sub}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+
+              <Reveal delay={100} className="p3-ai-highlights">
+                <h3 className="p3-ai-sub-title">Notes</h3>
+                <div className="p3-highlights-list">
+                  {AI_HIGHLIGHTS.map((h) => (
+                    <div key={h.title} className="p3-highlight">
+                      <span className="p3-highlight-icon"><Icon name={h.icon} size={16} strokeWidth={1.5} /></span>
+                      <div>
+                        <div className="p3-highlight-title">{h.title}</div>
+                        <div className="p3-highlight-desc">{h.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        {/* VI. DEPLOYMENT */}
+        <section className="p3-section p3-section-alt" id="deployment">
+          <div className="p3-section-inner">
+            <Reveal>
+              <ChapterMark numeral={ROMAN[5]} kicker="Deployment" />
+              <h2 className="p3-h2">Two ways to run the platform.</h2>
+            </Reveal>
+
+            <div className="p3-deploy-grid">
+              {DEPLOY_MODES.map((d, i) => (
+                <Reveal key={d.id} delay={i * 60} as="article" className="p3-deploy-card">
+                  <div className="p3-deploy-head">
+                    <span className="p3-deploy-icon"><Icon name={d.icon} size={19} strokeWidth={1.5} /></span>
+                    <h3 className="p3-deploy-title">{d.label}</h3>
+                  </div>
+                  <p className="p3-deploy-tagline">{d.tagline}</p>
+                  <p className="p3-deploy-sub">{d.sub}</p>
+                  <ul className="p3-deploy-list">
+                    {d.features.map((f) => (
+                      <li key={f}>{f}</li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* VII. CONTACT */}
+        <section className="p3-section p3-contact" id="contact">
+          <div className="p3-contact-inner">
+            <Reveal>
+              <ChapterMark numeral={ROMAN[6]} kicker={CTA.eyebrow} />
+              <h2 className="p3-h2">{CTA.headline}</h2>
+              <p className="p3-lede p3-contact-sub">{CTA.sub}</p>
+            </Reveal>
+            <Reveal delay={60} className="p3-contact-form-wrap">
+              <ContactForm />
+            </Reveal>
+          </div>
+        </section>
+      </main>
 
       {/* FOOTER */}
-      <footer className="d3-footer">
-        <div className="d3-footer-inner">
-          <div className="d3-logo">
-            <span className="d3-logo-mark">
-              <svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true">
-                <circle cx="16" cy="16" r="13" fill="none" stroke="#0d3b4a" strokeWidth="2" />
-                <path d="M10 16 L14 20 L22 12" stroke="#e07856" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <span className="d3-logo-name">Evolveus</span>
+      <footer className="p3-footer">
+        <div className="p3-footer-inner">
+          <div className="p3-footer-brand">
+            <div className="p3-brand">
+              <BrandMark size={24} />
+              <span className="p3-brand-name">{BRAND.name}</span>
+            </div>
+            <p className="p3-footer-tagline">{FOOTER.tagline}</p>
           </div>
-          <p className="d3-footer-copy">© 2026 Evolveus · Digital assessment for higher education</p>
+          <div className="p3-footer-columns">
+            {FOOTER.columns.map((col) => (
+              <div key={col.title} className="p3-footer-col">
+                <h4>{col.title}</h4>
+                <ul>
+                  {col.links.map((l) => (
+                    <li key={l.label}><a href={l.href}>{l.label}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="p3-footer-bottom">
+          <span>© 2026 {BRAND.name}</span>
+          <span>{BRAND.domain}</span>
         </div>
       </footer>
     </div>

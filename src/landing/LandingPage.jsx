@@ -1,5 +1,8 @@
-import Design5Hybrid from './designs/Design5Hybrid';
+import Register from './brand/Register';
 
-export default function LandingPage({ onBrochure, onThemes }) {
-  return <Design5Hybrid onBrochure={onBrochure} onThemes={onThemes} />;
+// The "/" experience — the EvolveUs brand page ("Register").
+// The earlier exploratory variants stay reachable at /1 through /7,
+// but they are no longer the front door.
+export default function LandingPage() {
+  return <Register />;
 }

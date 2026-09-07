@@ -9,11 +9,31 @@
       "destination": "/"
     },
     {
-      "source": "/themes",
+      "source": "/presentation",
       "destination": "/"
     },
     {
-      "source": "/presentation",
+      "source": "/1",
+      "destination": "/"
+    },
+    {
+      "source": "/2",
+      "destination": "/"
+    },
+    {
+      "source": "/3",
+      "destination": "/"
+    },
+    {
+      "source": "/4",
+      "destination": "/"
+    },
+    {
+      "source": "/5",
+      "destination": "/"
+    },
+    {
+      "source": "/6",
       "destination": "/"
     }
   ],

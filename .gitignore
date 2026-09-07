@@ -29,3 +29,7 @@ dist-ssr
 
 .history/*
 .claude/launch.json
+# agent skill plugins (local only)
+.agents/
+.claude/skills/
+skills-lock.json
