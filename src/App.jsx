@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./index.css";
 import "./styles/shared.css";
 
@@ -67,6 +67,15 @@ export default function App() {
       "flyer-v4": "/flyer/v4",
     };
     window.history.replaceState({}, "", paths[view] ?? "/");
+  }, [view]);
+
+  // index.css styles <body> as the brochure's centred, padded, gapped column.
+  // The landing views render full-bleed, so they mark the body explicitly
+  // rather than leaving the reset to a :has() selector.
+  useLayoutEffect(() => {
+    const fullBleed = view === "landing" || view === "compare" || view.startsWith("design-");
+    document.body.classList.toggle("is-landing", fullBleed);
+    return () => document.body.classList.remove("is-landing");
   }, [view]);
 
   const exportPDF = async () => {

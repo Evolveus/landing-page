@@ -1,4 +1,9 @@
-/* Reset body when landing is mounted — full-width designs */
+/* Reset body when landing is mounted — full-width designs.
+   `body.is-landing` is set from App.jsx and is what actually does the work;
+   the :has() selector is kept only as a no-JS fallback. Relying on :has()
+   alone left the landing sitting inside index.css's centred, 2rem-padded,
+   2rem-gapped brochure column wherever the selector was not honoured. */
+body.is-landing,
 body:has(.landing-shell) {
   padding: 0 !important;
   margin: 0;
@@ -10,6 +15,7 @@ body:has(.landing-shell) {
   overflow-x: hidden;
 }
 
+body.is-landing > #root,
 #root:has(.landing-shell) { width: 100%; }
 
 .landing-shell {

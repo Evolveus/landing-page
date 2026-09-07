@@ -13,6 +13,7 @@
 
 /* Body reset — the landing renders full-bleed, but index.css
    centres a padded column for the A4 brochure view. */
+body.is-landing,
 body:has(.rg){
   padding: 0 !important;
   margin: 0;
@@ -23,6 +24,7 @@ body:has(.rg){
   width: 100%;
   overflow-x: hidden;
 }
+body.is-landing > #root,
 #root:has(.rg){ width: 100%; }
 
 .rg{
