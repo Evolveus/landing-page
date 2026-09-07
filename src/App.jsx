@@ -12,6 +12,7 @@ import StudentPage from "./components/pages/StudentPage";
 import RolesPage from "./components/pages/RolesPage";
 import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
+import Compare from "./landing/brand/Compare";
 import Design1 from "./landing/designs/Design1";
 import Design2 from "./landing/designs/Design2";
 import Design3 from "./landing/designs/Design3";
@@ -32,6 +33,7 @@ export default function App() {
   const [view, setView] = useState(() => {
     const path = window.location.pathname;
     if (path === "/brochure") return "brochure";
+    if (path === "/compare") return "compare";
     if (path === "/1") return "design-1";
     if (path === "/2") return "design-2";
     if (path === "/3") return "design-3";
@@ -51,6 +53,7 @@ export default function App() {
   useEffect(() => {
     const paths = {
       brochure: "/brochure",
+      compare: "/compare",
       "design-1": "/1",
       "design-2": "/2",
       "design-3": "/3",
@@ -141,6 +144,14 @@ export default function App() {
 
   if (view === "flyer-v4") {
     return <FlyerV4 onHome={() => setView("landing")} />;
+  }
+
+  if (view === "compare") {
+    return (
+      <div className="landing-shell">
+        <Compare />
+      </div>
+    );
   }
 
   if (view === "landing") {
