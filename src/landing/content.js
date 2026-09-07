@@ -437,19 +437,19 @@ export const VALUE = [
     n: '02',
     icon: 'brain',
     title: 'Written answers graded in minutes',
-    body: 'Descriptive answers are read against the rubric your faculty wrote and returned with a mark and a reason. Faculty approve everything before students see it.',
+    body: 'EvolveUs reads descriptive answers against the rubric your faculty wrote, then returns a mark and the reason for it. Faculty approve everything before students see it.',
   },
   {
     n: '03',
     icon: 'code',
     title: 'Coding exams that mark themselves',
-    body: 'Students write and run code in the browser. Their programs are tested automatically and marked on the spot, so a lab exam needs no manual correction.',
+    body: 'Students write and run code in the browser. EvolveUs tests each program and marks it on the spot, so nobody has to correct a lab exam by hand.',
   },
   {
     n: '04',
     icon: 'chart',
     title: 'A report on every student and class',
-    body: 'See which topics a class has mastered, which student is falling behind, and how a course performs against its outcomes, ready for accreditation.',
+    body: 'See which topics a class has mastered, which student is falling behind, and how a course performs against its outcomes. The same figures go straight into your accreditation files.',
   },
   {
     n: '05',
@@ -461,7 +461,7 @@ export const VALUE = [
     n: '06',
     icon: 'clock',
     title: 'Frees your faculty for teaching',
-    body: 'Papers are reused from question banks, correction is largely automatic, and results publish in a click, returning weeks of correction time each semester.',
+    body: 'Faculty reuse papers from their question banks, most of the correction happens without them, and results publish in a click. A department gets back weeks of correction time every semester.',
   },
 ];
 
@@ -492,7 +492,7 @@ export const WATCHED = [
   'Switching to another tab',
   'Moving away from the exam window',
   'Leaving full-screen mode',
-  'Resizing the window suspiciously',
+  'Resizing the exam window',
   'Copy, paste, and cut attempts',
   'Right-click and context menus',
   'Developer tool shortcuts',
@@ -507,7 +507,7 @@ export const EVALUATION = [
     icon: 'edit',
     label: 'Descriptive answers',
     title: 'Long answers, corrected overnight',
-    body: 'Faculty set a model answer and the points that earn marks. Every script is then read against that same standard and returned with a mark and a short reason, so a paper that once took a week comes back the next morning.',
+    body: 'Faculty set a model answer and the points that earn marks. EvolveUs then judges every script against that same standard and returns a mark with a short reason for it, so a paper that once took a week is ready the next morning.',
     points: [
       'Marked against the rubric your own faculty wrote',
       'Every script judged to the same standard, first to last',
@@ -520,7 +520,7 @@ export const EVALUATION = [
     icon: 'code',
     label: 'Coding answers',
     title: 'Lab exams that need no correction',
-    body: 'Students write and run their program in the browser. It is tested automatically against the cases faculty prepared, with marks for how much of it works, and checked to be sure the problem was genuinely solved rather than worked around.',
+    body: 'Students write and run their program in the browser. EvolveUs runs it against the test cases faculty prepared and gives marks for how much of it works, then checks that the student actually solved the problem instead of working around it.',
     points: [
       'Seven programming languages, chosen per question',
       'Part marks for a partly working program',
@@ -543,8 +543,8 @@ export const AI_ASSURANCE = [
   },
   {
     icon: 'clock',
-    title: 'Results in days, not weeks',
-    desc: 'Correction stops being the reason results are delayed at the end of a semester.',
+    title: 'Results back within days',
+    desc: 'Correction is no longer the thing holding up results at the end of a semester.',
   },
 ];
 
@@ -554,7 +554,7 @@ export const REPORTS = [
     label: 'For each student',
     icon: 'graduation',
     title: 'Every student gets their own picture',
-    summary: 'Not just a mark out of a hundred. Each student sees the topics they are strong in, the one to work on next, and how they are improving across the semester.',
+    summary: 'Each student sees more than a mark out of a hundred: the topics they are strong in, the one to work on next, and how they have improved across the semester.',
     points: [
       'Strongest topic, and the topic needing attention',
       'Progress built up automatically across every exam taken',
@@ -582,7 +582,7 @@ export const BRAND_DEPLOY = [
     id: 'managed',
     icon: 'globe',
     label: 'Hosted by us',
-    tagline: 'Nothing for your IT team to run.',
+    tagline: 'Your IT team has nothing to run.',
     sub: 'We host, update, back up, and monitor the platform. Your college can be conducting exams within days.',
     features: [
       'Running in days, with no servers to buy',
@@ -614,7 +614,7 @@ export const AI_HELP = [
   {
     icon: 'fileText',
     title: 'Draft a paper from your own material',
-    desc: 'Upload the notes or textbook chapter you taught from, and a set of questions is drafted on that subject for faculty to review, edit, and keep.',
+    desc: 'Upload the notes or textbook chapter you taught from, and EvolveUs drafts a set of questions on that subject for faculty to review, edit, and keep.',
   },
   {
     icon: 'terminal',
