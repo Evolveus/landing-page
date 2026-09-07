@@ -1,439 +1,345 @@
+import { DesignSwitcher } from '../_shared/DesignSwitcher';
 import { Icon } from '../_shared/Icon';
-import { useScrollY, useReveal } from '../_shared/useParallax';
+import { useReveal } from '../_shared/useParallax';
+import { ContactForm } from '../_shared/ContactForm';
+import {
+  BRAND,
+  NAV_LINKS,
+  HERO,
+  STATS,
+  PILLARS,
+  QUESTION_TYPES,
+  ROLES,
+  SECURITY_SIGNALS,
+  SECURITY_FEATURES,
+  AI_STEPS,
+  AI_MODELS,
+  AI_HIGHLIGHTS,
+  DEPLOY_MODES,
+  CONTENT_TOOLS,
+  CTA,
+  FOOTER,
+} from '../content';
 import './Design2.css';
 
-const FEATURES = [
-  {
-    num: '01',
-    icon: 'code',
-    title: 'Coding Assessment',
-    desc: 'Full in-browser code execution against visible and hidden test cases. Partial marking calculated automatically. Supports Java, Python, C++, JavaScript, C, Octave, and Scala.',
-  },
-  {
-    num: '02',
-    icon: 'brain',
-    title: 'AI-Assisted Evaluation',
-    desc: 'Open-ended descriptive answers and fill-in-the-blank questions scored with AI assistance. Faculty supply marking criteria for nuanced, consistent grading at scale.',
-  },
-  {
-    num: '03',
-    icon: 'shieldCheck',
-    title: 'Proctoring & Integrity',
-    desc: 'Twelve violation signals — tab switching, fullscreen exit, copy-paste, kiosk validation — detected, logged, and surfaced in audit reports. Subnet locks for lab-only access.',
-  },
-  {
-    num: '04',
-    icon: 'database',
-    title: 'Reusable Question Banks',
-    desc: 'Build banks once; reuse across semesters. Organise by topic; tag with Bloom\'s taxonomy and course outcomes. Bulk upload via spreadsheet templates.',
-  },
-  {
-    num: '05',
-    icon: 'chart',
-    title: 'Analytics & Reporting',
-    desc: 'Per-student and per-question performance breakdowns, class-wide gap analysis, and exportable reports ready for accreditation and administrative review.',
-  },
-  {
-    num: '06',
-    icon: 'users',
-    title: 'Role-Based Access',
-    desc: 'Separate dashboards and permissions for Administrators, Semester Managers, Faculty, and Students. Row-level security ensures tenant data separation.',
-  },
-  {
-    num: '07',
-    icon: 'building',
-    title: 'Institution Management',
-    desc: 'Departments, batches, semesters, courses, instructors, students, and labs — managed centrally. Bulk-create users and courses via spreadsheet.',
-  },
-  {
-    num: '08',
-    icon: 'edit',
-    title: 'Rich Content Tools',
-    desc: 'Rich-text editor, LaTeX support, image embedding, file uploads. Built for academic depth with formatting tools faculty actually need.',
-  },
-];
-
-const STATS = [
-  { n: '2,000+', l: 'Quizzes conducted' },
-  { n: '200,000+', l: 'Student responses scored' },
-  { n: '8', l: 'Question formats' },
-  { n: '7', l: 'Programming languages' },
-];
-
-function Reveal({ children, delay = 0 }) {
+function Reveal({ children, className = '', as: Tag = 'div', delay = 0 }) {
   const [ref, visible] = useReveal();
   return (
-    <div
+    <Tag
       ref={ref}
-      className={`d2-reveal ${visible ? 'is-visible' : ''}`}
-      style={{ transitionDelay: `${delay}ms` }}
+      className={`d2-reveal ${visible ? 'd2-in' : ''} ${className}`}
+      style={{ transitionDelay: visible ? `${delay}ms` : '0ms' }}
     >
       {children}
+    </Tag>
+  );
+}
+
+function Panel({ path, src, alt }) {
+  return (
+    <div className="d2-panel">
+      <div className="d2-panel-bar">
+        <span className="d2-panel-dots">
+          <span />
+          <span />
+          <span />
+        </span>
+        <span className="d2-panel-path">{path}</span>
+      </div>
+      <div className="d2-panel-body">
+        <img src={src} alt={alt} loading="lazy" />
+      </div>
     </div>
   );
 }
 
-export default function Design2({ onBrochure }) {
-  const y = useScrollY();
+function SectionHead({ index, id, title, note }) {
   return (
-    <div className="d2">
-      <div className="d2-deco d2-deco-1" style={{ transform: `translateY(${y * 0.2}px)` }} />
-      <div className="d2-deco d2-deco-2" style={{ transform: `translateY(${y * -0.12}px)` }} />
+    <div className="d2-section-head">
+      <span className="d2-section-idx">SEC.{index}</span>
+      <h2>{title}</h2>
+      {note && <span className="d2-section-note">{note}</span>}
+      <a className="d2-anchor-link" href={`#${id}`} aria-hidden="true">#{id}</a>
+    </div>
+  );
+}
 
-      {/* NAV */}
-      <nav className="d2-nav">
-        <div className="d2-nav-inner">
-          <div className="d2-logo">
-            <span className="d2-logo-mark">
-              <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-                <circle cx="16" cy="16" r="13" fill="none" stroke="#1a2744" strokeWidth="1.4" />
-                <path d="M16 6 L16 26 M6 16 L26 16" stroke="#c9a227" strokeWidth="1.4" />
-                <circle cx="16" cy="16" r="4" fill="#c9a227" />
-              </svg>
-            </span>
-            <span className="d2-logo-text">
-              <span className="d2-logo-e">E</span>
-              <span className="d2-logo-rest">volveus</span>
-            </span>
-          </div>
-          <div className="d2-nav-links">
-            <a href="#d2-platform">Platform</a>
-            <a href="#d2-coding">Coding</a>
-            <a href="#d2-roles">Roles</a>
-          </div>
-          <div className="d2-nav-right">
-            <button className="d2-nav-ghost" onClick={onBrochure}>Brochure</button>
-            <button className="d2-nav-cta">
-              Schedule Demo <Icon name="arrowRight" size={13} />
-            </button>
-          </div>
-        </div>
-      </nav>
+export default function Design2({ active, onNavigate }) {
+  return (
+    <div className="p2">
+      <DesignSwitcher active={active} onNavigate={onNavigate} />
 
-      {/* HERO */}
-      <section className="d2-hero">
-        <div className="d2-hero-inner">
-          <p className="d2-hero-kicker">Digital assessment for higher education</p>
-          <h1 className="d2-h1">
-            Where rigorous<br />
-            <em>examination</em> meets<br />
-            modern intelligence.
-          </h1>
-          <div className="d2-hero-rule" />
-          <p className="d2-hero-sub">
-            Evolveus is a complete assessment management system — from question banks
-            and coding evaluations to secure proctoring, AI-assisted grading, and
-            accreditation-ready analytics. Built for the daily demands of academic
-            institutions.
-          </p>
-          <div className="d2-hero-btns">
-            <button className="d2-btn-primary">
-              Request a Demonstration <Icon name="arrowRight" size={14} />
-            </button>
-            <button className="d2-btn-text" onClick={onBrochure}>
-              <Icon name="bookOpen" size={14} /> Read the Brochure
-            </button>
-          </div>
-        </div>
+      <header className="d2-nav">
+        <a className="d2-brand" href="#top">
+          <span className="d2-brand-mark">
+            <Icon name="terminal" size={16} />
+          </span>
+          <span className="d2-brand-word">{BRAND.name}</span>
+          <span className="d2-brand-domain">{BRAND.domain}</span>
+        </a>
+        <nav className="d2-nav-links">
+          {NAV_LINKS.map((link) => (
+            <a key={link.href} href={link.href}>{link.label}</a>
+          ))}
+        </nav>
+        <a className="d2-btn d2-btn-primary d2-nav-cta" href="#contact">
+          Request access
+        </a>
+      </header>
 
-        <div className="d2-stats-strip">
-          {STATS.map(s => (
-            <Reveal key={s.l}>
-              <div className="d2-stat">
+      <main id="top">
+        {/* HERO */}
+        <section className="d2-hero">
+          <div className="d2-hero-grid">
+            <div className="d2-hero-copy">
+              <div className="d2-eyebrow">
+                <span className="d2-status-dot" />
+                {HERO.eyebrow}
+              </div>
+              <h1>{HERO.headline}</h1>
+              <p className="d2-hero-sub">{HERO.sub}</p>
+              <div className="d2-hero-actions">
+                <a className="d2-btn d2-btn-primary" href="#contact">
+                  {HERO.primaryCta}
+                  <Icon name="arrowRight" size={14} />
+                </a>
+                <a className="d2-btn d2-btn-ghost" href="#platform">
+                  {HERO.secondaryCta}
+                </a>
+              </div>
+            </div>
+            <div className="d2-hero-visual">
+              <Panel path="~/evolveus/exam/staffDashboard.png" src="/staffDashboard.png" alt="Administrator dashboard" />
+            </div>
+          </div>
+
+          <div className="d2-stats">
+            {STATS.map((s) => (
+              <div className="d2-stat" key={s.l}>
                 <span className="d2-stat-n">{s.n}</span>
                 <span className="d2-stat-l">{s.l}</span>
               </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* CODING SPOTLIGHT */}
-      <section className="d2-coding" id="d2-coding">
-        <div className="d2-coding-inner">
-          <Reveal>
-            <div className="d2-coding-label"><span /> FEATURED CAPABILITY</div>
-          </Reveal>
-          <div className="d2-coding-grid">
-            <Reveal>
-              <div className="d2-coding-left">
-                <h2 className="d2-h2">
-                  Code is submitted.<br />
-                  <em>Marks awarded</em> automatically.
-                </h2>
-                <p className="d2-coding-body">
-                  Evolveus executes student-submitted code against structured test cases
-                  in a sandboxed environment. Faculty configure visible examples and
-                  hidden edge cases — the platform handles compilation, execution,
-                  comparison, and scoring.
-                </p>
-                <p className="d2-coding-body">
-                  Partial marking distributes credit proportionally across passed test
-                  cases. A student who solves four of five cases receives four-fifths of
-                  the total mark — fairly and without manual intervention.
-                </p>
-                <div className="d2-coding-langs">
-                  <span className="d2-coding-langs-label">Languages —</span>
-                  <div className="d2-coding-langs-list">
-                    {['Java', 'Python', 'C++', 'JavaScript', 'C', 'Octave', 'Scala'].map(l => (
-                      <span key={l} className="d2-lang-chip">{l}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="d2-coding-right">
-                <div className="d2-pull-quote">
-                  <div className="d2-pq-mark">"</div>
-                  <p className="d2-pq-text">
-                    Faculty design the problems. Evolveus runs every submission —
-                    instantly, consistently, and without bias.
-                  </p>
-                </div>
-                <div className="d2-coding-steps">
-                  {[
-                    { i: 'edit', t: 'Write', d: 'Student codes in the browser editor with syntax support and boilerplate scaffolding' },
-                    { i: 'cpu', t: 'Execute', d: 'Submission runs in an isolated container with time and memory limits enforced' },
-                    { i: 'eye', t: 'Evaluate', d: 'Each test case is checked; hidden cases catch edge conditions and hardcoded answers' },
-                    { i: 'award', t: 'Award', d: 'Partial marks calculated by ratio of passed cases — no rounding, no ambiguity' },
-                  ].map((s, i) => (
-                    <div key={s.t} className="d2-step">
-                      <span className="d2-step-num">{String(i + 1).padStart(2, '0')}</span>
-                      <span className="d2-step-icon"><Icon name={s.i} size={14} /></span>
-                      <div>
-                        <span className="d2-step-title">{s.t}.</span>
-                        <span className="d2-step-desc"> {s.d}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* PLATFORM FEATURES */}
-      <section className="d2-platform" id="d2-platform">
-        <div className="d2-platform-inner">
-          <Reveal>
-            <div className="d2-platform-header">
-              <p className="d2-section-kicker">THE PLATFORM</p>
-              <h2 className="d2-h2-center">
-                Every tool an institution needs,<br />
-                <em>in one place.</em>
-              </h2>
-            </div>
-          </Reveal>
-          <div className="d2-feat-list">
-            {FEATURES.map((f, i) => (
-              <Reveal key={f.num} delay={i * 60}>
-                <div className="d2-feat-item">
-                  <span className="d2-feat-num">{f.num}</span>
-                  <div className="d2-feat-body">
-                    <div className="d2-feat-title-row">
-                      <span className="d2-feat-icon"><Icon name={f.icon} size={18} /></span>
-                      <h3 className="d2-feat-title">{f.title}</h3>
-                    </div>
-                    <p className="d2-feat-desc">{f.desc}</p>
-                  </div>
+        {/* PLATFORM PILLARS */}
+        <section id="platform" className="d2-section">
+          <SectionHead index="01" id="platform" title="Platform pillars" note={`${PILLARS.length} modules`} />
+          <div className="d2-pillars">
+            {PILLARS.map((p, i) => (
+              <Reveal key={p.n} delay={i * 40} className="d2-pillar">
+                <div className="d2-pillar-top">
+                  <span className="d2-pillar-num">{p.n}</span>
+                  <Icon name={p.icon} size={18} />
                 </div>
+                <h3>{p.title}</h3>
+                <p>{p.body}</p>
+                <ul className="d2-pillar-bullets">
+                  {p.bullets.map((b) => (
+                    <li key={b}><Icon name="arrowRight" size={11} />{b}</li>
+                  ))}
+                </ul>
               </Reveal>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* QUESTION TYPES + EVALUATION */}
-      <section className="d2-evaluation">
-        <div className="d2-section-inner">
-          <div className="d2-eval-grid">
-            <Reveal>
-              <div className="d2-eval-col">
-                <p className="d2-section-kicker">QUESTION FORMATS</p>
-                <h3 className="d2-h3">Eight types. One platform.</h3>
-                <ol className="d2-q-types">
-                  {[
-                    'Single-correct multiple choice',
-                    'Multiple-correct multiple choice',
-                    'True or false',
-                    'Descriptive (long-form)',
-                    'Fill-in-the-blank',
-                    'Match-the-following',
-                    'File upload',
-                    'Coding (test-case executed)',
-                  ].map((q, i) => (
-                    <li key={q}>
-                      <span className="d2-q-num">{String(i + 1).padStart(2, '0')}</span>
-                      <span className="d2-q-name">{q}</span>
-                    </li>
-                  ))}
-                </ol>
+          <div className="d2-tools-strip">
+            <span className="d2-tools-label">content tooling</span>
+            <div className="d2-tools-row">
+              {CONTENT_TOOLS.map((t) => (
+                <div className="d2-tool" key={t.title}>
+                  <Icon name={t.icon} size={15} />
+                  <div>
+                    <span className="d2-tool-title">{t.title}</span>
+                    <span className="d2-tool-desc">{t.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* QUESTION TYPES */}
+        <section id="question-types" className="d2-section">
+          <SectionHead index="02" id="question-types" title="Question types" note={`${QUESTION_TYPES.length} formats`} />
+          <div className="d2-qt-table">
+            <div className="d2-qt-row d2-qt-head">
+              <span>ID</span>
+              <span>Type</span>
+              <span>Description</span>
+              <span>Grading</span>
+            </div>
+            {QUESTION_TYPES.map((q) => (
+              <div className="d2-qt-row" key={q.num}>
+                <span className="d2-qt-id">{q.num}</span>
+                <span className="d2-qt-label">
+                  <Icon name={q.icon} size={14} />
+                  {q.label}
+                </span>
+                <span className="d2-qt-desc">{q.desc}</span>
+                <span className="d2-qt-grading">{q.grading}</span>
               </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="d2-eval-col">
-                <p className="d2-section-kicker">EVALUATION CONTROLS</p>
-                <h3 className="d2-h3">Rigorous. Configurable.</h3>
-                <div className="d2-eval-list">
-                  {[
-                    { t: 'MCQ partial marking', d: 'Configurable per quiz — full or proportional credit' },
-                    { t: 'Negative marking', d: 'Fixed value or percentage; global or per-question' },
-                    { t: 'Coding partial marks', d: 'Test-case ratio multiplied by maximum marks' },
-                    { t: 'AI fill-in-blank', d: 'Synonym and semantic equivalence accepted' },
-                    { t: 'AI descriptive grading', d: 'Faculty supply criteria; AI scores with consistency' },
-                    { t: 'Manual override', d: 'Faculty can adjust any score post-evaluation' },
-                  ].map(e => (
-                    <div key={e.t} className="d2-eval-row">
-                      <Icon name="checkCircle" size={16} className="d2-eval-check" />
-                      <div>
-                        <strong>{e.t}.</strong> {e.d}
-                      </div>
-                    </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ROLES */}
+        <section id="roles" className="d2-section">
+          <SectionHead index="03" id="roles" title="Built for every role" note={`${ROLES.length} role types`} />
+          <div className="d2-roles">
+            {ROLES.map((r) => (
+              <Reveal key={r.id} className="d2-role">
+                <div className="d2-role-head">
+                  <Icon name={r.icon} size={17} />
+                  <h3>{r.label}</h3>
+                </div>
+                <p className="d2-role-summary">{r.summary}</p>
+                <Panel path={`~/evolveus/roles/${r.id}${r.src}`} src={r.src} alt={`${r.label} view`} />
+                <ul className="d2-role-features">
+                  {r.features.map((f) => (
+                    <li key={f}><Icon name="check" size={13} />{f}</li>
                   ))}
+                </ul>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* SECURITY */}
+        <section id="security" className="d2-section">
+          <SectionHead index="04" id="security" title="Exam security" note="12 signals tracked" />
+          <div className="d2-security-grid">
+            {SECURITY_FEATURES.map((f) => (
+              <div className="d2-security-card" key={f.title}>
+                <Icon name={f.icon} size={19} />
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="d2-signals">
+            <span className="d2-signals-label">$ violation_signals --list</span>
+            <div className="d2-signals-grid">
+              {SECURITY_SIGNALS.map((s) => (
+                <div className="d2-signal-chip" key={s}>
+                  <span className="d2-signal-dot" />
+                  {s}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* AI EVALUATION */}
+        <section id="ai-evaluation" className="d2-section">
+          <SectionHead index="05" id="ai-evaluation" title="AI evaluation" note="human review required" />
+          <div className="d2-ai-steps">
+            {AI_STEPS.map((s, i) => (
+              <div className="d2-ai-step" key={s.num}>
+                <div className="d2-ai-step-num">
+                  <span>{s.num}</span>
+                  {i < AI_STEPS.length - 1 && <div className="d2-ai-step-line" />}
+                </div>
+                <div className="d2-ai-step-body">
+                  <Icon name={s.icon} size={16} />
+                  <h3>{s.title}</h3>
+                  <p>{s.desc}</p>
                 </div>
               </div>
-            </Reveal>
+            ))}
           </div>
-        </div>
-      </section>
 
-      {/* SECURITY */}
-      <section className="d2-security">
-        <div className="d2-section-inner">
-          <Reveal>
-            <div className="d2-platform-header">
-              <p className="d2-section-kicker">EXAM INTEGRITY</p>
-              <h2 className="d2-h2-center">
-                Every violation,<br /><em>on record.</em>
-              </h2>
+          <div className="d2-ai-lower">
+            <div className="d2-ai-models">
+              <span className="d2-ai-sub-label">supported providers</span>
+              <div className="d2-model-list">
+                {AI_MODELS.map((m) => (
+                  <div className="d2-model" key={m.name}>
+                    <span className="d2-model-name">{m.name}</span>
+                    <span className="d2-model-sub">{m.sub}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </Reveal>
-          <div className="d2-sec-grid">
-            <Reveal>
-              <div>
-                <h4 className="d2-sec-h">Detection signals</h4>
-                <ul className="d2-sec-list">
-                  {[
-                    'Tab switching', 'Window focus loss', 'Fullscreen exit',
-                    'Suspicious resize', 'Copy / paste / cut', 'Right-click',
-                    'DevTools shortcuts', 'Print / save', 'Screenshot attempts',
-                    'Restricted shortcuts', 'Kiosk validation', 'IP outside subnet',
-                  ].map(s => (
-                    <li key={s}>
-                      <Icon name="check" size={12} className="d2-sec-check" />
-                      {s}
-                    </li>
+            <div className="d2-ai-highlights">
+              <span className="d2-ai-sub-label">notes</span>
+              {AI_HIGHLIGHTS.map((h) => (
+                <div className="d2-ai-highlight" key={h.title}>
+                  <Icon name={h.icon} size={15} />
+                  <div>
+                    <span className="d2-highlight-title">{h.title}</span>
+                    <span className="d2-highlight-desc">{h.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* DEPLOYMENT */}
+        <section id="deployment" className="d2-section">
+          <SectionHead index="06" id="deployment" title="Deployment modes" note="choose your topology" />
+          <div className="d2-deploy-grid">
+            {DEPLOY_MODES.map((d) => (
+              <div className="d2-deploy-card" key={d.id}>
+                <div className="d2-deploy-head">
+                  <Icon name={d.icon} size={18} />
+                  <h3>{d.label}</h3>
+                </div>
+                <p className="d2-deploy-tagline">{d.tagline}</p>
+                <p className="d2-deploy-sub">{d.sub}</p>
+                <ul className="d2-deploy-features">
+                  {d.features.map((f) => (
+                    <li key={f}><Icon name="arrowRight" size={11} />{f}</li>
                   ))}
                 </ul>
               </div>
-            </Reveal>
-            <Reveal delay={100}>
-              <div>
-                <h4 className="d2-sec-h">Enforcement controls</h4>
-                <div className="d2-enf">
-                  {[
-                    { i: 'monitor', t: 'Fullscreen Required' },
-                    { i: 'lock', t: 'Kiosk Mode' },
-                    { i: 'pin', t: 'Lab / Subnet Lock' },
-                    { i: 'key', t: 'Password Gate' },
-                    { i: 'refresh', t: 'Continuous Sync' },
-                    { i: 'rss', t: 'Audit Logs' },
-                  ].map(e => (
-                    <div key={e.t} className="d2-enf-pill">
-                      <Icon name={e.i} size={14} /> {e.t}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ROLES */}
-      <section className="d2-roles" id="d2-roles">
-        <div className="d2-roles-inner">
-          <Reveal>
-            <p className="d2-section-kicker">DESIGNED FOR EVERYONE</p>
-            <h2 className="d2-h2-center">One platform. Four roles.</h2>
-          </Reveal>
-          <div className="d2-roles-grid">
-            {[
-              {
-                role: 'Administrator',
-                color: '#8b1a1a',
-                icon: 'building',
-                desc: 'Manages departments, batches, semesters, users, and labs from a single superuser interface. Full audit trail included.',
-              },
-              {
-                role: 'Semester Manager',
-                color: '#c9a227',
-                icon: 'flag',
-                desc: 'Oversees courses and assessments within their semester. Manages instructors, creates quizzes, and reviews analytics.',
-              },
-              {
-                role: 'Faculty',
-                color: '#1a3a5c',
-                icon: 'edit',
-                desc: 'Builds question banks, creates exams, configures coding test cases, and reviews student results.',
-              },
-              {
-                role: 'Student',
-                color: '#2d6a4f',
-                icon: 'graduation',
-                desc: 'Distraction-free exam interface with real-time timer, auto-save, and continuous answer sync.',
-              },
-            ].map((r, i) => (
-              <Reveal key={r.role} delay={i * 80}>
-                <div className="d2-role-card" style={{ borderTopColor: r.color }}>
-                  <div className="d2-role-icon" style={{ color: r.color, background: r.color + '12' }}>
-                    <Icon name={r.icon} size={18} />
-                  </div>
-                  <h3 className="d2-role-title" style={{ color: r.color }}>{r.role}</h3>
-                  <p className="d2-role-desc">{r.desc}</p>
-                </div>
-              </Reveal>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA */}
-      <section className="d2-cta">
-        <div className="d2-cta-inner">
-          <Reveal>
-            <div className="d2-cta-ornament">✦</div>
-            <h2 className="d2-cta-h">
-              Bring rigour and reliability<br />
-              to your assessments.
-            </h2>
-            <p className="d2-cta-sub">
-              Evolveus is ready for institutional deployment on your own infrastructure.
-            </p>
-            <div className="d2-cta-btns">
-              <button className="d2-btn-primary">
-                Request a Demonstration <Icon name="arrowRight" size={14} />
-              </button>
-              <button className="d2-btn-text" onClick={onBrochure}>
-                <Icon name="download" size={14} /> Download Brochure
-              </button>
+        {/* CONTACT */}
+        <section id="contact" className="d2-section d2-contact">
+          <div className="d2-contact-head">
+            <div className="d2-eyebrow">
+              <span className="d2-status-dot" />
+              {CTA.eyebrow}
             </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="d2-footer">
-        <div className="d2-footer-inner">
-          <div className="d2-logo">
-            <span className="d2-logo-text">
-              <span className="d2-logo-e">E</span>
-              <span className="d2-logo-rest">volveus</span>
-            </span>
+            <h2>{CTA.headline}</h2>
+            <p>{CTA.sub}</p>
           </div>
-          <p className="d2-footer-copy">© 2026 Evolveus · All rights reserved</p>
+          <div className="d2-contact-panel">
+            <ContactForm />
+          </div>
+        </section>
+      </main>
+
+      <footer className="d2-footer">
+        <div className="d2-footer-top">
+          <div className="d2-footer-brand">
+            <span className="d2-brand-mark">
+              <Icon name="terminal" size={16} />
+            </span>
+            <span className="d2-brand-word">{BRAND.name}</span>
+          </div>
+          <p>{FOOTER.tagline}</p>
+        </div>
+        <div className="d2-footer-cols">
+          {FOOTER.columns.map((col) => (
+            <div className="d2-footer-col" key={col.title}>
+              <span>{col.title}</span>
+              <ul>
+                {col.links.map((l) => (
+                  <li key={l.label}><a href={l.href}>{l.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="d2-footer-bottom">
+          <span>© 2026 EvolveUs</span>
+          <span className="d2-footer-domain">{BRAND.domain}</span>
         </div>
       </footer>
     </div>

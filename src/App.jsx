@@ -12,7 +12,13 @@ import StudentPage from "./components/pages/StudentPage";
 import RolesPage from "./components/pages/RolesPage";
 import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
-import ThemesPage from "./landing/ThemesPage";
+import Design1 from "./landing/designs/Design1";
+import Design2 from "./landing/designs/Design2";
+import Design3 from "./landing/designs/Design3";
+import Design4 from "./landing/designs/Design4";
+import Design5 from "./landing/designs/Design5";
+import Design6 from "./landing/designs/Design6";
+import Design7 from "./landing/designs/Design7";
 import PresentationPage from "./presentation/PresentationPage";
 import FlyerPage from "./flyer/FlyerPage";
 import FlyerV1 from "./flyer/FlyerV1";
@@ -26,7 +32,13 @@ export default function App() {
   const [view, setView] = useState(() => {
     const path = window.location.pathname;
     if (path === "/brochure") return "brochure";
-    if (path === "/themes") return "themes";
+    if (path === "/1") return "design-1";
+    if (path === "/2") return "design-2";
+    if (path === "/3") return "design-3";
+    if (path === "/4") return "design-4";
+    if (path === "/5") return "design-5";
+    if (path === "/6") return "design-6";
+    if (path === "/7") return "design-7";
     if (path === "/ppt" || path === "/presentation") return "presentation";
     if (path === "/flyer/v1") return "flyer-v1";
     if (path === "/flyer/v2") return "flyer-v2";
@@ -39,7 +51,13 @@ export default function App() {
   useEffect(() => {
     const paths = {
       brochure: "/brochure",
-      themes: "/themes",
+      "design-1": "/1",
+      "design-2": "/2",
+      "design-3": "/3",
+      "design-4": "/4",
+      "design-5": "/5",
+      "design-6": "/6",
+      "design-7": "/7",
       landing: "/",
       presentation: "/ppt",
       flyer: "/flyer",
@@ -118,19 +136,21 @@ export default function App() {
 
   if (view === "landing") {
     return (
-      <LandingPage
-        onBrochure={() => setView("brochure")}
-        onThemes={() => setView("themes")}
-      />
+      <div className="landing-shell">
+        <LandingPage onNavigate={(n) => setView(`design-${n}`)} />
+      </div>
     );
   }
 
-  if (view === "themes") {
+  if (view.startsWith("design-")) {
+    const n = Number(view.slice("design-".length));
+    const onNavigate = (k) => setView(`design-${k}`);
+    const designs = { 1: Design1, 2: Design2, 3: Design3, 4: Design4, 5: Design5, 6: Design6, 7: Design7 };
+    const Design = designs[n] ?? Design1;
     return (
-      <ThemesPage
-        onBrochure={() => setView("brochure")}
-        onHome={() => setView("landing")}
-      />
+      <div className="landing-shell">
+        <Design active={n} onNavigate={onNavigate} />
+      </div>
     );
   }
 

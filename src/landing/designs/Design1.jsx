@@ -1,735 +1,450 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '../_shared/Icon';
-import { useScrollY, useReveal } from '../_shared/useParallax';
+import { useReveal, useScrollY } from '../_shared/useParallax';
+import { DesignSwitcher } from '../_shared/DesignSwitcher';
+import { ContactForm } from '../_shared/ContactForm';
+import {
+  BRAND,
+  NAV_LINKS,
+  HERO,
+  STATS,
+  PILLARS,
+  QUESTION_TYPES,
+  ROLES,
+  SECURITY_SIGNALS,
+  SECURITY_FEATURES,
+  AI_STEPS,
+  AI_MODELS,
+  AI_HIGHLIGHTS,
+  DEPLOY_MODES,
+  CONTENT_TOOLS,
+  CTA,
+  FOOTER,
+} from '../content';
 import './Design1.css';
 
-const STATS = [
-  { n: '2,000+', l: 'Quizzes conducted' },
-  { n: '200,000+', l: 'Responses scored' },
-  { n: '7', l: 'Languages supported' },
-  { n: '8', l: 'Question formats' },
-];
-
-const PILLARS = [
-  {
-    icon: 'code',
-    title: 'Coding Assessment',
-    desc: 'Sandboxed code execution. Visible & hidden test cases. Partial marking. Time and memory limits.',
-  },
-  {
-    icon: 'shieldCheck',
-    title: 'Proctoring & Integrity',
-    desc: 'Tab-switch, fullscreen-exit, copy-paste, kiosk enforcement, and IP/subnet locks — all logged.',
-  },
-  {
-    icon: 'chart',
-    title: 'Analytics & Reporting',
-    desc: 'Per-student, per-question, and class-wide breakdowns. Exportable for accreditation.',
-  },
-  {
-    icon: 'users',
-    title: 'Role-Based Access',
-    desc: 'Admin, Manager, Faculty, Student — separate dashboards with row-level security.',
-  },
-  {
-    icon: 'database',
-    title: 'Question Banks',
-    desc: 'Reusable banks tagged by topic, Bloom\'s taxonomy, and course outcomes (CO1–CO8).',
-  },
-  {
-    icon: 'building',
-    title: 'Institution Setup',
-    desc: 'Departments, batches, semesters, courses, labs, and instructors — managed centrally.',
-  },
-  {
-    icon: 'brain',
-    title: 'AI-Enhanced Grading',
-    desc: 'Descriptive answers and fill-in-the-blank evaluated with synonym + semantic matching.',
-  },
-  {
-    icon: 'refresh',
-    title: 'Continuous Auto-Save',
-    desc: 'Answers sync to server in real time. Network drops or refreshes never lose progress.',
-  },
-];
-
-const WORKFLOW = [
-  {
-    id: 'admin',
-    label: 'Academic setup',
-    icon: 'building',
-    title: 'Institution administration that matches campus structure.',
-    desc: 'Departments, semesters, batches, courses, instructors, students, and labs are managed centrally instead of scattered across spreadsheets.',
-    points: ['Bulk course creation', 'Batch and student assignment', 'Lab IP subnet configuration'],
-    image: '/bankQuestions.png',
-  },
-  {
-    id: 'banks',
-    label: 'Question banks',
-    icon: 'database',
-    title: 'Reusable banks with curriculum metadata built in.',
-    desc: 'Faculty organise banks by course, semester, topic, difficulty, Bloom level, and CO1-CO8 mapping, then share controlled access with colleagues.',
-    points: ['Topic-wise organisation', 'Shared access controls', 'Spreadsheet MCQ upload'],
-    image: '/questionCreation.png',
-  },
-  {
-    id: 'delivery',
-    label: 'Secure delivery',
-    icon: 'shieldCheck',
-    title: 'Every assessment can be tuned to the exam setting.',
-    desc: 'Password protection, fullscreen, kiosk validation, lab restrictions, shuffled questions, auto-submit, and linear flow are all first-class quiz controls.',
-    points: ['Fullscreen violation tracking', 'Kiosk and lab locks', 'Auto-submit and recovery'],
-    image: '/quizView.png',
-  },
-  {
-    id: 'results',
-    label: 'Results',
-    icon: 'chart',
-    title: 'Evaluation, submissions, and outcomes in one review surface.',
-    desc: 'Faculty can inspect student-wise and question-wise responses, violation history, submission status, manual overrides, and result publication.',
-    points: ['Student-wise response review', 'Question performance analytics', 'Manual override tracking'],
-    image: '/studentDashboard.png',
-  },
-];
-
-const QUESTION_TYPES = [
-  { name: 'Single-correct MCQ', tag: 'Auto-graded' },
-  { name: 'Multiple-correct MCQ', tag: 'Partial marking' },
-  { name: 'True / False', tag: 'Auto-graded' },
-  { name: 'Descriptive (long-form)', tag: 'AI-assisted' },
-  { name: 'Fill-in-the-blank', tag: 'AI-graded' },
-  { name: 'Match-the-following', tag: 'Auto-graded' },
-  { name: 'File upload', tag: 'Manual review' },
-  { name: 'Coding', tag: 'Test-case run' },
-];
-
-const VIOLATIONS = [
-  { v: 'Tab switching', s: 'logged' },
-  { v: 'Fullscreen exit', s: 'flagged' },
-  { v: 'Copy / paste / cut', s: 'blocked' },
-  { v: 'Right-click / context menu', s: 'blocked' },
-  { v: 'DevTools shortcuts', s: 'blocked' },
-  { v: 'Print / save shortcuts', s: 'blocked' },
-  { v: 'Screenshot attempts', s: 'logged' },
-  { v: 'Window focus loss', s: 'logged' },
-  { v: 'Suspicious resize', s: 'logged' },
-  { v: 'Kiosk validation missing', s: 'denied' },
-  { v: 'IP outside lab subnet', s: 'denied' },
-  { v: 'Restricted shortcuts', s: 'blocked' },
-];
-
-const ROLES = [
-  {
-    role: 'Administrator',
-    icon: 'building',
-    bullets: [
-      'Manage institutions, departments, batches',
-      'Create and manage all users',
-      'Configure labs and IP subnets',
-      'Full audit trail and platform health',
-    ],
-  },
-  {
-    role: 'Semester Manager',
-    icon: 'flag',
-    bullets: [
-      'Oversee courses within their semester',
-      'Manage instructors and assessments',
-      'Bulk-create courses and batches',
-      'Review semester-wide analytics',
-    ],
-  },
-  {
-    role: 'Faculty',
-    icon: 'edit',
-    bullets: [
-      'Build question banks with topic tags',
-      'Create exams with sections and rules',
-      'Configure coding test cases',
-      'Review submissions and override scores',
-    ],
-  },
-  {
-    role: 'Student',
-    icon: 'graduation',
-    bullets: [
-      'See live, upcoming, completed quizzes',
-      'Distraction-free exam interface',
-      'Real-time timer and auto-submit',
-      'Continuous answer sync',
-    ],
-  },
-];
-
-const LANGS = ['Python', 'Java', 'C++', 'JavaScript', 'C', 'Octave', 'Scala'];
-
-const CONTROL_GROUPS = [
-  {
-    id: 'access',
-    label: 'Access',
-    icon: 'key',
-    options: ['Password gate', 'Selected courses', 'Individual students', 'Batch alignment'],
-  },
-  {
-    id: 'integrity',
-    label: 'Integrity',
-    icon: 'shield',
-    options: ['Fullscreen required', 'Kiosk validation', 'Lab subnet lock', 'Violation ledger'],
-  },
-  {
-    id: 'flow',
-    label: 'Flow',
-    icon: 'layers',
-    options: ['Linear navigation', 'Shuffle questions', 'Shuffle options', 'Auto-submit'],
-  },
-  {
-    id: 'grading',
-    label: 'Grading',
-    icon: 'award',
-    options: ['MCQ partial marking', 'Negative marking', 'Coding partial marks', 'Manual override'],
-  },
-];
-
-function HeroParallax() {
-  const y = useScrollY();
+function Mark({ className = '' }) {
   return (
-    <div className="d1-hero-mock" style={{ transform: `translateY(${y * -0.08}px)` }}>
-      <div className="d1-mock-frame">
-        <div className="d1-mock-bar">
-          <div className="d1-mock-dots"><span /><span /><span /></div>
-          <span className="d1-mock-url">evolveus.in / staff / dashboard</span>
-        </div>
-        <img src="/staffDashboard.png" alt="Evolveus staff dashboard" className="d1-mock-img" />
-      </div>
-      <div
-        className="d1-hero-sub-mock"
-        style={{ transform: `translateY(${y * -0.16}px)` }}
-      >
-        <div className="d1-mock-frame d1-mock-frame-sm">
-          <div className="d1-mock-bar">
-            <div className="d1-mock-dots"><span /><span /><span /></div>
-            <span className="d1-mock-url">quiz settings</span>
-          </div>
-          <img src="/quizSettings.png" alt="Quiz settings" className="d1-mock-img" />
-        </div>
-      </div>
-    </div>
+    <svg
+      className={`p1-mark ${className}`}
+      width="30"
+      height="30"
+      viewBox="0 0 30 30"
+      fill="none"
+      aria-hidden="true"
+    >
+      <rect x="0.75" y="0.75" width="28.5" height="28.5" rx="2" />
+      <path d="M8 9.5h14M8 15h10.5M8 20.5h14" />
+      <circle cx="24" cy="20.5" r="1.3" fill="currentColor" stroke="none" />
+    </svg>
   );
 }
 
-function Reveal({ children, className = '', delay = 0 }) {
+function Reveal({ children, className = '', as: Tag = 'div', delay = 0, ...rest }) {
   const [ref, visible] = useReveal();
   return (
-    <div
+    <Tag
       ref={ref}
-      className={`d1-reveal ${visible ? 'is-visible' : ''} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
+      className={`p1-reveal ${visible ? 'is-visible' : ''} ${className}`}
+      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+      {...rest}
     >
       {children}
-    </div>
+    </Tag>
   );
 }
 
-function CodingPanel() {
-  const [step, setStep] = useState(0);
+function AccentHeadline({ text, className = '' }) {
+  const words = text.trim().split(' ');
+  const accented = words.slice(-2).join(' ');
+  const lead = words.slice(0, -2).join(' ');
+  return (
+    <h1 className={className}>
+      {lead ? `${lead} ` : ''}
+      <span className="p1-accent">{accented}</span>
+    </h1>
+  );
+}
+
+function ScrollProgress() {
+  const y = useScrollY();
+  const [max, setMax] = useState(1);
   useEffect(() => {
-    const t = setInterval(() => setStep(s => (s + 1) % 6), 1100);
-    return () => clearInterval(t);
+    const update = () => setMax(Math.max(document.documentElement.scrollHeight - window.innerHeight, 1));
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
   }, []);
-  const tests = [
-    { id: 'TC-01', status: 'pass', ms: '12ms', pts: '2/2' },
-    { id: 'TC-02', status: 'pass', ms: '8ms', pts: '2/2' },
-    { id: 'TC-03', status: 'pass', ms: '15ms', pts: '2/2' },
-    { id: 'TC-04', status: 'fail', ms: '9ms', pts: '0/2' },
-    { id: 'TC-05', status: 'pass', ms: '11ms', pts: '2/2' },
-  ];
+  const pct = Math.min((y / max) * 100, 100);
+  return <div className="p1-progress" style={{ transform: `scaleX(${pct / 100})` }} />;
+}
+
+function SectionHeading({ num, eyebrow, title, lede }) {
   return (
-    <div className="d1-coding-panel">
-      <div className="d1-cp-bar">
-        <span className="d1-cp-lang">PYTHON 3.11</span>
-        <span className="d1-cp-meta">CS301 · Binary Search Tree</span>
-      </div>
-      <div className="d1-cp-body">
-        {tests.map((t, i) => (
-          <div
-            key={t.id}
-            className={`d1-cp-row ${i < step ? 'is-done' : ''} ${t.status} ${i === step - 1 ? 'is-now' : ''}`}
-          >
-            <span className="d1-cp-icon">
-              {i < step ? (
-                t.status === 'pass'
-                  ? <Icon name="check" size={14} />
-                  : <Icon name="alert" size={14} />
-              ) : <span className="d1-cp-spin" />}
-            </span>
-            <span className="d1-cp-id">{t.id}</span>
-            <span className="d1-cp-ms">{i < step ? t.ms : '—'}</span>
-            <span className="d1-cp-pts">{i < step ? t.pts : ''}</span>
-          </div>
-        ))}
-        <div className="d1-cp-total">
-          <span>Final score</span>
-          <div>
-            <span className="d1-cp-score">{step >= 5 ? '8.0' : '—'}</span>
-            <span className="d1-cp-denom"> / 10.0</span>
-          </div>
+    <div className="p1-sec-head" data-ghost={num}>
+      {eyebrow && (
+        <div className="p1-sec-label">
+          <span className="p1-eyebrow">{eyebrow}</span>
         </div>
-        <div className="d1-cp-bar-wrap">
-          <div className="d1-cp-progress" style={{ width: step >= 5 ? '80%' : `${(step / 5) * 80}%` }} />
-        </div>
-      </div>
+      )}
+      <h2 className="p1-sec-title">{title}</h2>
+      {lede && <p className="p1-sec-lede">{lede}</p>}
     </div>
   );
 }
 
-function WorkflowExplorer() {
-  const [active, setActive] = useState(WORKFLOW[0].id);
-  const item = WORKFLOW.find(w => w.id === active) ?? WORKFLOW[0];
+function Frame({ src, alt, label, className = '' }) {
   return (
-    <div className="d1-workflow">
-      <div className="d1-workflow-tabs" role="tablist" aria-label="Platform workflow">
-        {WORKFLOW.map(w => (
-          <button
-            key={w.id}
-            role="tab"
-            aria-selected={w.id === item.id}
-            className={`d1-workflow-tab ${w.id === item.id ? 'is-active' : ''}`}
-            onClick={() => setActive(w.id)}
-          >
-            <Icon name={w.icon} size={16} />
-            <span>{w.label}</span>
-          </button>
-        ))}
+    <div className={`p1-frame ${className}`}>
+      <div className="p1-frame-bar">
+        <span className="p1-frame-dots">
+          <i /><i /><i />
+        </span>
+        <span className="p1-frame-label">{label}</span>
       </div>
-      <div className="d1-workflow-body">
-        <div className="d1-workflow-copy">
-          <div className="d1-workflow-kicker">Selected module</div>
-          <h3>{item.title}</h3>
-          <p>{item.desc}</p>
-          <div className="d1-workflow-points">
-            {item.points.map(point => (
-              <span key={point}>
-                <Icon name="check" size={13} />
-                {point}
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="d1-workflow-shot">
-          <img src={item.image} alt={`${item.label} interface preview`} />
-        </div>
-      </div>
+      <img src={src} alt={alt} className="p1-frame-img" loading="lazy" />
     </div>
   );
 }
 
-function QuizControlConsole() {
-  const [active, setActive] = useState('integrity');
-  const group = CONTROL_GROUPS.find(g => g.id === active) ?? CONTROL_GROUPS[1];
-  const activeCount = group.options.length;
-  return (
-    <div className="d1-control-console">
-      <div className="d1-control-head">
-        <div>
-          <span>Quiz control stack</span>
-          <strong>{group.label}</strong>
-        </div>
-        <div className="d1-control-score">{activeCount}/4</div>
-      </div>
-      <div className="d1-control-segments" role="tablist" aria-label="Quiz controls">
-        {CONTROL_GROUPS.map(g => (
-          <button
-            key={g.id}
-            role="tab"
-            aria-selected={g.id === active}
-            className={g.id === active ? 'is-active' : ''}
-            onClick={() => setActive(g.id)}
-          >
-            <Icon name={g.icon} size={15} />
-            {g.label}
-          </button>
-        ))}
-      </div>
-      <div className="d1-control-list">
-        {group.options.map((option, i) => (
-          <label key={option} className="d1-control-option">
-            <input type="checkbox" checked readOnly />
-            <span className="d1-control-check"><Icon name="check" size={12} /></span>
-            <span>{option}</span>
-            <em>{String(i + 1).padStart(2, '0')}</em>
-          </label>
-        ))}
-      </div>
-      <div className="d1-control-preview">
-        <div className="d1-control-preview-row">
-          <span>Publish state</span>
-          <strong>Ready</strong>
-        </div>
-        <div className="d1-control-preview-row">
-          <span>Result visibility</span>
-          <strong>Hidden until review</strong>
-        </div>
-        <div className="d1-control-preview-bar">
-          <span style={{ width: `${68 + activeCount * 6}%` }} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function Design1({ onBrochure }) {
+export default function Design1({ active, onNavigate }) {
   const y = useScrollY();
   return (
-    <div className="d1">
-      {/* Subtle parallax background */}
-      <div className="d1-bg-grid" style={{ transform: `translateY(${y * 0.15}px)` }} />
-      <div className="d1-bg-glow" style={{ transform: `translate(${y * 0.05}px, ${y * -0.1}px)` }} />
+    <div className="p1">
+      <div className="p1-grain" aria-hidden="true" />
+      <ScrollProgress />
+      <DesignSwitcher active={active} onNavigate={onNavigate} />
 
-      {/* NAV */}
-      <nav className="d1-nav">
-        <div className="d1-nav-inner">
-          <div className="d1-logo">
-            <span className="d1-logo-mark">
-              <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-                <path d="M16 2 L28 9 L28 23 L16 30 L4 23 L4 9 Z" fill="none" stroke="#c89b3c" strokeWidth="1.6" />
-                <path d="M11 12 L21 12 M11 16 L18 16 M11 20 L21 20" stroke="#c89b3c" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
-            </span>
-            <span className="d1-logo-name">Evolveus</span>
+      <header className={`p1-nav ${y > 8 ? 'is-scrolled' : ''}`}>
+        <div className="p1-nav-inner">
+          <a href="#top" className="p1-brand">
+            <Mark />
+            <span className="p1-wordmark">{BRAND.name}</span>
+          </a>
+          <nav className="p1-nav-links" aria-label="Primary">
+            {NAV_LINKS.map((l) => (
+              <a key={l.href} href={l.href}>{l.label}</a>
+            ))}
+          </nav>
+          <a href="#contact" className="p1-btn p1-btn-gold p1-nav-cta">
+            Request a demo
+          </a>
+        </div>
+      </header>
+
+      <section className="p1-hero" id="top">
+        <div className="p1-hero-inner">
+          <div className="p1-hero-copy">
+            <p className="p1-eyebrow p1-eyebrow-light">{HERO.eyebrow}</p>
+            <AccentHeadline text={HERO.headline} className="p1-hero-headline" />
+            <p className="p1-hero-sub">{HERO.sub}</p>
+            <div className="p1-hero-ctas">
+              <a href="#contact" className="p1-btn p1-btn-gold">
+                {HERO.primaryCta}
+                <Icon name="arrowRight" size={15} />
+              </a>
+              <a href="#platform" className="p1-btn p1-btn-outline">
+                {HERO.secondaryCta}
+              </a>
+            </div>
           </div>
-          <div className="d1-nav-links">
-            <a href="#d1-platform">Platform</a>
-            <a href="#d1-coding">Coding</a>
-            <a href="#d1-security">Security</a>
-            <a href="#d1-roles">Roles</a>
-          </div>
-          <div className="d1-nav-right">
-            <button className="d1-nav-ghost" onClick={onBrochure}>Brochure</button>
-            <button className="d1-nav-cta">
-              Request Demo <Icon name="arrowRight" size={14} />
-            </button>
+
+          <div className="p1-hero-visual p1-float">
+            <Frame
+              src="/staffDashboard.png"
+              alt="Administrator dashboard"
+              label="evolveus.in / staff / dashboard"
+              className="p1-frame-primary"
+            />
+            <Frame
+              src="/quizSettings.png"
+              alt="Quiz configuration screen"
+              label="quiz / settings"
+              className="p1-frame-secondary"
+            />
           </div>
         </div>
-      </nav>
 
-      {/* HERO */}
-      <section className="d1-hero">
-        <div className="d1-hero-inner">
-          <div className="d1-hero-text">
-            <div className="d1-pretitle">
-              <span className="d1-pretitle-line" />
-              For higher education institutions
-            </div>
-            <h1 className="d1-h1">
-              The assessment platform that<br />
-              <span className="d1-accent-text">institutions trust</span> for high-stakes exams.
-            </h1>
-            <p className="d1-lede">
-              Evolveus is a complete digital examination system — from question banks
-              and coding assessments to secure proctoring, AI-assisted grading, and
-              accreditation-ready analytics. Deployed on your infrastructure.
-            </p>
-            <div className="d1-hero-actions">
-              <button className="d1-cta-primary">
-                Request a Demonstration <Icon name="arrowRight" size={15} />
-              </button>
-              <button className="d1-cta-text" onClick={onBrochure}>
-                Read the Brochure <Icon name="bookOpen" size={14} />
-              </button>
-            </div>
-            <div className="d1-trust">
-              <div className="d1-trust-label">Battle-tested at scale</div>
-              <div className="d1-trust-stats">
-                {STATS.map(s => (
-                  <div key={s.l} className="d1-trust-stat">
-                    <div className="d1-trust-n">{s.n}</div>
-                    <div className="d1-trust-l">{s.l}</div>
-                  </div>
-                ))}
+        <div className="p1-stats">
+          <div className="p1-stats-inner">
+            {STATS.map((s) => (
+              <div className="p1-stat" key={s.l}>
+                <span className="p1-stat-n">{s.n}</span>
+                <span className="p1-stat-l">{s.l}</span>
               </div>
-            </div>
+            ))}
           </div>
-          <HeroParallax />
         </div>
       </section>
 
-      {/* PLATFORM PILLARS */}
-      <section className="d1-platform" id="d1-platform">
-        <div className="d1-section-inner">
+      <section className="p1-section" id="platform">
+        <div className="p1-container">
           <Reveal>
-            <div className="d1-eyebrow"><span /> The Platform</div>
-            <h2 className="d1-h2">A complete assessment system, in one place.</h2>
-            <p className="d1-section-sub">
-              From institution setup to final grade export, Evolveus replaces the
-              fragmented stack of tools academic institutions rely on today.
-            </p>
+            <SectionHeading
+              num="01"
+              title="Six pillars covering the full assessment cycle"
+            />
           </Reveal>
-          <div className="d1-pillar-grid">
+
+          <div className="p1-pillars">
             {PILLARS.map((p, i) => (
-              <Reveal key={p.title} delay={i * 60}>
-                <article className="d1-pillar-card">
-                  <div className="d1-pillar-icon">
-                    <Icon name={p.icon} size={22} strokeWidth={1.5} />
-                  </div>
-                  <h3 className="d1-pillar-title">{p.title}</h3>
-                  <p className="d1-pillar-desc">{p.desc}</p>
-                </article>
+              <Reveal key={p.n} className="p1-pillar" delay={i * 60}>
+                <div className="p1-pillar-head">
+                  <span className="p1-num p1-num-sm">{p.n}</span>
+                  <span className="p1-icon-chip"><Icon name={p.icon} size={18} /></span>
+                </div>
+                <h3>{p.title}</h3>
+                <p>{p.body}</p>
+                <ul>
+                  {p.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
               </Reveal>
             ))}
           </div>
-          <Reveal delay={180}>
-            <WorkflowExplorer />
-          </Reveal>
-        </div>
-      </section>
 
-      {/* CODING SPOTLIGHT */}
-      <section className="d1-coding" id="d1-coding">
-        <div className="d1-section-inner">
-          <div className="d1-coding-grid">
-            <div>
-              <Reveal>
-                <div className="d1-eyebrow d1-eyebrow-amber"><span /> Coding Assessment</div>
-                <h2 className="d1-h2">Code submitted.<br />Marks awarded — instantly.</h2>
-                <p className="d1-section-sub">
-                  Faculty define the test cases. Evolveus compiles the submission,
-                  runs it against visible and hidden cases in an isolated sandbox, and
-                  awards partial marks proportional to cases passed.
-                </p>
-              </Reveal>
-              <Reveal delay={120}>
-                <div className="d1-coding-points">
-                  {[
-                    { i: 'cpu', t: 'Sandboxed execution', d: 'Isolated containers with configurable time and memory limits' },
-                    { i: 'eye', t: 'Hidden test cases', d: 'Visible demos for students; hidden cases catch edge conditions' },
-                    { i: 'gauge', t: 'Partial marking', d: 'Pass 4 of 5 cases → 80% of total marks, calculated automatically' },
-                    { i: 'fileText', t: 'Boilerplate & driver code', d: 'Pre-fill function signatures and reference solutions' },
-                  ].map(p => (
-                    <div key={p.t} className="d1-coding-point">
-                      <span className="d1-cp-pt-icon"><Icon name={p.i} size={16} /></span>
-                      <div>
-                        <div className="d1-cp-pt-t">{p.t}</div>
-                        <div className="d1-cp-pt-d">{p.d}</div>
-                      </div>
-                    </div>
-                  ))}
+          <Reveal className="p1-tools-row">
+            <span className="p1-tools-label">Question content tools</span>
+            <div className="p1-tools-grid">
+              {CONTENT_TOOLS.map((t) => (
+                <div className="p1-tool" key={t.title}>
+                  <Icon name={t.icon} size={16} />
+                  <div>
+                    <strong>{t.title}</strong>
+                    <span>{t.desc}</span>
+                  </div>
                 </div>
-                <div className="d1-langs">
-                  <span className="d1-langs-label">Languages</span>
-                  {LANGS.map(l => <span key={l} className="d1-lang-chip">{l}</span>)}
-                </div>
-              </Reveal>
+              ))}
             </div>
-            <Reveal delay={180}>
-              <CodingPanel />
-            </Reveal>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* QUESTION TYPES */}
-      <section className="d1-qtypes">
-        <div className="d1-section-inner">
+      <section className="p1-section p1-section-alt" id="question-types">
+        <div className="p1-container">
           <Reveal>
-            <div className="d1-eyebrow"><span /> Assessment Formats</div>
-            <h2 className="d1-h2">Eight question types. One platform.</h2>
+            <SectionHeading
+              num="02"
+              title="Eight formats, each graded the way it should be"
+            />
           </Reveal>
-          <div className="d1-qtypes-grid">
-            {QUESTION_TYPES.map((q, i) => (
-              <Reveal key={q.name} delay={i * 40}>
-                <div className="d1-qtype">
-                  <span className="d1-qtype-num">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="d1-qtype-name">{q.name}</span>
-                  <span className="d1-qtype-tag">{q.tag}</span>
-                </div>
-              </Reveal>
+
+          <Reveal className="p1-qtable" as="div">
+            <div className="p1-qtable-head">
+              <span>No.</span>
+              <span>Type</span>
+              <span>Description</span>
+              <span>Grading</span>
+            </div>
+            {QUESTION_TYPES.map((q) => (
+              <div className="p1-qtable-row" key={q.num}>
+                <span className="p1-num p1-num-sm">{q.num}</span>
+                <span className="p1-qtable-label">
+                  <Icon name={q.icon} size={16} />
+                  {q.label}
+                </span>
+                <span className="p1-qtable-desc">{q.desc}</span>
+                <span className="p1-qtable-grading">{q.grading}</span>
+              </div>
             ))}
-          </div>
-          <Reveal delay={180}>
-            <QuizControlConsole />
           </Reveal>
         </div>
       </section>
 
-      {/* SECURITY */}
-      <section className="d1-security" id="d1-security">
-        <div className="d1-section-inner">
-          <div className="d1-security-grid">
-            <Reveal>
-              <div>
-                <div className="d1-eyebrow d1-eyebrow-amber"><span /> Exam Integrity</div>
-                <h2 className="d1-h2">Every violation is on record.</h2>
-                <p className="d1-section-sub">
-                  Evolveus enforces controlled exam environments. Suspicious actions
-                  are detected, logged with timestamps, and surfaced in audit reports.
-                  Subnet-locked exams ensure students attempt only from approved labs.
-                </p>
-                <div className="d1-sec-stack">
-                  {[
-                    { i: 'monitor', t: 'Fullscreen enforcement', d: 'Blocks exam progress unless fullscreen is active' },
-                    { i: 'lock', t: 'Kiosk mode', d: 'Restricts exams to approved kiosk environments' },
-                    { i: 'pin', t: 'IP / Subnet restriction', d: 'Lock exams to specific labs or campus networks' },
-                    { i: 'shield', t: 'Password protection', d: 'Add an additional access gate per exam' },
-                  ].map(p => (
-                    <div key={p.t} className="d1-sec-item">
-                      <Icon name={p.i} size={20} />
-                      <div>
-                        <div className="d1-sec-t">{p.t}</div>
-                        <div className="d1-sec-d">{p.d}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="d1-viol-table">
-                <div className="d1-viol-head">
-                  <span>Violation</span>
-                  <span>Action</span>
-                </div>
-                {VIOLATIONS.map(v => (
-                  <div key={v.v} className="d1-viol-row">
-                    <span className="d1-viol-name">{v.v}</span>
-                    <span className={`d1-viol-status d1-viol-${v.s}`}>{v.s}</span>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ROLES */}
-      <section className="d1-roles" id="d1-roles">
-        <div className="d1-section-inner">
+      <section className="p1-section" id="roles">
+        <div className="p1-container">
           <Reveal>
-            <div className="d1-eyebrow"><span /> Designed for every role</div>
-            <h2 className="d1-h2">One platform. Four dashboards.</h2>
-            <p className="d1-section-sub">
-              Role-based access ensures every user — administrator, manager, faculty,
-              or student — sees precisely the tools relevant to them.
-            </p>
+            <SectionHeading
+              num="03"
+              title="A dedicated surface for every seat in the institution"
+            />
           </Reveal>
-          <div className="d1-roles-grid">
+
+          <div className="p1-roles">
             {ROLES.map((r, i) => (
-              <Reveal key={r.role} delay={i * 70}>
-                <article className="d1-role-card">
-                  <div className="d1-role-head">
-                    <Icon name={r.icon} size={20} />
-                    <span>{r.role}</span>
+              <Reveal className="p1-role" key={r.id} delay={i * 80}>
+                <Frame src={r.src} alt={`${r.label} screen`} label={r.label.toLowerCase()} />
+                <div className="p1-role-body">
+                  <div className="p1-role-head">
+                    <Icon name={r.icon} size={18} />
+                    <h3>{r.label}</h3>
                   </div>
-                  <ul className="d1-role-list">
-                    {r.bullets.map(b => (
-                      <li key={b}>
-                        <Icon name="check" size={13} className="d1-role-check" />
-                        {b}
-                      </li>
+                  <p>{r.summary}</p>
+                  <ul>
+                    {r.features.map((f) => (
+                      <li key={f}>{f}</li>
                     ))}
                   </ul>
-                </article>
+                </div>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CONTENT TOOLS */}
-      <section className="d1-content">
-        <div className="d1-section-inner">
-          <div className="d1-content-grid">
-            <Reveal>
-              <div>
-                <div className="d1-eyebrow d1-eyebrow-amber"><span /> Content & Analytics</div>
-                <h2 className="d1-h2">Built for academic depth.</h2>
-                <div className="d1-content-list">
-                  {[
-                    { i: 'edit', t: 'Rich-text editor', d: 'Bold, italic, lists, code, quotes — full formatting' },
-                    { i: 'bookOpen', t: 'LaTeX support', d: 'Mathematical and scientific notation in questions' },
-                    { i: 'upload', t: 'Image & file upload', d: 'Embed media in questions and accept file submissions' },
-                    { i: 'tag', t: 'Bloom\'s taxonomy', d: 'Tag every question — Remember through Create' },
-                    { i: 'flag', t: 'Course outcome mapping', d: 'CO1–CO8 alignment for accreditation' },
-                    { i: 'database', t: 'Bulk upload', d: 'Spreadsheet-based MCQ creation with validation' },
-                  ].map(c => (
-                    <div key={c.t} className="d1-content-item">
-                      <Icon name={c.i} size={18} />
-                      <div>
-                        <strong>{c.t}.</strong> {c.d}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="d1-analytics-card">
-                <div className="d1-an-head">
-                  <Icon name="chart" size={18} />
-                  <span>Performance Insights</span>
-                </div>
-                <div className="d1-an-stat-grid">
-                  {[
-                    { n: '94%', l: 'Auto-graded', accent: true },
-                    { n: '0.8s', l: 'Avg. compile time' },
-                    { n: '100%', l: 'Audit-traced' },
-                    { n: '24/7', l: 'Self-hosted ready' },
-                  ].map(s => (
-                    <div key={s.l} className={`d1-an-stat ${s.accent ? 'is-accent' : ''}`}>
-                      <div className="d1-an-n">{s.n}</div>
-                      <div className="d1-an-l">{s.l}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="d1-an-bars">
-                  {[78, 64, 52, 88, 71, 45, 82].map((h, i) => (
-                    <div key={i} className="d1-an-bar" style={{ height: `${h}%` }} />
-                  ))}
-                </div>
-                <div className="d1-an-foot">
-                  Per-question difficulty distribution · CS301 Midterm
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="d1-cta">
-        <div className="d1-cta-inner">
+      <section className="p1-section p1-section-alt" id="security">
+        <div className="p1-container">
           <Reveal>
-            <h2 className="d1-cta-h">
-              Bring rigour and reliability<br />
-              <span className="d1-accent-text">to your assessments.</span>
-            </h2>
-            <p className="d1-cta-sub">
-              Schedule a demo with our team. We'll walk through coding evaluation,
-              proctoring, analytics, and deployment options for your institution.
-            </p>
-            <div className="d1-cta-btns">
-              <button className="d1-cta-primary d1-cta-lg">
-                Request a Demonstration <Icon name="arrowRight" size={15} />
-              </button>
-              <button className="d1-cta-text" onClick={onBrochure}>
-                Download Brochure <Icon name="download" size={14} />
-              </button>
+            <SectionHeading
+              num="04"
+              eyebrow="Security"
+              title="Exam integrity, enforced and logged"
+            />
+          </Reveal>
+
+          <Reveal className="p1-security-banner">
+            <Icon name={SECURITY_FEATURES[0].icon} size={26} />
+            <div>
+              <h3>{SECURITY_FEATURES[0].title}</h3>
+              <p>{SECURITY_FEATURES[0].desc}</p>
             </div>
+          </Reveal>
+
+          <div className="p1-security-grid">
+            {SECURITY_FEATURES.slice(1).map((f, i) => (
+              <Reveal className="p1-security-card" key={f.title} delay={i * 60}>
+                <Icon name={f.icon} size={22} />
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal className="p1-signals">
+            <span className="p1-tools-label">Violation signals tracked</span>
+            <ol className="p1-signals-list">
+              {SECURITY_SIGNALS.map((s, i) => (
+                <li key={s}>
+                  <span className="p1-num p1-num-sm">{String(i + 1).padStart(2, '0')}</span>
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ol>
           </Reveal>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="d1-footer">
-        <div className="d1-footer-inner">
-          <div className="d1-logo">
-            <span className="d1-logo-mark">
-              <svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true">
-                <path d="M16 2 L28 9 L28 23 L16 30 L4 23 L4 9 Z" fill="none" stroke="#c89b3c" strokeWidth="1.6" />
-              </svg>
-            </span>
-            <span className="d1-logo-name">Evolveus</span>
+      <section className="p1-section" id="ai-evaluation">
+        <div className="p1-container">
+          <Reveal>
+            <SectionHeading
+              num="05"
+              title="Grading assistance faculty can verify, step by step"
+            />
+          </Reveal>
+
+          <div className="p1-ai-steps">
+            {AI_STEPS.map((s, i) => (
+              <Reveal className="p1-ai-step" key={s.num} delay={i * 70}>
+                <div className="p1-ai-step-num">
+                  <span className="p1-num">{s.num}</span>
+                  <Icon name={s.icon} size={18} />
+                </div>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </Reveal>
+            ))}
           </div>
-          <p className="d1-footer-copy">© 2026 Evolveus · Digital assessment for higher education</p>
+
+          <div className="p1-ai-bottom">
+            <Reveal className="p1-ai-models">
+              <span className="p1-tools-label">Supported model providers</span>
+              <div className="p1-models-list">
+                {AI_MODELS.map((m) => (
+                  <div className="p1-model" key={m.name}>
+                    <strong>{m.name}</strong>
+                    <span>{m.sub}</span>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
+            <Reveal className="p1-ai-highlights">
+              {AI_HIGHLIGHTS.map((h) => (
+                <div className="p1-highlight" key={h.title}>
+                  <Icon name={h.icon} size={18} />
+                  <div>
+                    <strong>{h.title}</strong>
+                    <span>{h.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section className="p1-section p1-section-alt" id="deployment">
+        <div className="p1-container">
+          <Reveal>
+            <SectionHeading
+              num="06"
+              title="Managed by us, or run on infrastructure you control"
+            />
+          </Reveal>
+
+          <div className="p1-deploy-grid">
+            {DEPLOY_MODES.map((d, i) => (
+              <Reveal className="p1-deploy-card" key={d.id} delay={i * 90}>
+                <div className="p1-deploy-head">
+                  <Icon name={d.icon} size={20} />
+                  <h3>{d.label}</h3>
+                </div>
+                <p className="p1-deploy-tagline">{d.tagline}</p>
+                <p className="p1-deploy-sub">{d.sub}</p>
+                <ul>
+                  {d.features.map((f) => (
+                    <li key={f}>
+                      <Icon name="check" size={14} />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="p1-contact" id="contact">
+        <div className="p1-container p1-contact-inner">
+          <div className="p1-contact-copy">
+            <p className="p1-eyebrow p1-eyebrow-light">{CTA.eyebrow}</p>
+            <h2>{CTA.headline}</h2>
+            <p className="p1-contact-sub">{CTA.sub}</p>
+          </div>
+          <div className="p1-contact-form-wrap">
+            <ContactForm />
+          </div>
+        </div>
+      </section>
+
+      <footer className="p1-footer">
+        <div className="p1-container p1-footer-inner">
+          <div className="p1-footer-brand">
+            <a href="#top" className="p1-brand">
+              <Mark />
+              <span className="p1-wordmark">{BRAND.name}</span>
+            </a>
+            <p>{FOOTER.tagline}</p>
+          </div>
+          <div className="p1-footer-cols">
+            {FOOTER.columns.map((c) => (
+              <div className="p1-footer-col" key={c.title}>
+                <span className="p1-tools-label">{c.title}</span>
+                <ul>
+                  {c.links.map((l) => (
+                    <li key={l.label}><a href={l.href}>{l.label}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="p1-container p1-footer-bottom">
+          <span>© 2026 {BRAND.name}</span>
+          <span>{BRAND.domain}</span>
         </div>
       </footer>
     </div>
