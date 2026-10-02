@@ -9,7 +9,7 @@ export const SUMMARY =
   'EvolveUs gives institutions a complete assessment management system, from academic setup to secure exam delivery and result analysis. It reduces manual work for administrators and faculty, improves exam control, supports diverse question formats, and gives students a clear, organised assessment experience.';
 
 export const BRAND = {
-  name: 'EvolveUs',
+  name: 'Evolveus',
   domain: 'evolveus.in',
 };
 
@@ -394,97 +394,88 @@ export const FOOTER = {
 // ─────────────────────────────────────────────────────────────
 // Brand page copy (src/landing/brand/Register.jsx).
 //
-// Audience: college management, not engineers. Every line should be
-// understood by a principal, dean, or exam controller. Benefit-led —
+// Audience: university management, not engineers. Every line should be
+// understood by a dean, registrar, or exam controller. Benefit-led —
 // say what the college gets, not how it is built.
 // ─────────────────────────────────────────────────────────────
 
 export const BRAND_NAV = [
-  { href: '#why', label: 'Why EvolveUs' },
+  { href: '#before', label: 'Setting papers' },
   { href: '#security', label: 'Exam security' },
-  { href: '#evaluation', label: 'Evaluation' },
+  { href: '#marking', label: 'Marking' },
   { href: '#reports', label: 'Reports' },
   { href: '#roles', label: 'Who uses it' },
   { href: '#deployment', label: 'Deployment' },
 ];
 
 export const BRAND_HERO = {
-  eyebrow: 'Online examinations for colleges',
-  headline: 'Run exams your institution can stand behind.',
-  sub: 'EvolveUs conducts your online exams under real supervision, grades written and coding answers automatically, and gives you a clear report on every student and every class.',
+  eyebrow: 'Online exams for universities',
+  headline: 'Set the paper, run the exam, mark it, see the results. One place.',
+  emphasis: 'One place.',
+  sub: 'Evolveus runs a university\'s online exams from start to finish. Students write in your labs on a secured browser, AI marks written and coding answers for faculty to approve, and results come back by topic and course outcome.',
   note: 'Runs on our cloud or on your own campus servers.',
 };
 
 export const TRUST = {
-  label: 'In daily use at',
+  label: 'In use at',
   org: 'Amrita Vishwa Vidyapeetham',
   logo: '/Amrita_Logo_Banner.svg',
   figures: [
-    { n: '1,500+', l: 'Students examined every day' },
+    { n: '1,500+', l: 'Students on the platform' },
     { n: '2,000+', l: 'Exams conducted' },
     { n: '200,000+', l: 'Answers evaluated' },
   ],
 };
 
-export const VALUE = [
+/* §01 — setting the paper */
+export const BEFORE = [
   {
     n: '01',
-    icon: 'shieldCheck',
-    title: 'Exams as controlled as the hall',
-    body: 'A locked exam browser, full-screen enforcement, and live supervision mean an online exam is no easier to cheat than one written under an invigilator.',
+    icon: 'database',
+    title: 'Question banks by topic',
+    body: 'Questions live in banks organised by course and topic. A bank can be shared with colleagues, with control over who may edit it, and MCQs can be uploaded in bulk from a spreadsheet.',
   },
   {
     n: '02',
-    icon: 'brain',
-    title: 'Written answers graded in minutes',
-    body: 'EvolveUs reads descriptive answers against the rubric your faculty wrote, then returns a mark and the reason for it. Faculty approve everything before students see it.',
+    icon: 'tag',
+    title: 'Tagged for outcomes',
+    body: "Each question carries a difficulty, a Bloom's level and a course outcome from CO1 to CO8. The reports read these tags later, so nobody maps marks to outcomes by hand before an audit.",
   },
   {
     n: '03',
-    icon: 'code',
-    title: 'Coding exams that mark themselves',
-    body: 'Students write and run code in the browser. EvolveUs tests each program and marks it on the spot, so nobody has to correct a lab exam by hand.',
+    icon: 'fileText',
+    title: 'Drafted from your notes',
+    body: 'Upload a PDF of the notes or chapter you taught from and Evolveus drafts questions on it. Faculty keep the ones they like, edit some, and throw the rest away.',
   },
   {
     n: '04',
-    icon: 'chart',
-    title: 'A report on every student and class',
-    body: 'See which topics a class has mastered, which student is falling behind, and how a course performs against its outcomes. The same figures go straight into your accreditation files.',
-  },
-  {
-    n: '05',
-    icon: 'building',
-    title: 'Fits the college you already run',
-    body: 'Departments, batches, semesters, courses, and labs are set up the way your institution already works. Nothing has to be reorganised to begin.',
-  },
-  {
-    n: '06',
-    icon: 'clock',
-    title: 'Frees your faculty for teaching',
-    body: 'Faculty reuse papers from their question banks, most of the correction happens without them, and results publish in a click. A department gets back weeks of correction time every semester.',
+    icon: 'layers',
+    title: 'Any mix of question types',
+    body: 'MCQ, true or false, fill in the blank, matching, descriptive, file upload and coding questions can sit in the same paper, with one mark sheet at the end.',
   },
 ];
 
+/* §02 — during the exam */
 export const SECURITY_PILLARS = [
   {
     icon: 'lock',
-    title: 'Secure exam browser',
-    desc: 'Students can only begin from the approved EvolveUs exam environment, so the exam runs on a locked-down screen with nothing else reachable.',
+    title: 'Locked exam browser',
+    desc: 'An exam can require the Evolveus kiosk browser. Until the student submits, other apps and websites stay closed.',
   },
   {
     icon: 'monitor',
-    title: 'Full-screen enforcement',
-    desc: 'The exam holds the whole screen for its full duration. Any attempt to leave is recorded and the student is prompted straight back.',
+    title: 'Full screen throughout',
+    desc: 'Leaving full screen is logged, and the student has to return to it before carrying on.',
   },
   {
     icon: 'network',
-    title: 'Restricted to your labs',
-    desc: 'An exam can be limited to approved campus labs or your college network, so it cannot be attempted from home.',
+    title: 'Only from your labs',
+    desc: "An exam can be limited to approved lab networks by IP range, so it can't be taken from a hostel room or from home.",
   },
   {
     icon: 'key',
-    title: 'Password-controlled start',
-    desc: 'A quiz can require a password released by the invigilator, so no one begins before the exam is called.',
+    title: 'Started with a password',
+    desc: 'The invigilator reads out the password when the exam begins, so nobody starts early.',
   },
 ];
 
@@ -501,89 +492,177 @@ export const WATCHED = [
   'Other restricted keyboard shortcuts',
 ];
 
+/* §03 — marking */
 export const EVALUATION = [
   {
     id: 'descriptive',
     icon: 'edit',
-    label: 'Descriptive answers',
-    title: 'Long answers, corrected overnight',
-    body: 'Faculty set a model answer and the points that earn marks. EvolveUs then judges every script against that same standard and returns a mark with a short reason for it, so a paper that once took a week is ready the next morning.',
+    label: 'Written answers',
+    title: 'Graded against your rubric, with a reason',
+    body: 'Faculty write the model answer and the points that earn marks. Evolveus grades every answer against them and writes a short remark explaining each mark.',
     points: [
-      'Marked against the rubric your own faculty wrote',
-      'Every script judged to the same standard, first to last',
-      'A short reason shown beside each mark',
-      'Faculty can change any mark before results are published',
+      'Marked against the rubric your faculty wrote',
+      'The same standard for the first answer and the last',
+      'A written reason beside every mark',
+      'Faculty can change any mark before results go out',
     ],
   },
   {
     id: 'coding',
     icon: 'code',
     label: 'Coding answers',
-    title: 'Lab exams that need no correction',
-    body: 'Students write and run their program in the browser. EvolveUs runs it against the test cases faculty prepared and gives marks for how much of it works, then checks that the student actually solved the problem instead of working around it.',
+    title: 'Run against test cases, then checked for method',
+    body: 'Students write and run code in the browser. The program runs against the visible and hidden test cases faculty set, and earns part marks for the cases it passes. When a question asks for a particular approach, such as dynamic programming, an AI check confirms the student used it, even if every test passed.',
     points: [
-      'Seven programming languages, chosen per question',
+      'Seven languages, chosen per question',
       'Part marks for a partly working program',
-      'Results the moment the exam closes',
-      'Shortcut answers flagged rather than quietly passed',
+      'Off-method solutions flagged for faculty',
+      'Time and memory limits set per question',
     ],
+  },
+];
+
+/* Real screens from the product, captured with names replaced. */
+export const MARKING_SHOTS = [
+  {
+    src: '/product/grading-remark.webp',
+    alt: 'A descriptive answer from an operating systems quiz, marked 2 out of 2, with the remark explaining why it earned full marks.',
+    caption: 'A written answer from an operating systems quiz, with the mark and the remark Evolveus wrote for it.',
+  },
+  {
+    src: '/product/attempt-analytics.webp',
+    alt: "One question from a student's attempt, showing the chosen option, the time spent, clicks and views.",
+    caption: 'For every question: the answer, the time spent, how many times the student opened it, and how many clicks it took.',
   },
 ];
 
 export const AI_ASSURANCE = [
   {
     icon: 'checkCircle',
-    title: 'Faculty always have the last word',
-    desc: 'Nothing reaches a student until a faculty member has reviewed and approved it. Any mark can be changed.',
+    title: 'Nothing is published until faculty say so',
+    desc: 'Students see results only after a faculty member publishes them. Any mark can be edited before that, and every edit is logged.',
   },
   {
-    icon: 'shield',
-    title: 'Consistent from first script to last',
-    desc: 'The same standard is applied to every paper, without the drift that creeps in over a long correction session.',
-  },
-  {
-    icon: 'clock',
-    title: 'Results back within days',
-    desc: 'Correction is no longer the thing holding up results at the end of a semester.',
+    icon: 'refresh',
+    title: 'Fix the rubric, re-grade the question',
+    desc: 'If a rubric turns out to be wrong, correct it and re-evaluate that one question for the whole class.',
   },
 ];
 
+/* §04 — reports */
 export const REPORTS = [
   {
     id: 'student',
-    label: 'For each student',
+    label: 'For one student',
     icon: 'graduation',
-    title: 'Every student gets their own picture',
-    summary: 'Each student sees more than a mark out of a hundred: the topics they are strong in, the one to work on next, and how they have improved across the semester.',
+    title: 'Where the marks went',
+    summary: "Each attempt shows the student's score against the class, their rank, the time spent on each question, and marks broken down by Bloom's level. Students see their own trend across every course they take.",
     points: [
-      'Strongest topic, and the topic needing attention',
-      'Progress built up automatically across every exam taken',
-      'A clear view of where marks were actually lost',
-      'Something a tutor can act on in a mentoring session',
+      'Score, rank, and distance from the class average',
+      "Marks by Bloom's level and course outcome",
+      'A score trend across all their courses',
+      'Blank answers and rushed attempts flagged',
     ],
+    shot: { src: '/product/student-standing.webp', alt: "One student's attempt: score, class average, rank, and marks by Bloom's level." },
   },
   {
     id: 'class',
-    label: 'For each class',
+    label: 'For one exam',
     icon: 'chart',
-    title: 'And the department sees the whole cohort',
-    summary: 'Results roll up by topic and by course outcome, so a weak area shows up while there is still time to teach it again.',
+    title: 'How the class did, and who needs a word',
+    summary: 'The spread of scores for the whole class, with the students who need attention listed beside it and the reason for each: well below average, answers left blank, or finished unusually fast.',
     points: [
-      'Topic-wise mastery for the whole class at a glance',
+      'Score distribution, mean and median',
+      'Students to follow up, with the reason',
+      'Question difficulty measured from real answers',
+      'Results exported to Excel',
+    ],
+    shot: { src: '/product/cohort-results.webp', alt: 'Results for a 131-student quiz: score histogram and a list of students to follow up.' },
+  },
+  {
+    id: 'department',
+    label: 'For a department',
+    icon: 'building',
+    title: 'Topic mastery across batches',
+    summary: 'Mastery for each topic, compared across sections and semesters, so a weak topic shows up while there is still time to teach it again.',
+    points: [
+      'Topic mastery for every class',
       'Course outcome attainment, CO1 to CO8',
-      'Exportable for NAAC and NBA accreditation files',
       'Comparison across batches, sections, and semesters',
     ],
   },
 ];
 
+/* Illustrative numbers for the department view. Labelled as sample data on the page. */
+export const MASTERY_SAMPLE = {
+  course: 'Operating Systems, semester 3',
+  batches: ['Section A', 'Section B', 'Section C'],
+  topics: [
+    { name: 'Processes and threads', v: [78, 74, 81] },
+    { name: 'CPU scheduling', v: [71, 66, 69] },
+    { name: 'Synchronisation', v: [52, 44, 58] },
+    { name: 'Deadlocks', v: [63, 61, 57] },
+    { name: 'Memory management', v: [47, 39, 51] },
+    { name: 'File systems', v: [69, 72, 64] },
+  ],
+};
+
+export const AI_HELP = {
+  title: 'Or just ask',
+  desc: 'Faculty can ask the built-in assistant how a class is doing or which topics are weakest, or have it set up a quiz. It shows what it is about to do and waits for a yes.',
+};
+
+/* §05 — roles, with current screens */
+export const BRAND_ROLES = [
+  {
+    id: 'admin',
+    label: 'Administrator',
+    src: '/product/role-admin.webp',
+    summary: 'Sets up departments, batches, semesters, courses and labs, and manages every account in the university.',
+    features: [
+      'Departments, batches, semesters, and courses',
+      'Accounts and roles for admins, managers, faculty, and students',
+      'Lab IP ranges for exams that must be taken on campus',
+      'Bulk import of courses and users from a spreadsheet',
+      'An audit log of exam edits and mark changes',
+    ],
+  },
+  {
+    id: 'faculty',
+    label: 'Faculty',
+    src: '/product/role-faculty.webp',
+    summary: 'Writes questions, sets and schedules exams, checks the marking, and follows up on the results.',
+    features: [
+      'Question banks organised by topic and shared with colleagues',
+      "Bloom's level and course outcome on every question",
+      'Exams scheduled to courses, batches, or single students',
+      'AI marks reviewed and changed before publishing',
+      'Analytics for each course, quiz, question, and student',
+    ],
+  },
+  {
+    id: 'student',
+    label: 'Student',
+    src: '/product/role-student.webp',
+    summary: 'Takes exams, sees results once they are published, and keeps track of their own progress.',
+    features: [
+      'Live, upcoming, completed, and missed exams in one list',
+      'A timed exam with a question navigator and continuous saving',
+      'An in-browser code editor for coding questions',
+      'Results and remarks once faculty publish them',
+      'A score trend across every course',
+    ],
+  },
+];
+
+/* §06 — deployment */
 export const BRAND_DEPLOY = [
   {
     id: 'managed',
     icon: 'globe',
     label: 'Hosted by us',
-    tagline: 'Your IT team has nothing to run.',
-    sub: 'We host, update, back up, and monitor the platform. Your college can be conducting exams within days.',
+    tagline: 'Nothing for your IT team to run.',
+    sub: 'We host, update, back up and monitor it. A university can be running exams within days.',
     features: [
       'Running in days, with no servers to buy',
       'Updates and backups handled for you',
@@ -594,44 +673,40 @@ export const BRAND_DEPLOY = [
     id: 'self',
     icon: 'building',
     label: 'On your campus',
-    tagline: 'Student data never leaves your servers.',
-    sub: 'Install it on your own machines or private cloud. We still look after the software; the data simply stays with you.',
+    tagline: 'Student data stays on your servers.',
+    sub: 'Install it on your own machines or private cloud, and we maintain it there.',
     features: [
-      'Student records remain on your own network',
-      'We maintain and update it on your servers',
-      'Meets institutional data-residency requirements',
+      'Student records stay on your own network',
+      'We update and maintain it on your servers',
+      'For complete isolation, run the AI models on your own hardware or switch AI marking off',
     ],
   },
 ];
 
+/* §07 — the team. TODO(confirm): wording about the team's origin. */
+export const TEAM = {
+  title: 'Who builds Evolveus',
+  paragraphs: [
+    'Evolveus is built by a small team that started at the School of AI, Amrita Vishwa Vidyapeetham. The department runs its quizzes and end-semester exams on it.',
+    'Most of what is on this page began as a request from faculty there, or as a problem that turned up during a real exam. If you get in touch, you will be talking to the people who write the code.',
+  ],
+};
+
 export const BRAND_CTA = {
   eyebrow: 'Book a walkthrough',
   headline: 'See it with your own question paper.',
-  sub: 'We will take your team through a real exam, start to finish: setting the paper, supervising the hall, correcting the scripts, and publishing the reports. Half an hour is usually enough.',
+  sub: 'Send us a paper you have already set. We will run it as a real exam with your team, from setting it up to the report at the end. It takes about half an hour.',
 };
 
-export const AI_HELP = [
-  {
-    icon: 'fileText',
-    title: 'Draft a paper from your own material',
-    desc: 'Upload the notes or textbook chapter you taught from, and EvolveUs drafts a set of questions on that subject for faculty to review, edit, and keep.',
-  },
-  {
-    icon: 'terminal',
-    title: 'Ask for what you need in plain language',
-    desc: 'Faculty can simply ask how a class is doing, which topics are weakest, or to set up a quiz, and the assistant does it on their confirmation.',
-  },
-];
-
 export const BRAND_FOOTER = {
-  tagline: 'Online examinations, evaluation, and reporting for colleges.',
+  tagline: 'Online exams, marking, and reports for universities.',
   columns: [
     {
       title: 'Platform',
       links: [
-        { href: '#why', label: 'Why EvolveUs' },
+        { href: '#before', label: 'Setting papers' },
         { href: '#security', label: 'Exam security' },
-        { href: '#evaluation', label: 'Evaluation' },
+        { href: '#marking', label: 'Marking' },
         { href: '#reports', label: 'Reports' },
       ],
     },
@@ -646,7 +721,7 @@ export const BRAND_FOOTER = {
       title: 'Talk to us',
       links: [
         { href: '#contact', label: 'Book a walkthrough' },
-        { href: '#roles', label: 'Who uses it' },
+        { href: '#team', label: 'Who builds it' },
       ],
     },
   ],
@@ -660,8 +735,8 @@ export const BRAND_LOGO = {
 /* ─────────────────────────────────────────────────────────────
    COMPARISON PAGE
 
-   A college almost never compares EvolveUs against one named
-   product. It compares EvolveUs against a *kind* of tool it already
+   A college almost never compares Evolveus against one named
+   product. It compares Evolveus against a *kind* of tool it already
    has — a form, its LMS, a coding-test service, a proctoring vendor.
    So this page compares categories, and names well-known products
    only as examples of the category they belong to.
@@ -669,17 +744,17 @@ export const BRAND_LOGO = {
    The rule for everything below: describe what each kind of tool was
    BUILT for. Never assert that a named vendor lacks a named feature.
    Vendors ship; a claim that is true this quarter becomes a liability
-   the next one. Every EvolveUs column entry is backed by FEATURES.md.
+   the next one. Every Evolveus column entry is backed by FEATURES.md.
    ───────────────────────────────────────────────────────────── */
 
 export const COMPARE_HERO = {
-  eyebrow: 'How EvolveUs compares',
+  eyebrow: 'How Evolveus compares',
   headline: 'What are you comparing it against?',
-  sub: 'Most colleges are not choosing between two examination platforms. They are deciding whether the tools already on campus — a form, the LMS, a coding-test service — are enough to run a real examination. This page is an honest answer to that.',
+  sub: 'Most colleges are not choosing between two exam platforms. They are deciding whether the tools already on campus, such as a form, the LMS or a coding-test service, are enough to run a real exam. This page tries to answer that honestly.',
   note: 'Including the cases where the answer is no, and you should keep what you have.',
 };
 
-/* The four things a college actually weighs EvolveUs against. */
+/* The four things a college actually weighs Evolveus against. */
 export const COMPARE_ALTERNATIVES = [
   {
     id: 'forms',
@@ -703,7 +778,7 @@ export const COMPARE_ALTERNATIVES = [
     label: 'Coding-test platforms',
     examples: 'HackerRank, HackerEarth',
     built: 'Built to screen engineers for a job, at scale, on code alone.',
-    gap: 'They are strong at exactly the thing they do. But a semester examination is not only code, and their unit of thought is a candidate in a hiring funnel, not a student in a batch under a syllabus.',
+    gap: 'They are strong at exactly the thing they do. A semester exam has more than code in it, though, and these tools think in candidates moving through a hiring funnel, where a college thinks in students in a batch working through a syllabus.',
   },
   {
     id: 'proctor',
@@ -711,12 +786,12 @@ export const COMPARE_ALTERNATIVES = [
     label: 'Proctoring and hiring suites',
     examples: 'Mercer | Mettl, Talview',
     built: 'Built to supervise high-stakes tests for employers and certification bodies.',
-    gap: 'Supervision is genuinely their strength. What they are not built around is your academic year — course outcomes, internal marks, and a head of department asking which topic a class did badly on.',
+    gap: 'Supervision is their strength. They are not built around your academic year: course outcomes, internal marks, and a head of department asking which topic a class did badly on.',
   },
 ];
 
 export const COMPARE_COLUMNS = [
-  { id: 'evolveus', label: 'EvolveUs', sub: 'Examinations for colleges' },
+  { id: 'evolveus', label: 'Evolveus', sub: 'Examinations for colleges' },
   { id: 'forms', label: 'Form tools', sub: 'Google, Microsoft Forms' },
   { id: 'lms', label: 'LMS quizzes', sub: 'Moodle, Classroom' },
   { id: 'judge', label: 'Coding tests', sub: 'HackerRank, HackerEarth' },
@@ -728,7 +803,7 @@ export const COMPARE_ROWS = [
   {
     id: 'structure',
     criterion: 'Shaped like a college',
-    detail: 'Departments, programmes, batches, semesters and courses are the setup, not a naming convention.',
+    detail: 'Departments, programmes, batches, semesters and courses are set up first, and every exam hangs off them.',
     cells: {
       evolveus: { v: 'full', t: 'The academic structure is step one' },
       forms: { v: 'none', t: 'A form has no batches' },
@@ -800,7 +875,7 @@ export const COMPARE_ROWS = [
   {
     id: 'attainment',
     criterion: 'Reports a head of department can act on',
-    detail: 'Results rolled up by topic and course outcome, for a class and across a batch, not just a list of marks.',
+    detail: 'Results rolled up by topic and course outcome, for one class or across a whole batch.',
     cells: {
       evolveus: { v: 'full', t: 'Topic and outcome attainment' },
       forms: { v: 'none', t: 'A spreadsheet of responses' },
@@ -845,12 +920,12 @@ export const COMPARE_HONEST = [
   {
     icon: 'users',
     title: 'You are hiring, not teaching',
-    body: 'For placement drives and screening at scale, a hiring platform is built around exactly that problem. EvolveUs is built around the semester.',
+    body: 'For placement drives and screening at scale, a hiring platform is built around exactly that problem. Evolveus is built around the semester.',
   },
   {
     icon: 'bookOpen',
     title: 'Your LMS already carries the course',
-    body: 'If material, assignments and discussion live in your LMS and it is working, keep it. Colleges usually bring in EvolveUs for the examination alone and leave the LMS where it is.',
+    body: 'If material, assignments and discussion live in your LMS and it is working, keep it. Colleges usually bring in Evolveus for the examination alone and leave the LMS where it is.',
   },
 ];
 
@@ -865,10 +940,10 @@ export const COMPARE_REPLACES = [
 ];
 
 export const COMPARE_NOTE =
-  'This page compares categories of tool by what they were designed to do, not the current feature list of any one vendor. Products change; confirm specifics with each vendor before you decide. Every claim in the EvolveUs column is something we will demonstrate live.';
+  'This page compares categories of tool by what they were designed to do, not the current feature list of any one vendor. Products change; confirm specifics with each vendor before you decide. Every claim in the Evolveus column is something we will demonstrate live.';
 
 export const COMPARE_CTA = {
   eyebrow: 'Judge it yourself',
   headline: 'Put it beside whatever you use now.',
-  sub: 'Send us the paper you set last semester. We will run it through EvolveUs and show you the supervision log, the corrected scripts, and the report your department would have received.',
+  sub: 'Send us the paper you set last semester. We will run it through Evolveus and show you the supervision log, the corrected scripts, and the report your department would have received.',
 };

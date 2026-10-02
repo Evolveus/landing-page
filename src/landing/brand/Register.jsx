@@ -5,17 +5,19 @@ import { ContactForm } from '../_shared/ContactForm';
 import { Rv, SectionHead, Nav, Footer } from './chrome';
 import { motionOK, useReveal } from './pageMotion';
 import {
-  BRAND, BRAND_HERO, TRUST, VALUE,
-  SECURITY_PILLARS, WATCHED, EVALUATION, AI_ASSURANCE, AI_HELP,
-  REPORTS, ROLES, BRAND_DEPLOY, BRAND_CTA,
+  BRAND, BRAND_HERO, TRUST, BEFORE,
+  SECURITY_PILLARS, WATCHED, EVALUATION, MARKING_SHOTS, AI_ASSURANCE, AI_HELP,
+  REPORTS, MASTERY_SAMPLE, BRAND_ROLES, BRAND_DEPLOY, TEAM, BRAND_CTA,
 } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
-   REGISTER — the EvolveUs brand page.
+   REGISTER — the Evolveus brand page.
 
    One idea carries the whole design: the answer sheet. Bubbles are
    the brand's atom, hairline rules do the structural work, and the
    margin rail numbers each section the way an exam booklet does.
+   The sections follow one exam from start to finish: setting the
+   paper, sitting it, marking it, reading the results.
    Every fact on this page comes from ../content.js.
    ═══════════════════════════════════════════════════════════════ */
 
@@ -113,26 +115,60 @@ function Counter({ text }) {
   return <span ref={ref}>{text}</span>;
 }
 
-/* A field of answer-sheet bubbles. Decorative brand texture, not data:
-   the fill pattern is deterministic from the seed, and carries no meaning. */
-function BubbleField({ rows = 6, cols = 14, seed = 7 }) {
-  const cells = [];
-  for (let r = 0; r < rows; r += 1) {
-    for (let c = 0; c < cols; c += 1) {
-      const h = Math.sin((r * 12.9898 + c * 78.233) * seed) * 43758.5453;
-      const on = (h - Math.floor(h)) > 0.62;
-      cells.push({ key: `${r}-${c}`, on, d: (r * cols + c) * 12 });
-    }
-  }
+/* A real product card, cropped from the app and set on a tinted mat like
+   a figure in a printed booklet. Whole screens use the browser frame in
+   Roles instead; a single card in a browser frame reads as a shrunken page. */
+function Shot({ src, alt, caption, className = '', delay = 0 }) {
   return (
-    <div className="rg-field" aria-hidden="true" style={{ '--cols': cols }}>
-      {cells.map((c) => (
-        <i
-          key={c.key}
-          className={`rg-field-b ${c.on ? 'on' : ''}`}
-          style={{ '--d': `${c.d}ms` }}
-        />
-      ))}
+    <Rv as="figure" className={`rg-shot-fig ${className}`} delay={delay}>
+      <div className="rg-exhibit">
+        <img src={src} alt={alt} loading="lazy" />
+      </div>
+      {caption && <figcaption className="rg-shot-cap">{caption}</figcaption>}
+    </Rv>
+  );
+}
+
+/* The department view, drawn rather than screenshotted: the clone of
+   production has no topic-mastery data yet, so this uses sample numbers
+   and says so. Each cell is a bar on the same 0 to 100 scale, and the
+   weakest cell in each row is marked. */
+function MasteryTable() {
+  const { course, batches, topics } = MASTERY_SAMPLE;
+  return (
+    <div className="rg-shot rg-mastery">
+      <div className="rg-shot-bar">
+        <span className="rg-mono">{BRAND.domain} / topic mastery</span>
+        <span className="rg-mono rg-mastery-tag">Sample data</span>
+      </div>
+      <div className="rg-mastery-in">
+        <div className="rg-mastery-course">{course}</div>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Topic</th>
+              {batches.map((b) => <th scope="col" key={b}>{b}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {topics.map((t) => {
+              const low = Math.min(...t.v);
+              return (
+                <tr key={t.name}>
+                  <th scope="row">{t.name}</th>
+                  {t.v.map((v, i) => (
+                    <td key={batches[i]} className={v < 50 ? 'is-weak' : ''}>
+                      <span className="rg-mastery-bar"><i style={{ width: `${v}%` }} /></span>
+                      <span className={`rg-mastery-n ${v === low ? 'is-low' : ''}`}>{v}%</span>
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p className="rg-mastery-key">Sample numbers. Topics below 50% are marked in amber.</p>
+      </div>
     </div>
   );
 }
@@ -187,13 +223,13 @@ function SpecimenSheet() {
 
 /* ── Roles, with a screenshot of the real product ─────────────── */
 function Roles() {
-  const [active, setActive] = useState(ROLES[0].id);
-  const role = ROLES.find((r) => r.id === active) ?? ROLES[0];
+  const [active, setActive] = useState(BRAND_ROLES[0].id);
+  const role = BRAND_ROLES.find((r) => r.id === active) ?? BRAND_ROLES[0];
 
   return (
     <>
       <Rv className="rg-tabs" role="tablist">
-        {ROLES.map((r) => (
+        {BRAND_ROLES.map((r) => (
           <button
             key={r.id}
             role="tab"
@@ -225,7 +261,7 @@ function Roles() {
             <span className="rg-mono">{BRAND.domain} / {role.id}</span>
             <span className="rg-shot-dots"><i /><i /><i /></span>
           </div>
-          <img src={role.src} alt={`${role.label} view in EvolveUs`} loading="lazy" />
+          <img src={role.src} alt={`${role.label} view in Evolveus`} loading="lazy" />
         </Rv>
       </div>
     </>
@@ -248,64 +284,45 @@ export default function Register() {
 
       {/* ── HERO ────────────────────────────────────────── */}
       <header className="rg-hero" id="top">
-        <div className="rg-wrap rg-hero-in">
-          <Rv className="rg-eyebrow">
-            <span className="rg-bub rg-bub--fill" />
-            <span className="rg-mono">{BRAND_HERO.eyebrow}</span>
-          </Rv>
+        <div className="rg-wrap rg-hero-in rg-hero-grid">
+          <div>
+            <Rv className="rg-eyebrow">
+              <span className="rg-bub rg-bub--fill" />
+              <span className="rg-mono">{BRAND_HERO.eyebrow}</span>
+            </Rv>
 
-          <Rv as="h1" className="rg-display rg-rv--mask" delay={80}>
-            {(() => {
-              const EMPH = 'stand behind';
-              const [before, after] = BRAND_HERO.headline.split(EMPH);
-              return after === undefined
-                ? BRAND_HERO.headline
-                : <>{before}<em>{EMPH}</em>{after}</>;
-            })()}
-          </Rv>
+            <Rv as="h1" className="rg-display rg-rv--mask" delay={80}>
+              {(() => {
+                const [before, after] = BRAND_HERO.headline.split(BRAND_HERO.emphasis);
+                return after === undefined
+                  ? BRAND_HERO.headline
+                  : <>{before}<em>{BRAND_HERO.emphasis}</em>{after}</>;
+              })()}
+            </Rv>
 
-          <div className="rg-hero-grid">
-            <div>
-              <Rv as="p" className="rg-lede" delay={160}>{BRAND_HERO.sub}</Rv>
+            <Rv as="p" className="rg-lede" delay={160}>{BRAND_HERO.sub}</Rv>
 
-              <Rv className="rg-hero-ctas" delay={220}>
-                <a className="rg-btn" href="#contact">
-                  Book a walkthrough
-                  <Icon name="arrowRight" size={15} />
-                </a>
-                <a className="rg-btn rg-btn--ghost" href="#why">See what it does</a>
-              </Rv>
+            <Rv className="rg-hero-ctas" delay={220}>
+              <a className="rg-btn" href="#contact">
+                Book a walkthrough
+                <Icon name="arrowRight" size={15} />
+              </a>
+              <a className="rg-btn rg-btn--ghost" href="#before">Follow one exam through</a>
+            </Rv>
 
-              <Rv className="rg-hero-note" delay={280}>
-                <Icon name="shieldCheck" size={15} />
-                {BRAND_HERO.note}
-              </Rv>
-            </div>
-
-            <Rv delay={300}>
-              <div ref={sheetDrift}>
-                <SpecimenSheet />
-              </div>
+            <Rv className="rg-hero-note" delay={280}>
+              <Icon name="shieldCheck" size={15} />
+              {BRAND_HERO.note}
             </Rv>
           </div>
+
+          <Rv delay={300}>
+            <div ref={sheetDrift}>
+              <SpecimenSheet />
+            </div>
+          </Rv>
         </div>
       </header>
-
-      {/* ── WATCHED-DURING-EXAM TICKER ──────────────────── */}
-      <div className="rg-ticker" aria-hidden="true">
-        <div className="rg-ticker-in">
-          {[0, 1].map((copy) => (
-            <div className="rg-ticker-seq" key={copy}>
-              {WATCHED.map((w) => (
-                <span className="rg-ticker-item" key={w}>
-                  <i />
-                  {w}
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* ── TRUST ───────────────────────────────────────── */}
       <div className="rg-wrap">
@@ -325,18 +342,18 @@ export default function Register() {
         </div>
       </div>
 
-      {/* ── §01 WHY ─────────────────────────────────────── */}
-      <section className="rg-sec" id="why">
+      {/* ── §01 BEFORE THE EXAM ─────────────────────────── */}
+      <section className="rg-sec" id="before">
         <div className="rg-wrap">
           <SectionHead
             code="§01"
-            kicker="Why colleges choose it"
-            title="Everything an exam needs, from the paper to the report."
-            lede="One system for setting the paper, supervising the exam, correcting the answers, and telling you what the results actually mean."
+            kicker="Before the exam"
+            title="Papers built from a shared question bank"
+            lede="A good question written once can be used again next semester, by anyone in the department the bank is shared with."
           />
 
-          <div className="rg-pillars">
-            {VALUE.map((v, i) => (
+          <div className="rg-pillars rg-pillars--two">
+            {BEFORE.map((v, i) => (
               <Rv className="rg-pillar" key={v.n} delay={i * 60}>
                 <div className="rg-pillar-top">
                   <span className="rg-pillar-n">{v.n}</span>
@@ -350,14 +367,14 @@ export default function Register() {
         </div>
       </section>
 
-      {/* ── §02 EXAM SECURITY ───────────────────────────── */}
+      {/* ── §02 DURING THE EXAM ─────────────────────────── */}
       <section className="rg-sec rg-sec--dark" id="security">
         <div className="rg-wrap">
           <SectionHead
             code="§02"
-            kicker="Exam security"
-            title="An online exam, invigilated properly."
-            lede="The reason most colleges hesitate about online exams is supervision. This is how EvolveUs answers that."
+            kicker="During the exam"
+            title="Controls while the exam is running"
+            lede="An online exam is only worth running if the university trusts the result. These controls make cheating hard, and the log shows when someone tried."
           />
 
           <div className="rg-feat-grid">
@@ -371,11 +388,10 @@ export default function Register() {
           </div>
 
           <div className="rg-sub">
-            <Rv as="h3" className="rg-sub-h">And the invigilator never blinks</Rv>
+            <Rv as="h3" className="rg-sub-h">What gets logged</Rv>
             <Rv as="p" className="rg-sub-lede" delay={60}>
-              While a student is writing, the system watches for the things a supervisor
-              in the hall would notice. Anything unusual is recorded against that
-              attempt and shown to faculty with the paper.
+              Each of these is recorded against the student's attempt, with the time it
+              happened. Faculty see the log next to the answers and decide what it means.
             </Rv>
 
             <div className="rg-log">
@@ -403,14 +419,14 @@ export default function Register() {
         </div>
       </section>
 
-      {/* ── §03 EVALUATION ──────────────────────────────── */}
-      <section className="rg-sec" id="evaluation">
+      {/* ── §03 MARKING ─────────────────────────────────── */}
+      <section className="rg-sec" id="marking">
         <div className="rg-wrap">
           <SectionHead
             code="§03"
-            kicker="Evaluation"
-            title="Correction that finishes with the exam."
-            lede="The longest part of any examination is not writing it, it is correcting it. This is the part EvolveUs takes off your faculty."
+            kicker="After the exam"
+            title="Marked within minutes of the exam closing"
+            lede="Objective questions are marked the moment a student submits. Written and coding answers go to a marking queue, and on a normal day the whole paper is done within about ten minutes."
           />
 
           <div className="rg-evals">
@@ -435,28 +451,22 @@ export default function Register() {
           </div>
 
           <div className="rg-sub">
-            <Rv as="h3" className="rg-sub-h">Faculty stay in charge of every mark</Rv>
+            <Rv as="h3" className="rg-sub-h">From a real exam</Rv>
             <Rv as="p" className="rg-sub-lede" delay={60}>
-              Automatic correction is only useful if the college can defend the result.
-              So nothing is final until a faculty member says so.
+              Two screens from a 131-student operating systems quiz. Student names and IP
+              addresses are replaced. The time, click and view
+              counts are a rough signal of how sure a student was. They help spot a
+              confusing question or a rushed attempt, but nobody should mark on them alone.
             </Rv>
-            <Rv className="rg-assure" delay={100}>
-              {AI_ASSURANCE.map((h) => (
-                <div className="rg-hi" key={h.title}>
-                  <span className="rg-hi-ico"><Icon name={h.icon} size={20} /></span>
-                  <div>
-                    <h3 className="rg-h3">{h.title}</h3>
-                    <p>{h.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </Rv>
+            <div className="rg-shots">
+              {MARKING_SHOTS.map((sh, i) => <Shot key={sh.src} {...sh} delay={i * 100} />)}
+            </div>
           </div>
 
           <div className="rg-sub">
-            <Rv as="h3" className="rg-sub-h">It helps set the paper too</Rv>
+            <Rv as="h3" className="rg-sub-h">Faculty sign off on every mark</Rv>
             <Rv className="rg-assure rg-assure--two" delay={80}>
-              {AI_HELP.map((h) => (
+              {AI_ASSURANCE.map((h) => (
                 <div className="rg-hi" key={h.title}>
                   <span className="rg-hi-ico"><Icon name={h.icon} size={20} /></span>
                   <div>
@@ -475,9 +485,9 @@ export default function Register() {
         <div className="rg-wrap">
           <SectionHead
             code="§04"
-            kicker="Reports"
-            title="Marks are the start, not the answer."
-            lede="Every question carries a topic and a course outcome, so results add up to something a tutor and a head of department can actually act on."
+            kicker="Results"
+            title="Results by student, by class, and by topic"
+            lede="Every question carries a topic and a course outcome, so results add up to more than a mark list. A tutor can see what one student needs, and a head of department can see where a whole batch is weak."
           />
 
           <div className="rg-mrows">
@@ -500,11 +510,23 @@ export default function Register() {
                   </ul>
                 </Rv>
 
-                <Rv className="rg-mrow-art" delay={140}>
-                  <BubbleField rows={8} cols={12} seed={i === 0 ? 7 : 19} />
-                </Rv>
+                <div className="rg-mrow-art">
+                  {m.shot
+                    ? <Shot {...m.shot} delay={140} />
+                    : <Rv delay={140}><MasteryTable /></Rv>}
+                </div>
               </div>
             ))}
+          </div>
+
+          <div className="rg-sub">
+            <Rv className="rg-hi rg-ask">
+              <span className="rg-hi-ico"><Icon name="terminal" size={20} /></span>
+              <div>
+                <h3 className="rg-h3">{AI_HELP.title}</h3>
+                <p>{AI_HELP.desc}</p>
+              </div>
+            </Rv>
           </div>
         </div>
       </section>
@@ -515,8 +537,8 @@ export default function Register() {
           <SectionHead
             code="§05"
             kicker="Who uses it"
-            title="Three seats at the same table."
-            lede="Your office sets up the college, faculty run their own assessments, and students see only their own work."
+            title="Administrators, faculty, and students"
+            lede="The exam office sets up the university, faculty run their own exams, and students see only their own work."
           />
           <Roles />
         </div>
@@ -528,8 +550,8 @@ export default function Register() {
           <SectionHead
             code="§06"
             kicker="Deployment"
-            title="Our servers, or yours."
-            lede="The same platform either way. The only question is where your student data sits."
+            title="Hosted by us, or on your campus"
+            lede="The software is the same either way. What changes is where your student data is stored."
           />
 
           <Rv className="rg-deploy">
@@ -552,6 +574,19 @@ export default function Register() {
               </div>
             ))}
           </Rv>
+        </div>
+      </section>
+
+      {/* ── §07 TEAM ────────────────────────────────────── */}
+      <section className="rg-sec" id="team">
+        <div className="rg-wrap">
+          <SectionHead code="§07" kicker="The team" title={TEAM.title} />
+
+          <div className="rg-team">
+            {TEAM.paragraphs.map((p, i) => (
+              <Rv as="p" key={i} delay={i * 60}>{p}</Rv>
+            ))}
+          </div>
         </div>
       </section>
 

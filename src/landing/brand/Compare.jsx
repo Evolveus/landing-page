@@ -126,7 +126,7 @@ export default function Compare() {
           <div className="cm-scroll" tabIndex={0} role="region" aria-label="Comparison grid">
             <table className="cm-grid">
               <caption className="cm-sr">
-                How EvolveUs and four categories of alternative tool are built
+                How Evolveus and four categories of alternative tool are built
                 against nine requirements of a college examination.
               </caption>
               <thead>
