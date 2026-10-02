@@ -55,9 +55,9 @@ body.is-landing > #root,
 
   /* One vertical rhythm, used by every section and sub-block, so the
      gaps between sections stay even down the page. */
-  --sec-y: clamp(72px, 7.5vw, 116px);
-  --head-gap: clamp(40px, 4.5vw, 64px);
-  --sub-gap: clamp(48px, 5vw, 72px);
+  --sec-y: clamp(60px, 6vw, 92px);
+  --head-gap: clamp(32px, 3.6vw, 52px);
+  --sub-gap: clamp(40px, 4vw, 60px);
 
   position: relative;
   width: 100%;
@@ -83,7 +83,8 @@ body.is-landing > #root,
 .rg *, .rg *::before, .rg *::after{ box-sizing: border-box; }
 .rg p{ margin: 0; }
 .rg ul{ list-style: none; margin: 0; padding: 0; }
-.rg a{ color: inherit; text-decoration: none; }
+/* :where() keeps this reset at class specificity, so .rg-btn's colour wins. */
+.rg :where(a){ color: inherit; text-decoration: none; }
 .rg svg{ stroke-linecap: round; stroke-linejoin: round; }
 .rg ::selection{ background: var(--brand-pale); color: var(--brand-deep); }
 
@@ -366,8 +367,8 @@ body.is-landing > #root,
 }
 
 .rg-hero h1{
-  font-size: clamp(42px, 7.4vw, 106px);
-  margin: 0 0 clamp(26px, 3vw, 38px);
+  font-size: clamp(40px, 4.6vw, 72px);
+  margin: 0 0 clamp(22px, 2.4vw, 32px);
   max-width: 15ch;
 }
 .rg-hero h1 em{
@@ -378,9 +379,9 @@ body.is-landing > #root,
 
 .rg-hero-grid{
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
-  gap: clamp(40px, 6vw, 88px);
-  align-items: end;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(40px, 5vw, 80px);
+  align-items: center;
   padding-bottom: clamp(56px, 7vw, 88px);
 }
 
@@ -574,6 +575,7 @@ body.is-landing > #root,
   border-top: 1px solid var(--rule);
   border-left: 1px solid var(--rule);
 }
+.rg-pillars--two{ grid-template-columns: repeat(2, 1fr); }
 .rg-pillar{
   position: relative;
   padding: clamp(28px, 2.8vw, 40px);
@@ -1148,6 +1150,57 @@ body.is-landing > #root,
 /* ═══════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   PRODUCT SCREENS — real captures in a thin frame
+   ═══════════════════════════════════════════════════════ */
+.rg-shot-fig{ margin: 0; }
+.rg-exhibit{
+  background: var(--paper-2);
+  border: 1px solid var(--rule-soft);
+  border-radius: 4px;
+  padding: clamp(14px, 2vw, 28px);
+}
+.rg-exhibit img{ display: block; width: 100%; height: auto; border-radius: 10px; }
+.rg-shot-cap{
+  margin-top: 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-45);
+  max-width: 60ch;
+}
+.rg-shots{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 40px);
+  align-items: start;
+}
+
+/* Department view: a drawn table, since there is no real data to capture. */
+.rg-mastery-tag{ font-size: 10px; color: var(--flag); }
+.rg-mastery-in{ padding: clamp(18px, 2vw, 26px); overflow-x: auto; }
+.rg-mrow-art, .rg-mrow-text{ min-width: 0; }
+.rg-mastery-course{ font-weight: 600; font-size: 15px; margin-bottom: 16px; }
+.rg-mastery table{ width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.rg-mastery th, .rg-mastery td{ text-align: left; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
+.rg-mastery thead th{ font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-45); }
+.rg-mastery tbody th{ font-weight: 500; color: var(--ink-70); padding-right: 14px; }
+.rg-mastery td{ min-width: 84px; }
+.rg-mastery-bar{ display: block; height: 6px; background: var(--paper-2); border-radius: 3px; overflow: hidden; margin-bottom: 5px; }
+.rg-mastery-bar i{ display: block; height: 100%; background: var(--brand); border-radius: 3px; }
+.rg-mastery td.is-weak .rg-mastery-bar i{ background: var(--flag); }
+.rg-mastery-n{ font-family: var(--mono); font-size: 12px; color: var(--ink-70); font-variant-numeric: tabular-nums; }
+.rg-mastery td.is-weak .rg-mastery-n{ color: var(--flag); }
+.rg-mastery-key{ margin-top: 14px !important; font-size: 12.5px; color: var(--ink-45); }
+
+.rg-ask{ max-width: 760px; padding-top: 0; }
+
+/* ═══════════════════════════════════════════════════════
+   TEAM
+   ═══════════════════════════════════════════════════════ */
+.rg-team{ padding-left: calc(var(--rail) + clamp(20px, 3vw, 48px)); max-width: calc(var(--rail) + 48px + 64ch); }
+.rg-team p{ font-size: clamp(17px, 1.35vw, 19px); line-height: 1.65; color: var(--ink-70); }
+.rg-team p + p{ margin-top: 1.1em !important; }
+
 @media (max-width: 1080px){
   .rg{ --rail: 108px; }
   .rg-pillars{ grid-template-columns: repeat(2, 1fr); }
@@ -1179,6 +1232,8 @@ body.is-landing > #root,
   .rg-deploy{ grid-template-columns: 1fr; }
   .rg-mode + .rg-mode{ border-left: 0; border-top: 1px solid var(--rule); }
   .rg-sechead{ grid-template-columns: 1fr; gap: 20px; }
+  .rg-shots{ grid-template-columns: 1fr; }
+  .rg-team{ grid-template-columns: 1fr; padding-left: 0; }
   .rg-secmark{ position: static; padding-top: 0; }
 }
 
@@ -1191,7 +1246,8 @@ body.is-landing > #root,
   .rg-stat:nth-child(2n){ border-right: 0; padding-right: 0; }
   .rg-stat:nth-child(n+3){ border-top: 1px solid var(--rule); }
   .rg-stat:last-child{ grid-column: 1 / -1; padding-left: 0; border-right: 0; }
-  .rg-pillars{ grid-template-columns: 1fr; }
+  .rg-pillars, .rg-pillars--two{ grid-template-columns: 1fr; }
+  .rg-mastery td{ min-width: 64px; }
   .rg-feat-grid{ grid-template-columns: 1fr; }
   .rg .ef-grid{ grid-template-columns: 1fr; }
   .rg-foot-grid{ grid-template-columns: 1fr; gap: 30px; }
