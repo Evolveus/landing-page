@@ -726,6 +726,7 @@ export const BRAND_FOOTER = {
 
 export const BRAND_LOGO = {
   mark: '/evolveus-mark.png',
+  markDark: '/evolveus-mark-dark.png',
   markLight: '/evolveus-mark-light.png',
 };
 

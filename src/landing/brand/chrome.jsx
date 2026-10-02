@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useScrollProgress, useStuck } from './pageMotion';
+import { useScrollProgress, useStuck, useTheme } from './pageMotion';
 import { Icon } from '../_shared/Icon';
 import { BRAND, BRAND_LOGO, BRAND_NAV, BRAND_FOOTER } from '../content';
 
@@ -18,18 +18,25 @@ export const Rv = ({ as: Tag = 'div', delay = 0, className = '', children, ...re
   </Tag>
 );
 
-/* The brand lockup. `light` swaps in the white mark for dark grounds. */
+/* The brand lockup. `light` swaps in the white mark for the footer's dark
+   ground. Without it (the header), both the light-theme and dark-theme
+   marks are rendered and CSS shows the one that matches the theme. */
 export function Lockup({ light = false }) {
+  const mark = (src, cls = '') => (
+    <img
+      className={`rg-mark ${cls}`}
+      src={src}
+      alt=""
+      width="79"
+      height="128"
+      aria-hidden="true"
+    />
+  );
   return (
     <>
-      <img
-        className="rg-mark"
-        src={light ? BRAND_LOGO.markLight : BRAND_LOGO.mark}
-        alt=""
-        width="79"
-        height="128"
-        aria-hidden="true"
-      />
+      {light
+        ? mark(BRAND_LOGO.markLight)
+        : <>{mark(BRAND_LOGO.mark, 'rg-on-light')}{mark(BRAND_LOGO.markDark, 'rg-on-dark')}</>}
       <span className="rg-brand-name">{BRAND.name}</span>
     </>
   );
@@ -62,6 +69,7 @@ export function SectionHead({ code, kicker, title, lede }) {
 export function Nav({ base = '', extra = [] }) {
   const stuck = useStuck();
   const progress = useScrollProgress();
+  const [theme, toggleTheme] = useTheme();
   const [menu, setMenu] = useState(false);
 
   // Close the mobile menu once the viewport is wide enough to show the full nav.
@@ -90,6 +98,14 @@ export function Nav({ base = '', extra = [] }) {
             </a>
           ))}
         </div>
+        <button
+          className="rg-theme"
+          onClick={toggleTheme}
+          aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          title={theme === 'dark' ? 'Light theme' : 'Dark theme'}
+        >
+          <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={17} />
+        </button>
         <a className="rg-btn rg-btn--sm" href={`${base}#contact`}>
           Book a walkthrough
           <Icon name="arrowRight" size={14} />

@@ -61,6 +61,19 @@ function useDrift(strength = 0.05, cap = 40) {
   return ref;
 }
 
+/* A product screenshot in both themes. Each light image has a dark twin
+   beside it (name-dark.webp); CSS hides the one that does not match, and
+   a hidden lazy image is never downloaded. */
+function ThemedImg({ src, alt }) {
+  const dark = src.replace(/\.webp$/, '-dark.webp');
+  return (
+    <>
+      <img className="rg-on-light" src={src} alt={alt} loading="lazy" />
+      <img className="rg-on-dark" src={dark} alt={alt} loading="lazy" />
+    </>
+  );
+}
+
 /* A real product card, set on a mat drawn like a specimen answer sheet:
    timing marks down the left edge, registration marks in the corners, and
    a figure label in the head. Whole screens use the browser frame in Roles
@@ -81,7 +94,7 @@ function Shot({ src, alt, caption, fig, label, className = '', delay = 0 }) {
   return (
     <Rv as="figure" className={`rg-shot-fig ${className}`} delay={delay}>
       <Exhibit fig={fig} label={label}>
-        <img src={src} alt={alt} loading="lazy" />
+        <ThemedImg src={src} alt={alt} />
       </Exhibit>
       {caption && <figcaption className="rg-shot-cap">{caption}</figcaption>}
     </Rv>
@@ -248,7 +261,7 @@ function Roles() {
             <span className="rg-mono">{BRAND.domain} / {role.id}</span>
             <span className="rg-shot-dots"><i /><i /><i /></span>
           </div>
-          <img src={role.src} alt={`${role.label} view in Evolveus`} loading="lazy" />
+          <ThemedImg src={role.src} alt={`${role.label} view in Evolveus`} />
         </Rv>
       </div>
     </>

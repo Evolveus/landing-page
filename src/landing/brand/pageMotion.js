@@ -107,3 +107,41 @@ export function useScrollProgress() {
   return bar;
 }
 
+
+/* Light or dark.
+
+   With nothing stored, the page follows the system setting. The toggle
+   writes an explicit choice to <html data-theme> and localStorage; the
+   inline script in index.html applies a stored choice before first paint,
+   so the page never flashes the wrong theme. */
+const THEME_KEY = 'evolveus-theme';
+
+function systemTheme() {
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+export function useTheme() {
+  const [theme, setTheme] = useState(
+    () => document.documentElement.dataset.theme || systemTheme(),
+  );
+
+  // Track the system setting while the visitor has not chosen one.
+  useEffect(() => {
+    const mq = window.matchMedia?.('(prefers-color-scheme: dark)');
+    if (!mq) return;
+    const sync = () => {
+      if (!document.documentElement.dataset.theme) setTheme(systemTheme());
+    };
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  const toggle = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(THEME_KEY, next); } catch { /* storage blocked: the choice lasts this visit */ }
+    setTheme(next);
+  };
+
+  return [theme, toggle];
+}
