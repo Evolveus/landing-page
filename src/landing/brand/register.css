@@ -30,6 +30,8 @@ body.is-landing > #root,
 .rg{
   /* ── Ink & paper ─────────────────────────────────── */
   --paper: #fcfcfa;
+  --card: #fff;
+  --nav-bg: rgba(252, 252, 250, 0.86);
   --paper-2: #f4f6f2;
   --ink: #0d1f17;
   --ink-70: #3f564a;
@@ -202,7 +204,7 @@ body.is-landing > #root,
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 900;
-  background: rgba(252, 252, 250, 0.86);
+  background: var(--nav-bg);
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid transparent;
@@ -399,7 +401,7 @@ body.is-landing > #root,
 /* ── The specimen sheet ───────────────────────────── */
 .rg-sheet{
   border: 1px solid var(--rule);
-  background: #fff;
+  background: var(--card);
   border-radius: 3px;
 }
 .rg-sheet-bar{
@@ -687,7 +689,7 @@ body.is-landing > #root,
   flex-shrink: 0;
 }
 
-.rg-shot{ border: 1px solid var(--rule); background: #fff; border-radius: 3px; overflow: hidden; }
+.rg-shot{ border: 1px solid var(--rule); background: var(--card); border-radius: 3px; overflow: hidden; }
 .rg-shot-bar{
   display: flex;
   align-items: center;
@@ -875,7 +877,7 @@ body.is-landing > #root,
   display: grid; place-items: center;
   border: 1px solid var(--rule);
   font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--brand);
-  background: #fff;
+  background: var(--card);
 }
 .rg-omr-col i{
   width: 10px; height: 10px; border-radius: 50%;
@@ -1180,7 +1182,7 @@ body.is-landing > #root,
 .rg-shot-fig{ margin: 0; }
 .rg-exhibit{
   position: relative;
-  background: #fff;
+  background: var(--card);
   border: 1px solid var(--rule);
   border-radius: 3px;
   padding: 0 clamp(14px, 1.8vw, 24px) clamp(14px, 1.8vw, 24px) clamp(30px, 3vw, 40px);
@@ -1228,7 +1230,7 @@ body.is-landing > #root,
 }
 
 /* Department view: a drawn table of bubble rows, since there is no real data to capture. */
-.rg-mastery{ background: #fff; border-radius: 8px; padding: clamp(12px, 1.4vw, 18px); }
+.rg-mastery{ background: var(--card); border-radius: 8px; padding: clamp(12px, 1.4vw, 18px); }
 .rg-mastery-course{ font-weight: 600; font-size: 14px; margin-bottom: 12px; }
 .rg-mastery table{ width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
 .rg-mastery thead th:first-child{ width: 30%; }
@@ -1245,6 +1247,84 @@ body.is-landing > #root,
 
 .rg-ask, .rg-ask:first-child{ max-width: 760px; padding-top: 0; border-top: 0; border-bottom: 0; }
 
+
+
+/* ═══ DARK THEME ═══════════════════════════════════════
+   Follows the system unless the visitor picked a theme with the nav
+   toggle (html[data-theme]). The same values appear twice because the
+   media query and the explicit choice cannot share one selector. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) body.is-landing{ background: #0b1411 !important; }
+  :root:not([data-theme="light"]) .rg{
+  --paper: #0b1411;
+  --paper-2: #111c17;
+  --card: #15211c;
+  --nav-bg: rgba(11, 20, 17, 0.86);
+  --ink: #e4eee8;
+  --ink-70: #a7bbb0;
+  --ink-45: #7d9488;
+  --ink-25: #4c6156;
+  --rule: rgba(214, 230, 221, 0.14);
+  --rule-soft: rgba(214, 230, 221, 0.07);
+  --brand: #3fbf86;
+  --brand-deep: #082017;
+  --brand-lift: #5fd6a0;
+  --brand-pale: rgba(63, 191, 134, 0.2);
+  --brand-wash: rgba(63, 191, 134, 0.07);
+  --flag: #e39a63;
+  }
+}
+:root[data-theme="dark"] body.is-landing{ background: #0b1411 !important; }
+:root[data-theme="dark"] .rg{
+  --paper: #0b1411;
+  --paper-2: #111c17;
+  --card: #15211c;
+  --nav-bg: rgba(11, 20, 17, 0.86);
+  --ink: #e4eee8;
+  --ink-70: #a7bbb0;
+  --ink-45: #7d9488;
+  --ink-25: #4c6156;
+  --rule: rgba(214, 230, 221, 0.14);
+  --rule-soft: rgba(214, 230, 221, 0.07);
+  --brand: #3fbf86;
+  --brand-deep: #082017;
+  --brand-lift: #5fd6a0;
+  --brand-pale: rgba(63, 191, 134, 0.2);
+  --brand-wash: rgba(63, 191, 134, 0.07);
+  --flag: #e39a63;
+}
+
+/* Primary buttons: the bright dark-theme green is too light for white
+   text, so buttons keep a deeper green of their own. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .rg-btn:not(.rg-btn--ghost){ background: #15784f; border-color: #15784f; }
+}
+:root[data-theme="dark"] .rg-btn:not(.rg-btn--ghost){ background: #15784f; border-color: #15784f; }
+
+/* One element per theme: the header mark and every product screenshot
+   ship a light and a dark version, and CSS shows the matching one. The
+   footer mark is single, white on the dark footer in both themes. */
+.rg-on-dark{ display: none !important; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .rg-on-light{ display: none !important; }
+  :root:not([data-theme="light"]) .rg-on-dark{ display: block !important; }
+}
+:root[data-theme="dark"] .rg-on-light{ display: none !important; }
+:root[data-theme="dark"] .rg-on-dark{ display: block !important; }
+
+/* Theme toggle in the nav. */
+.rg-theme{
+  display: grid; place-items: center;
+  width: 38px; height: 38px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink-70);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.rg-theme:hover{ color: var(--brand); border-color: var(--brand); }
+.rg-theme:focus-visible{ outline: 2px solid var(--brand); outline-offset: 2px; }
 
 @media (max-width: 1080px){
   .rg{ --rail: 108px; }
@@ -1310,4 +1390,10 @@ body.is-landing > #root,
   .rg-tabs{ overflow-x: auto; scrollbar-width: none; }
   .rg-tabs::-webkit-scrollbar{ display: none; }
   .rg-tab{ white-space: nowrap; font-size: 15.5px; margin-right: 20px; padding-right: 0; }
+}
+
+/* With the theme toggle in the nav, a phone has no room for the nav CTA.
+   The hero carries the same button immediately below. */
+@media (max-width: 430px){
+  .rg-nav-in .rg-btn--sm{ display: none; }
 }
