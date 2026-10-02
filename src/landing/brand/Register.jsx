@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './register.css';
 import { Icon } from '../_shared/Icon';
 import { ContactForm } from '../_shared/ContactForm';
@@ -7,7 +7,7 @@ import { motionOK, useReveal } from './pageMotion';
 import {
   BRAND, BRAND_HERO, TRUST, BEFORE,
   SECURITY_PILLARS, WATCHED, EVALUATION, MARKING_SHOTS, AI_ASSURANCE, AI_HELP,
-  REPORTS, MASTERY_SAMPLE, BRAND_ROLES, BRAND_DEPLOY, TEAM, BRAND_CTA,
+  REPORTS, MASTERY_SAMPLE, BRAND_ROLES, BRAND_DEPLOY, BRAND_CTA,
 } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -61,69 +61,28 @@ function useDrift(strength = 0.05, cap = 40) {
   return ref;
 }
 
-/* Counts a figure up when it first scrolls into view.
-
-   The final value is rendered on mount, so the number is right with no JS
-   and with reduced motion. The zero start is written straight to the node
-   before paint, and each frame updates textContent rather than state. */
-function Counter({ text }) {
-  const ref = useRef(null);
-  const match = /^([\d,]+)(.*)$/.exec(text);
-  const target = match ? Number(match[1].replace(/,/g, '')) : null;
-  const suffix = match ? match[2] : '';
-
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el || target === null || !motionOK()) return;
-    el.textContent = `0${suffix}`;
-  }, [target, suffix]);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || target === null || !motionOK()) return;
-
-    const settle = () => { el.textContent = target.toLocaleString('en-US') + suffix; };
-    if (!('IntersectionObserver' in window)) {
-      settle();
-      return;
-    }
-
-    let raf = 0;
-    const io = new IntersectionObserver((entries) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      io.disconnect();
-      const started = performance.now();
-      const step = (now) => {
-        const t = Math.min(1, (now - started) / 1400);
-        const eased = 1 - Math.pow(1 - t, 3);
-        el.textContent = Math.round(target * eased).toLocaleString('en-US') + suffix;
-        if (t < 1) raf = requestAnimationFrame(step);
-      };
-      raf = requestAnimationFrame(step);
-    }, { threshold: 0.4 });
-
-    io.observe(el);
-    // Never leave a zero on screen if the observer stays silent.
-    const failsafe = setTimeout(settle, 2500);
-    return () => {
-      clearTimeout(failsafe);
-      if (raf) cancelAnimationFrame(raf);
-      io.disconnect();
-    };
-  }, [target, suffix]);
-
-  return <span ref={ref}>{text}</span>;
+/* A real product card, set on a mat drawn like a specimen answer sheet:
+   timing marks down the left edge, registration marks in the corners, and
+   a figure label in the head. Whole screens use the browser frame in Roles
+   instead; a single card in a browser frame reads as a shrunken page. */
+function Exhibit({ fig, label, children }) {
+  return (
+    <div className="rg-exhibit">
+      <div className="rg-exhibit-head">
+        <span className="rg-mono">Fig. {fig}</span>
+        <span className="rg-mono">{label}</span>
+      </div>
+      <div className="rg-exhibit-body">{children}</div>
+    </div>
+  );
 }
 
-/* A real product card, cropped from the app and set on a tinted mat like
-   a figure in a printed booklet. Whole screens use the browser frame in
-   Roles instead; a single card in a browser frame reads as a shrunken page. */
-function Shot({ src, alt, caption, className = '', delay = 0 }) {
+function Shot({ src, alt, caption, fig, label, className = '', delay = 0 }) {
   return (
     <Rv as="figure" className={`rg-shot-fig ${className}`} delay={delay}>
-      <div className="rg-exhibit">
+      <Exhibit fig={fig} label={label}>
         <img src={src} alt={alt} loading="lazy" />
-      </div>
+      </Exhibit>
       {caption && <figcaption className="rg-shot-cap">{caption}</figcaption>}
     </Rv>
   );
@@ -131,18 +90,14 @@ function Shot({ src, alt, caption, className = '', delay = 0 }) {
 
 /* The department view, drawn rather than screenshotted: the clone of
    production has no topic-mastery data yet, so this uses sample numbers
-   and says so. Each cell is a bar on the same 0 to 100 scale, and the
-   weakest cell in each row is marked. */
+   and says so. Each cell is a row of ten bubbles shaded to the mastery
+   level, so the table reads like a marked sheet; below 50% is amber. */
 function MasteryTable() {
   const { course, batches, topics } = MASTERY_SAMPLE;
   return (
-    <div className="rg-shot rg-mastery">
-      <div className="rg-shot-bar">
-        <span className="rg-mono">{BRAND.domain} / topic mastery</span>
-        <span className="rg-mono rg-mastery-tag">Sample data</span>
-      </div>
-      <div className="rg-mastery-in">
-        <div className="rg-mastery-course">{course}</div>
+    <Exhibit fig="4.3" label="Sample data">
+      <div className="rg-mastery">
+        <div className="rg-mastery-course">{course} · topic mastery</div>
         <table>
           <thead>
             <tr>
@@ -151,25 +106,57 @@ function MasteryTable() {
             </tr>
           </thead>
           <tbody>
-            {topics.map((t) => {
-              const low = Math.min(...t.v);
-              return (
-                <tr key={t.name}>
-                  <th scope="row">{t.name}</th>
-                  {t.v.map((v, i) => (
+            {topics.map((t) => (
+              <tr key={t.name}>
+                <th scope="row">{t.name}</th>
+                {t.v.map((v, i) => {
+                  const filled = Math.round(v / 10);
+                  return (
                     <td key={batches[i]} className={v < 50 ? 'is-weak' : ''}>
-                      <span className="rg-mastery-bar"><i style={{ width: `${v}%` }} /></span>
-                      <span className={`rg-mastery-n ${v === low ? 'is-low' : ''}`}>{v}%</span>
+                      <span className="rg-mastery-bubs" aria-hidden="true">
+                        {Array.from({ length: 10 }, (_, n) => <i key={n} className={n < filled ? 'on' : ''} />)}
+                      </span>
+                      <span className="rg-mastery-n">{v}%</span>
                     </td>
-                  ))}
-                </tr>
-              );
-            })}
+                  );
+                })}
+              </tr>
+            ))}
           </tbody>
         </table>
-        <p className="rg-mastery-key">Sample numbers. Topics below 50% are marked in amber.</p>
       </div>
-    </div>
+    </Exhibit>
+  );
+}
+
+/* A figure written the way a roll number is filled on an answer sheet:
+   one box per digit with the digit written in, and a column of 0 to 9
+   bubbles under it with the matching one shaded. The shading runs left
+   to right when the strip scrolls into view (see .rg-omr in the CSS).
+   Commas become a narrow gap; a trailing "+" is written after the boxes. */
+function OmrNumber({ text }) {
+  const plus = text.endsWith('+');
+  const groups = text.replace('+', '').split(',');
+  let col = 0;
+  return (
+    <span className="rg-omr" role="img" aria-label={text}>
+      {groups.map((g, gi) => (
+        <span className="rg-omr-group" key={gi}>
+          {[...g].map((d) => {
+            const c = col++;
+            return (
+              <span className="rg-omr-col" key={c} style={{ '--c': c }}>
+                <span className="rg-omr-box">{d}</span>
+                {Array.from({ length: 10 }, (_, n) => (
+                  <i key={n} className={n === Number(d) ? 'on' : ''} />
+                ))}
+              </span>
+            );
+          })}
+        </span>
+      ))}
+      {plus && <span className="rg-omr-plus">+</span>}
+    </span>
   );
 }
 
@@ -330,11 +317,12 @@ export default function Register() {
           <Rv className="rg-trust-org">
             <span className="rg-mono rg-trust-label">{TRUST.label}</span>
             <img className="rg-trust-logo" src={TRUST.logo} alt={TRUST.org} />
+            <p className="rg-trust-note">{TRUST.note}</p>
           </Rv>
           <div className="rg-trust-figs">
             {TRUST.figures.map((f, i) => (
               <Rv className="rg-trust-fig" key={f.l} delay={i * 80}>
-                <div className="rg-trust-n"><Counter text={f.n} /></div>
+                <OmrNumber text={f.n} />
                 <div className="rg-trust-l">{f.l}</div>
               </Rv>
             ))}
@@ -574,19 +562,6 @@ export default function Register() {
               </div>
             ))}
           </Rv>
-        </div>
-      </section>
-
-      {/* ── §07 TEAM ────────────────────────────────────── */}
-      <section className="rg-sec" id="team">
-        <div className="rg-wrap">
-          <SectionHead code="§07" kicker="The team" title={TEAM.title} />
-
-          <div className="rg-team">
-            {TEAM.paragraphs.map((p, i) => (
-              <Rv as="p" key={i} delay={i * 60}>{p}</Rv>
-            ))}
-          </div>
         </div>
       </section>
 

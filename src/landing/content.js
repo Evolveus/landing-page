@@ -419,6 +419,7 @@ export const BRAND_HERO = {
 export const TRUST = {
   label: 'In use at',
   org: 'Amrita Vishwa Vidyapeetham',
+  note: 'Developed at the School of AI, Amrita Vishwa Vidyapeetham, Coimbatore.',
   logo: '/Amrita_Logo_Banner.svg',
   figures: [
     { n: '1,500+', l: 'Students on the platform' },
@@ -526,11 +527,15 @@ export const EVALUATION = [
 export const MARKING_SHOTS = [
   {
     src: '/product/grading-remark.webp',
+    fig: '3.1',
+    label: 'Written answer, marked',
     alt: 'A descriptive answer from an operating systems quiz, marked 2 out of 2, with the remark explaining why it earned full marks.',
     caption: 'A written answer from an operating systems quiz, with the mark and the remark Evolveus wrote for it.',
   },
   {
     src: '/product/attempt-analytics.webp',
+    fig: '3.2',
+    label: 'One question, one student',
     alt: "One question from a student's attempt, showing the chosen option, the time spent, clicks and views.",
     caption: 'For every question: the answer, the time spent, how many times the student opened it, and how many clicks it took.',
   },
@@ -563,7 +568,7 @@ export const REPORTS = [
       'A score trend across all their courses',
       'Blank answers and rushed attempts flagged',
     ],
-    shot: { src: '/product/student-standing.webp', alt: "One student's attempt: score, class average, rank, and marks by Bloom's level." },
+    shot: { src: '/product/student-standing.webp', fig: '4.1', label: 'One attempt', alt: "One student's attempt: score, class average, rank, and marks by Bloom's level." },
   },
   {
     id: 'class',
@@ -577,7 +582,7 @@ export const REPORTS = [
       'Question difficulty measured from real answers',
       'Results exported to Excel',
     ],
-    shot: { src: '/product/cohort-results.webp', alt: 'Results for a 131-student quiz: score histogram and a list of students to follow up.' },
+    shot: { src: '/product/cohort-results.webp', fig: '4.2', label: 'One quiz, 131 students', alt: 'Results for a 131-student quiz: score histogram and a list of students to follow up.' },
   },
   {
     id: 'department',
@@ -593,16 +598,17 @@ export const REPORTS = [
   },
 ];
 
-/* Illustrative numbers for the department view. Labelled as sample data on the page. */
+/* Illustrative numbers for the department view. Labelled as sample data on the page.
+   \u00AD is a soft hyphen, so long topic names can break cleanly in a narrow column. */
 export const MASTERY_SAMPLE = {
   course: 'Operating Systems, semester 3',
   batches: ['Section A', 'Section B', 'Section C'],
   topics: [
     { name: 'Processes and threads', v: [78, 74, 81] },
     { name: 'CPU scheduling', v: [71, 66, 69] },
-    { name: 'Synchronisation', v: [52, 44, 58] },
+    { name: 'Synchroni\u00ADsation', v: [52, 44, 58] },
     { name: 'Deadlocks', v: [63, 61, 57] },
-    { name: 'Memory management', v: [47, 39, 51] },
+    { name: 'Memory manage\u00ADment', v: [47, 39, 51] },
     { name: 'File systems', v: [69, 72, 64] },
   ],
 };
@@ -683,15 +689,6 @@ export const BRAND_DEPLOY = [
   },
 ];
 
-/* §07 — the team. TODO(confirm): wording about the team's origin. */
-export const TEAM = {
-  title: 'Who builds Evolveus',
-  paragraphs: [
-    'Evolveus is built by a small team that started at the School of AI, Amrita Vishwa Vidyapeetham. The department runs its quizzes and end-semester exams on it.',
-    'Most of what is on this page began as a request from faculty there, or as a problem that turned up during a real exam. If you get in touch, you will be talking to the people who write the code.',
-  ],
-};
-
 export const BRAND_CTA = {
   eyebrow: 'Book a walkthrough',
   headline: 'See it with your own question paper.',
@@ -721,7 +718,7 @@ export const BRAND_FOOTER = {
       title: 'Talk to us',
       links: [
         { href: '#contact', label: 'Book a walkthrough' },
-        { href: '#team', label: 'Who builds it' },
+        { href: '#roles', label: 'Who uses it' },
       ],
     },
   ],

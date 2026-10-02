@@ -864,6 +864,30 @@ body.is-landing > #root,
   margin-bottom: 10px;
   font-variant-numeric: tabular-nums;
 }
+/* OMR digit grid: the proof figures, filled like a roll number. */
+.rg-trust-figs{ align-items: end; }
+.rg-trust-note{ margin-top: 14px !important; font-size: 13px; color: var(--ink-45); line-height: 1.5; max-width: 34ch; }
+.rg-omr{ display: inline-flex; align-items: flex-start; gap: 7px; margin-bottom: 14px; }
+.rg-omr-group{ display: inline-flex; gap: 3px; }
+.rg-omr-col{ display: inline-flex; flex-direction: column; align-items: center; gap: 3px; }
+.rg-omr-box{
+  width: 22px; height: 26px; margin-bottom: 4px;
+  display: grid; place-items: center;
+  border: 1px solid var(--rule);
+  font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--brand);
+  background: #fff;
+}
+.rg-omr-col i{
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1px solid var(--ink-25);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.rg-omr-col i.on{ background: var(--brand); border-color: var(--brand); }
+.rg-omr-plus{ font-family: var(--mono); font-size: 20px; color: var(--brand); line-height: 26px; }
+/* Shade column by column once the strip is revealed. */
+.rg-anim .rg-rv:not(.is-in) .rg-omr-col i.on{ background: transparent; border-color: var(--ink-25); }
+.rg-anim .rg-rv.is-in .rg-omr-col i.on{ transition-delay: calc(var(--c) * 90ms + 200ms); }
+
 .rg-trust-l{ font-size: 13.5px; color: var(--ink-45); line-height: 1.4; }
 
 /* ═══════════════════════════════════════════════════════
@@ -1155,12 +1179,40 @@ body.is-landing > #root,
    ═══════════════════════════════════════════════════════ */
 .rg-shot-fig{ margin: 0; }
 .rg-exhibit{
-  background: var(--paper-2);
-  border: 1px solid var(--rule-soft);
-  border-radius: 4px;
-  padding: clamp(14px, 2vw, 28px);
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0 clamp(14px, 1.8vw, 24px) clamp(14px, 1.8vw, 24px) clamp(30px, 3vw, 40px);
 }
-.rg-exhibit img{ display: block; width: 100%; height: auto; border-radius: 10px; }
+/* Timing marks: the black ticks down an OMR sheet's edge that the scanner reads. */
+.rg-exhibit::before{
+  content: '';
+  position: absolute;
+  left: clamp(10px, 1vw, 14px);
+  top: 46px; bottom: 18px;
+  width: 9px;
+  background: repeating-linear-gradient(to bottom, var(--ink) 0 4px, transparent 4px 16px);
+  opacity: 0.55;
+}
+/* Registration mark, bottom right. */
+.rg-exhibit::after{
+  content: '';
+  position: absolute;
+  right: 8px; bottom: 8px;
+  width: 8px; height: 8px;
+  background: var(--ink);
+}
+.rg-exhibit-head{
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 13px 0 12px;
+  margin-bottom: clamp(12px, 1.4vw, 18px);
+  border-bottom: 1px solid var(--rule);
+}
+.rg-exhibit-head .rg-mono{ font-size: 10.5px; color: var(--ink-45); }
+.rg-exhibit-head .rg-mono:first-child{ color: var(--brand); }
+.rg-exhibit-body{ background: var(--paper-2); border-radius: 6px; padding: clamp(10px, 1.4vw, 18px); }
+.rg-exhibit img{ display: block; width: 100%; height: auto; border-radius: 8px; }
 .rg-shot-cap{
   margin-top: 14px;
   font-size: 13.5px;
@@ -1175,31 +1227,24 @@ body.is-landing > #root,
   align-items: start;
 }
 
-/* Department view: a drawn table, since there is no real data to capture. */
-.rg-mastery-tag{ font-size: 10px; color: var(--flag); }
-.rg-mastery-in{ padding: clamp(18px, 2vw, 26px); overflow-x: auto; }
-.rg-mrow-art, .rg-mrow-text{ min-width: 0; }
-.rg-mastery-course{ font-weight: 600; font-size: 15px; margin-bottom: 16px; }
-.rg-mastery table{ width: 100%; border-collapse: collapse; font-size: 13.5px; }
-.rg-mastery th, .rg-mastery td{ text-align: left; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
-.rg-mastery thead th{ font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-45); }
-.rg-mastery tbody th{ font-weight: 500; color: var(--ink-70); padding-right: 14px; }
-.rg-mastery td{ min-width: 84px; }
-.rg-mastery-bar{ display: block; height: 6px; background: var(--paper-2); border-radius: 3px; overflow: hidden; margin-bottom: 5px; }
-.rg-mastery-bar i{ display: block; height: 100%; background: var(--brand); border-radius: 3px; }
-.rg-mastery td.is-weak .rg-mastery-bar i{ background: var(--flag); }
-.rg-mastery-n{ font-family: var(--mono); font-size: 12px; color: var(--ink-70); font-variant-numeric: tabular-nums; }
+/* Department view: a drawn table of bubble rows, since there is no real data to capture. */
+.rg-mastery{ background: #fff; border-radius: 8px; padding: clamp(12px, 1.4vw, 18px); }
+.rg-mastery-course{ font-weight: 600; font-size: 14px; margin-bottom: 12px; }
+.rg-mastery table{ width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+.rg-mastery thead th:first-child{ width: 30%; }
+.rg-mastery th, .rg-mastery td{ text-align: left; padding: 8px 8px 8px 0; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
+.rg-mastery thead th{ font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-45); }
+.rg-mastery tbody th{ font-weight: 500; color: var(--ink-70); padding-right: 10px; hyphens: manual; overflow-wrap: break-word; }
+/* Ten square cells that shrink with the column, so the table never overflows. */
+.rg-mastery-bubs{ display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 2px; max-width: 96px; margin-bottom: 4px; }
+.rg-mastery-bubs i{ aspect-ratio: 1; border-radius: 50%; border: 1px solid var(--ink-25); }
+.rg-mastery-bubs i.on{ background: var(--brand); border-color: var(--brand); }
+.rg-mastery td.is-weak .rg-mastery-bubs i.on{ background: var(--flag); border-color: var(--flag); }
+.rg-mastery-n{ font-family: var(--mono); font-size: 11.5px; color: var(--ink-70); font-variant-numeric: tabular-nums; }
 .rg-mastery td.is-weak .rg-mastery-n{ color: var(--flag); }
-.rg-mastery-key{ margin-top: 14px !important; font-size: 12.5px; color: var(--ink-45); }
 
-.rg-ask{ max-width: 760px; padding-top: 0; }
+.rg-ask, .rg-ask:first-child{ max-width: 760px; padding-top: 0; border-top: 0; border-bottom: 0; }
 
-/* ═══════════════════════════════════════════════════════
-   TEAM
-   ═══════════════════════════════════════════════════════ */
-.rg-team{ padding-left: calc(var(--rail) + clamp(20px, 3vw, 48px)); max-width: calc(var(--rail) + 48px + 64ch); }
-.rg-team p{ font-size: clamp(17px, 1.35vw, 19px); line-height: 1.65; color: var(--ink-70); }
-.rg-team p + p{ margin-top: 1.1em !important; }
 
 @media (max-width: 1080px){
   .rg{ --rail: 108px; }
@@ -1224,7 +1269,7 @@ body.is-landing > #root,
   .rg-assure, .rg-assure--two{ grid-template-columns: 1fr; }
   .rg-assure .rg-hi:nth-child(n+2){ border-top: 0; }
   .rg-trust{ grid-template-columns: 1fr; gap: 26px; }
-  .rg-mrow{ grid-template-columns: 1fr; gap: 30px; }
+  .rg-mrow{ grid-template-columns: minmax(0, 1fr); gap: 30px; }
   .rg-mrow--flip .rg-mrow-text{ order: 1; }
   .rg-mrow--flip .rg-mrow-art{ order: 2; }
   .rg-ai-lower{ grid-template-columns: 1fr; }
@@ -1233,7 +1278,6 @@ body.is-landing > #root,
   .rg-mode + .rg-mode{ border-left: 0; border-top: 1px solid var(--rule); }
   .rg-sechead{ grid-template-columns: 1fr; gap: 20px; }
   .rg-shots{ grid-template-columns: 1fr; }
-  .rg-team{ grid-template-columns: 1fr; padding-left: 0; }
   .rg-secmark{ position: static; padding-top: 0; }
 }
 
@@ -1247,7 +1291,8 @@ body.is-landing > #root,
   .rg-stat:nth-child(n+3){ border-top: 1px solid var(--rule); }
   .rg-stat:last-child{ grid-column: 1 / -1; padding-left: 0; border-right: 0; }
   .rg-pillars, .rg-pillars--two{ grid-template-columns: 1fr; }
-  .rg-mastery td{ min-width: 64px; }
+  .rg-mastery table{ font-size: 12px; }
+  .rg-mastery thead th:first-child{ width: 34%; }
   .rg-feat-grid{ grid-template-columns: 1fr; }
   .rg .ef-grid{ grid-template-columns: 1fr; }
   .rg-foot-grid{ grid-template-columns: 1fr; gap: 30px; }
