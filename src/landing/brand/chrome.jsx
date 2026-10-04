@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useScrollProgress, useStuck, useTheme } from './pageMotion';
 import { Icon } from '../_shared/Icon';
+import { FootMural, GraphiteDefs } from './footMural';
 import { BRAND, BRAND_LOGO, BRAND_NAV, BRAND_FOOTER } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -142,7 +143,7 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
 }
 
 /* The footer. `base` behaves as it does in the nav. */
-export function Footer({ base = '', extra = [], children }) {
+export function Footer({ base = '', extra = [] }) {
   const columns = BRAND_FOOTER.columns.map((col) => ({
     ...col,
     links: col.links.map((l) => ({ ...l, href: `${base}${l.href}` })),
@@ -153,9 +154,9 @@ export function Footer({ base = '', extra = [], children }) {
 
   return (
     <footer className="rg-foot">
+      <GraphiteDefs />
       <div className="rg-wrap rg-foot-in">
-        {/* Anything a page sets above the footer's columns. */}
-        {children}
+        <FootMural />
         <div className="rg-foot-grid">
           <div>
             <div className="rg-brand"><Lockup light /></div>

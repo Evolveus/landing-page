@@ -1140,6 +1140,84 @@ body.is-landing > #root,
 /* ═══════════════════════════════════════════════════════
    FOOTER
    ═══════════════════════════════════════════════════════ */
+/* ── Footer mural: the exam in one pencil line (MURAL_STROKES in
+   footMural.jsx), drawn as --d runs 0 to 1. The footer is always dark, so
+   the graphite is the light one. ─────────────────────── */
+.rg-mural{
+  --d: 1;
+  margin-bottom: clamp(36px, 4vw, 56px);
+  overflow: hidden;
+}
+.rg-mural svg{ display: block; width: 100%; height: auto; overflow: visible; filter: url(#rg-graphite); }
+.rg-mural-line{
+  fill: none;
+  stroke: #c4ccc7;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  /* This stroke's part of the drawing: from --s to --e of the line. */
+  stroke-dashoffset: calc(1 - clamp(0, (var(--d) - var(--s, 0)) / (var(--e, 1) - var(--s, 0)), 1));
+  /* Hidden until its turn: an undrawn stroke still shows its round cap
+     as a dot. */
+  --on: clamp(0, calc((var(--d) - var(--s, 0)) * 400), 1);
+  opacity: calc(var(--on) * 0.85);
+}
+.rg-mural-word{
+  font-family: 'Caveat', 'Segoe Print', cursive;
+  font-size: 26px;
+  font-weight: 500;
+  fill: #c4ccc7;
+  text-anchor: middle;
+  opacity: clamp(0, calc((var(--d) - var(--at)) * 14), 0.85);
+}
+
+/* ── Footer doodles: loose, thin and faint, in the footer's empty
+   space (FOOT_DOODLES in footMural.jsx): beside the content on wide
+   screens (l*, r*), and under the short columns (b*). Placed against
+   the footer's content box. ──────────────────────────── */
+.rg-foot-in{ position: relative; }
+.rg-foot-doodles{ --d: 1; position: absolute; inset: 0; pointer-events: none; }
+.rg-dd{ position: absolute; width: 52px; height: auto; overflow: visible; filter: url(#rg-graphite); }
+.rg-dd-line{ stroke-width: 1.7; opacity: calc(var(--on) * 0.55); }
+.rg-dd-l1{ --g: .55; top: 34px; width: 58px; }
+.rg-dd-l2{ --g: .3; top: 290px; width: 38px; }
+.rg-dd-l3{ --g: .62; bottom: 96px; width: 62px; }
+.rg-dd-r1{ --g: .5; top: 52px; }
+.rg-dd-r2{ --g: .3; top: 300px; width: 34px; }
+.rg-dd-r3{ --g: .62; bottom: 120px; width: 30px; }
+.rg-dd-b1{ left: 48px; bottom: 116px; width: 56px; }
+.rg-dd-b2{ left: 60%; bottom: 140px; width: 44px; }
+.rg-dd-b3{ left: 82%; bottom: 112px; width: 64px; }
+.rg-dd-l4{ --g: .74; top: 150px; width: 46px; }
+.rg-dd-l5{ --g: .7; top: 380px; width: 56px; }
+.rg-dd-l6{ --g: .2; top: 440px; width: 34px; }
+.rg-dd-l7{ --g: .18; top: 110px; width: 30px; }
+.rg-dd-r4{ --g: .74; top: 150px; width: 50px; }
+.rg-dd-r5{ --g: .22; top: 430px; width: 40px; }
+.rg-dd-r6{ --g: .66; top: 236px; width: 56px; }
+.rg-dd-r7{ --g: .2; top: 120px; width: 32px; }
+.rg-dd-b4{ left: 200px; bottom: 150px; width: 50px; }
+.rg-dd-b5{ left: 70%; bottom: 200px; width: 48px; }
+.rg-dd-b6{ left: 94%; bottom: 210px; width: 36px; }
+/* The side doodles sit in the gutter beside the content, --g of the
+   way out from the content's edge toward the screen's (their centres):
+   the gutter is
+   (100vw - 100%) / 2, 100% being the content box. They need a wide
+   screen; the ones below the columns need the columns. */
+.rg-dd[class*='rg-dd-l'], .rg-dd[class*='rg-dd-r']{ display: none; }
+.rg-dd[class*='rg-dd-l']{ left: calc((100% - 100vw) / 2 * var(--g)); translate: -50% 0; }
+.rg-dd[class*='rg-dd-r']{ right: calc((100% - 100vw) / 2 * var(--g)); translate: 50% 0; }
+@media (min-width: 1520px){ .rg-dd[class*='rg-dd-l'], .rg-dd[class*='rg-dd-r']{ display: block; } }
+@media (max-width: 1100px){ .rg-foot-doodles{ display: none; } }
+
+/* Too narrow to read whole: the mural is drawn larger and pans along
+   with the drawing, keeping the stroke being drawn on screen. */
+@media (max-width: 880px){
+  .rg-mural svg{ width: 220%; transform: translateX(calc(var(--d) * -54.5%)); }
+}
+.rg-defs{ position: absolute; width: 0; height: 0; overflow: hidden; }
+
 .rg-foot{ background: var(--brand-deep); color: #a9c4b6; border-top: 1px solid rgba(214, 230, 221, 0.16); }
 .rg-foot-in{ padding-top: clamp(48px, 5vw, 72px); padding-bottom: 34px; }
 .rg-foot-grid{ display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 40px; }
