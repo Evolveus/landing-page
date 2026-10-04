@@ -1,4 +1,5 @@
 import { Rv } from './chrome';
+import { TRUST } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
    FIGURES — the answer-sheet exhibits shared by the brand pages:
@@ -75,4 +76,14 @@ export function OmrNumber({ text }) {
       {plus && <span className="rg-omr-plus">+</span>}
     </span>
   );
+}
+
+/* The usage count so far, one digit-grid figure each. */
+export function UsageFigures() {
+  return TRUST.figures.map((f, i) => (
+    <Rv className="rg-trust-fig" key={f.l} delay={i * 80}>
+      <OmrNumber text={f.n} />
+      <div className="rg-trust-l">{f.l}</div>
+    </Rv>
+  ));
 }

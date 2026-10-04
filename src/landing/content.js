@@ -427,22 +427,13 @@ export const PRODUCT_WALK = {
   reports: { href: '/#reports', label: 'Walkthrough · step 04' },
 };
 
-export const BRAND_HERO = {
-  eyebrow: 'Online exams for universities',
-  headline: 'Set the paper, run the exam, mark it, see the results. One place.',
-  emphasis: 'One place.',
-  sub: 'Evolveus runs a university\'s online exams from start to finish. Students write in your labs on a secured browser, AI marks written and coding answers for faculty to approve, and results come back by topic and course outcome.',
-  note: 'Runs on our cloud or on your own campus servers.',
-};
-
 export const TRUST = {
-  label: 'In use at',
   org: 'Amrita Vishwa Vidyapeetham',
-  note: 'Developed at the School of AI, Amrita Vishwa Vidyapeetham, Coimbatore.',
   logo: '/Amrita_Logo_Banner.svg',
+  // Short labels: the digit grids carry the figures.
   figures: [
-    { n: '1,500+', l: 'Students on the platform' },
-    { n: '2,000+', l: 'Exams conducted' },
+    { n: '1,500+', l: 'Students' },
+    { n: '2,000+', l: 'Exams' },
     { n: '200,000+', l: 'Answers evaluated' },
   ],
 };
@@ -718,14 +709,6 @@ export const BRAND_CTA = {
    One exam told as a scroll story: the sheet on the right changes as
    each step passes. Copy is kept short on purpose; the detail lives on
    the home page. */
-export const JOURNEY_HERO = {
-  // Short labels: the digit grids carry the figures.
-  figureLabels: ['Students', 'Exams', 'Answers evaluated'],
-};
-
-/* The gate before step 1: a centred line and a pencil tin whose lid
-   slides off as the reader scrolls; when it is open, the story starts. */
-/* The home page's nav: the story is one section, so one link to it. */
 /* The header on every page: the other pages, not sections of the one
    you are on (/product has its own index for that). */
 export const SITE_NAV = [
