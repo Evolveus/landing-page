@@ -902,6 +902,12 @@ export default function Journey() {
               {JOURNEY_INTRO.cue}
               <Icon name="arrowDown" size={15} />
             </span>
+            {/* The desk the tin rests on: one long pencil line, drawn out
+                both ways from under the tin. */}
+            <svg className="jy-desk-line" viewBox="0 0 1600 24" aria-hidden="true">
+              <path className="jy-desk-line-l" d="M800 12.6 C 690 13.2, 560 11.4, 420 12.4 C 300 13.2, 160 11.6, 0 12.8" pathLength="1" />
+              <path className="jy-desk-line-r" d="M800 12.6 C 930 12, 1060 13.6, 1200 12.2 C 1330 11.2, 1460 12.8, 1600 11.8" pathLength="1" />
+            </svg>
           </a>
         </div>
         <div className="rg-wrap jy-story-in">
