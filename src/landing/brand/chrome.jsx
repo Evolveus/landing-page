@@ -43,6 +43,10 @@ export function Lockup({ light = false }) {
   );
 }
 
+/* A link as seen from a page with the given base: an in-page link
+   ('#…') is taken to that base; a path is left as it is. */
+const onPage = (base, href) => (href.startsWith('#') ? `${base}${href}` : href);
+
 /* Section header: margin marker + title, split by a full rule. `walk`,
    if given ({ href, label }), adds a small link under the marker, back
    to the matching step of the walkthrough on the home page. */
@@ -93,7 +97,7 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
   }, []);
 
   const links = [
-    ...(own ?? BRAND_NAV).map((l) => ({ ...l, href: `${base}${l.href}` })),
+    ...(own ?? BRAND_NAV).map((l) => ({ ...l, href: onPage(base, l.href) })),
     ...extra,
   ];
 
@@ -154,7 +158,7 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
 export function Footer({ base = '', extra = [] }) {
   const columns = BRAND_FOOTER.columns.map((col) => ({
     ...col,
-    links: col.links.map((l) => ({ ...l, href: `${base}${l.href}` })),
+    links: col.links.map((l) => ({ ...l, href: onPage(base, l.href) })),
   }));
   if (extra.length) {
     columns[0] = { ...columns[0], links: [...columns[0].links, ...extra] };
