@@ -13,7 +13,7 @@ import RolesPage from "./components/pages/RolesPage";
 import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
 import Compare from "./landing/brand/Compare";
-import Journey from "./landing/brand/Journey";
+import Register from "./landing/brand/Register";
 import Design1 from "./landing/designs/Design1";
 import Design2 from "./landing/designs/Design2";
 import Design3 from "./landing/designs/Design3";
@@ -35,7 +35,7 @@ export default function App() {
     const path = window.location.pathname;
     if (path === "/brochure") return "brochure";
     if (path === "/compare") return "compare";
-    if (path === "/journey") return "journey";
+    if (path === "/product") return "product";
     if (path === "/1") return "design-1";
     if (path === "/2") return "design-2";
     if (path === "/3") return "design-3";
@@ -56,7 +56,7 @@ export default function App() {
     const paths = {
       brochure: "/brochure",
       compare: "/compare",
-      journey: "/journey",
+      product: "/product",
       "design-1": "/1",
       "design-2": "/2",
       "design-3": "/3",
@@ -72,14 +72,22 @@ export default function App() {
       "flyer-v3": "/flyer/v3",
       "flyer-v4": "/flyer/v4",
     };
-    window.history.replaceState({}, "", paths[view] ?? "/");
+    const { hash } = window.location;
+    window.history.replaceState({}, "", (paths[view] ?? "/") + hash);
+    // The browser's own jump to #section happens before React has drawn
+    // the section, so jump once it exists.
+    if (hash) {
+      requestAnimationFrame(() => {
+        document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView();
+      });
+    }
   }, [view]);
 
   // index.css styles <body> as the brochure's centred, padded, gapped column.
   // The landing views render full-bleed, so they mark the body explicitly
   // rather than leaving the reset to a :has() selector.
   useLayoutEffect(() => {
-    const fullBleed = view === "landing" || view === "compare" || view === "journey" || view.startsWith("design-");
+    const fullBleed = view === "landing" || view === "compare" || view === "product" || view.startsWith("design-");
     document.body.classList.toggle("is-landing", fullBleed);
     return () => document.body.classList.remove("is-landing");
   }, [view]);
@@ -149,10 +157,10 @@ export default function App() {
     return <FlyerV4 onHome={() => setView("landing")} />;
   }
 
-  if (view === "journey") {
+  if (view === "product") {
     return (
       <div className="landing-shell">
-        <Journey />
+        <Register />
       </div>
     );
   }

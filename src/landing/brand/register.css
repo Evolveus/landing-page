@@ -248,7 +248,7 @@ body.is-landing > #root,
   letter-spacing: -0.025em;
 }
 
-.rg-nav-links{ display: flex; gap: 26px; }
+.rg-nav-links{ display: flex; gap: 26px; white-space: nowrap; }
 .rg-nav-links a{
   font-size: 14px;
   font-weight: 500;

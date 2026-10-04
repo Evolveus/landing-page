@@ -12,7 +12,8 @@ import {
 } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
-   REGISTER — the Evolveus brand page.
+   REGISTER — the detailed product page, at /product. (The home page is
+   the scroll story in Journey.jsx.)
 
    One idea carries the whole design: the answer sheet. Bubbles are
    the brand's atom, hairline rules do the structural work, and the
@@ -210,7 +211,7 @@ export default function Register() {
 
   return (
     <div className="rg" ref={root}>
-      <Nav extra={COMPARE_LINK} />
+      <Nav home="/" extra={COMPARE_LINK} />
 
       {/* ── HERO ────────────────────────────────────────── */}
       <header className="rg-hero" id="top">
