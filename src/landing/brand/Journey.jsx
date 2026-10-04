@@ -5,25 +5,25 @@ import { Icon } from '../_shared/Icon';
 import { ContactForm } from '../_shared/ContactForm';
 import { Rv, Nav, Footer } from './chrome';
 import { motionOK, useReveal, useSmoothScroll } from './pageMotion';
-import { OmrNumber, ThemedImg } from './figures';
+import { UsageFigures, ThemedImg } from './figures';
 import {
   TRUST, MASTERY_SAMPLE, BRAND,
-  JOURNEY_HERO, JOURNEY_OPEN, JOURNEY_TOUR, BRAND_ROLES, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
+  JOURNEY_OPEN, JOURNEY_TOUR, BRAND_ROLES, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
 } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
-   JOURNEY — prototype of the home page as a scroll story.
+   JOURNEY — the home page, as a scroll story.
 
    One answer sheet lies on a desk drawn in perspective. As the reader
-   scrolls past the four steps, the sheet goes through one exam: the
+   scrolls past the five steps, the sheet goes through one exam: the
    questions arrive from the bank, a student fills it in while the
    invigilation log runs, it is marked and approved, and the results
    rise off the desk as a histogram.
 
-   Scroll position becomes one number, t, from 0 to 4 (one unit per
-   step). Everything on the desk is CSS driven by t and the per-step
-   fractions --p1 to --p4, so the scroll handler only writes a few
-   custom properties.
+   Scroll position becomes one number, t: one unit for the gate, then
+   one per step. Everything on the desk is CSS driven by t and the
+   per-unit fractions --p0 to --p5, so the scroll handler only writes a
+   few custom properties.
    ═══════════════════════════════════════════════════════════════ */
 
 /* Camera per step boundary: tilt of the paper, its turn, and zoom.
@@ -492,8 +492,6 @@ const ROW_WINDOWS = [
   [0.67, 0.83],
   [0.88, 0.95],
 ];
-const PEN_ROWS = [0, 1, 2, 3, 4, 5];
-const fillWindow = (i) => ROW_WINDOWS[i];
 const TRAVEL = 0.055;
 
 const lerp = (a, b, f) => a + (b - a) * f;
@@ -516,10 +514,9 @@ function pencilAt(p, marks) {
 
   // Step 2: walk the rows.
   let from = rest;
-  for (let n = 0; n < PEN_ROWS.length; n++) {
-    const row = PEN_ROWS[n];
-    const m = marks[row];
-    const [ws, we] = fillWindow(row);
+  for (let n = 0; n < ROW_WINDOWS.length; n++) {
+    const m = marks[n];
+    const [ws, we] = ROW_WINDOWS[n];
     const startLine = m.line ?? m.code?.[0];
     const start = startLine
       ? { x: startLine[0], y: startLine[1] }
@@ -531,7 +528,7 @@ function pencilAt(p, marks) {
     if (p2 < ws) {
       // Travelling: lifted in the middle of the move.
       const f = clamp01((p2 - travelFrom) / TRAVEL);
-      const e = f * f * (3 - 2 * f);
+      const e = ease(f);
       return {
         x: lerp(from.x, start.x, e),
         y: lerp(from.y, start.y, e),
@@ -579,7 +576,7 @@ function pencilAt(p, marks) {
   }
   // After the last answer the paper is submitted: the pencil lifts off
   // and fades as "Submitted" appears.
-  const last = fillWindow(PEN_ROWS[PEN_ROWS.length - 1])[1];
+  const last = ROW_WINDOWS[ROW_WINDOWS.length - 1][1];
   const f = clamp01((p2 - last) / 0.04);
   return {
     x: from.x + f * 24,
@@ -1053,12 +1050,7 @@ export default function Journey() {
             </Rv>
           </div>
           <div className="jy-handoff-figs">
-            {TRUST.figures.map((f, i) => (
-              <Rv className="rg-trust-fig" key={f.l} delay={i * 80}>
-                <OmrNumber text={f.n} />
-                <div className="rg-trust-l">{JOURNEY_HERO.figureLabels[i]}</div>
-              </Rv>
-            ))}
+            <UsageFigures />
           </div>
         </div>
       </section>

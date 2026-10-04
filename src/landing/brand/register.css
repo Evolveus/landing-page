@@ -140,8 +140,6 @@ body.is-landing > #root,
   max-width: 60ch;
 }
 
-.rg-body{ color: var(--ink-70); font-size: 15.5px; line-height: 1.62; }
-
 /* ═══ THE BUBBLE — the brand's atom ═══════════════════ */
 .rg-bub{
   display: inline-block;
@@ -153,7 +151,6 @@ body.is-landing > #root,
   transition: background 0.4s ease, box-shadow 0.4s ease;
 }
 .rg-bub--fill{ background: var(--brand); }
-.rg-bub--lg{ width: 15px; height: 15px; border-width: 2px; }
 
 /* ═══ REVEAL ══════════════════════════════════════════
    Visible by default. The hidden start state is gated behind
@@ -166,11 +163,6 @@ body.is-landing > #root,
   transition-delay: var(--d, 0ms);
 }
 .rg-anim .rg-rv.is-in{ opacity: 1; transform: none; }
-
-/* Fade only — for table rows, where transforms on display:table-row
-   are unreliable across browsers. */
-.rg-anim .rg-rv--fade{ transform: none; transition: opacity 0.6s ease; }
-.rg-anim .rg-rv--fade.is-in{ transform: none; }
 
 /* Headlines wipe up behind their own baseline instead of fading. */
 .rg-anim .rg-rv--mask{
@@ -294,9 +286,6 @@ body.is-landing > #root,
 .rg-btn svg{ transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.25, 1); }
 .rg-btn:hover{ background: var(--brand-deep); border-color: var(--brand-deep); }
 .rg-btn:hover svg{ transform: translateX(4px); }
-
-.rg-btn--ghost{ background: transparent; color: var(--ink); border-color: var(--rule); }
-.rg-btn--ghost:hover{ background: transparent; border-color: var(--brand); color: var(--brand); }
 
 .rg-btn--sm{ height: 40px; padding: 0 18px; font-size: 13.5px; }
 /* A coloured, quieter button beside the main one: Sign in. */
@@ -516,68 +505,6 @@ body.is-landing > #root,
 /* A live dot's slow pulse. */
 @keyframes rg-pulse{ 0%, 100%{ opacity: 1; } 50%{ opacity: 0.25; } }
 
-
-/* ── Integrity ticker ─────────────────────────────── */
-.rg-ticker{
-  background: var(--brand-deep);
-  color: #d6e6dd;
-  overflow: hidden;
-  border-top: 1px solid var(--brand-deep);
-}
-.rg-ticker-in{
-  display: flex;
-  width: max-content;
-  animation: rg-slide 46s linear infinite;
-}
-.rg-ticker:hover .rg-ticker-in{ animation-play-state: paused; }
-@keyframes rg-slide{ to{ transform: translateX(-50%); } }
-.rg-ticker-seq{ display: flex; flex-shrink: 0; }
-.rg-ticker-item{
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 15px 26px;
-  font-family: var(--mono);
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-}
-.rg-ticker-item i{
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--brand-lift);
-  flex-shrink: 0;
-}
-@media (prefers-reduced-motion: reduce){
-  .rg-ticker-in{ animation: none; }
-}
-
-/* ═══════════════════════════════════════════════════════
-   STATS
-   ═══════════════════════════════════════════════════════ */
-.rg-stats{
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  border-bottom: 1px solid var(--rule);
-}
-.rg-stat{
-  padding: clamp(30px, 3.6vw, 46px) clamp(20px, 1.8vw, 30px);
-  border-right: 1px solid var(--rule);
-}
-.rg-stat:first-child{ padding-left: 0; }
-.rg-stat:last-child{ border-right: 0; padding-right: 0; }
-.rg-stat-n{
-  font-family: var(--mono);
-  font-size: clamp(25px, 2.7vw, 36px);
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  color: var(--brand);
-  line-height: 1;
-  margin-bottom: 12px;
-  font-variant-numeric: tabular-nums;
-}
-.rg-stat-l{ font-size: 13.5px; color: var(--ink-45); line-height: 1.4; }
-
 /* ═══════════════════════════════════════════════════════
    SECTION SHELL
    ═══════════════════════════════════════════════════════ */
@@ -686,24 +613,6 @@ body.is-landing > #root,
 .rg-pillar h3{ margin-bottom: 12px; }
 .rg-pillar-body{ color: var(--ink-70); font-size: 14.8px; line-height: 1.6; margin-bottom: 22px; }
 
-.rg-pillar-list{ border-top: 1px solid var(--rule); padding-top: 16px; }
-.rg-pillar-list li{
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font-size: 13.8px;
-  color: var(--ink-70);
-  padding: 5px 0;
-}
-.rg-pillar-list li::before{
-  content: '';
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--brand);
-  flex-shrink: 0;
-  transform: translateY(-2px);
-}
-
 /* ═══════════════════════════════════════════════════════
    §03 ROLES
    ═══════════════════════════════════════════════════════ */
@@ -790,12 +699,6 @@ body.is-landing > #root,
 }
 
 /* §04 Security */
-.rg-sig-grid{
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(36px, 5vw, 80px);
-  align-items: start;
-}
 .rg-sig-list{ border-top: 1px solid var(--rule); }
 .rg-sig-list li{
   display: flex;
@@ -821,16 +724,6 @@ body.is-landing > #root,
 .rg-feat-ico{ color: var(--brand); margin-bottom: 18px; display: block; }
 .rg-feat h3{ margin-bottom: 10px; }
 .rg-feat p{ font-size: 14.5px; color: var(--ink-70); line-height: 1.58; }
-
-.rg-ai-lower{
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(36px, 5vw, 76px);
-  margin-top: clamp(56px, 6vw, 88px);
-  padding-top: clamp(44px, 5vw, 64px);
-  border-top: 1px solid var(--rule);
-  align-items: start;
-}
 
 .rg-hi{ display: flex; gap: 18px; padding: 22px 0; border-bottom: 1px solid var(--rule); }
 .rg-hi:first-child{ border-top: 1px solid var(--rule); }
@@ -1020,34 +913,6 @@ body.is-landing > #root,
 @keyframes rg-blink{ 0%, 100%{ opacity: 1; } 50%{ opacity: 0; } }
 
 /* ═══════════════════════════════════════════════════════
-   BUBBLE FIELD — decorative brand texture
-   ═══════════════════════════════════════════════════════ */
-.rg-field{
-  display: grid;
-  grid-template-columns: repeat(var(--cols, 12), 1fr);
-  gap: clamp(9px, 1.1vw, 15px);
-  padding: clamp(22px, 2.4vw, 34px);
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-  background: var(--paper);
-}
-.rg-field-b{
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1.5px solid var(--brand);
-  opacity: 0.22;
-}
-.rg-field-b.on{ background: var(--brand); opacity: 1; }
-/* The bubbles are deliberately NOT animated one by one. A per-bubble
-   transition means ~200 elements whose visible state is delivered only when
-   the transition finishes, and a browser that throttles or zeroes out that
-   timeline (reduced motion, a background tab, Firefox under load) leaves an
-   empty bordered box on screen. The field fades in as one unit with its
-   parent .rg-rv instead, which looks the same and cannot fail open. */
-
-/* ═══════════════════════════════════════════════════════
    ANALYTICS ROWS — alternating
    ═══════════════════════════════════════════════════════ */
 .rg-mrow{
@@ -1073,8 +938,6 @@ body.is-landing > #root,
   line-height: 1.12;
   margin: 0 0 13px;
 }
-.rg-extra-top{ display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
-.rg-extra-top svg{ color: var(--brand); flex-shrink: 0; }
 
 /* ═══════════════════════════════════════════════════════
    CONTACT — dark close
@@ -1399,9 +1262,9 @@ body.is-landing > #root,
 /* Primary buttons: the bright dark-theme green is too light for white
    text, so buttons keep a deeper green of their own. */
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .rg-btn:not(.rg-btn--ghost):not(.rg-btn--soft){ background: #15784f; border-color: #15784f; }
+  :root:not([data-theme="light"]) .rg-btn:not(.rg-btn--soft){ background: #15784f; border-color: #15784f; }
 }
-:root[data-theme="dark"] .rg-btn:not(.rg-btn--ghost):not(.rg-btn--soft){ background: #15784f; border-color: #15784f; }
+:root[data-theme="dark"] .rg-btn:not(.rg-btn--soft){ background: #15784f; border-color: #15784f; }
 
 /* One element per theme: the header mark and every product screenshot
    ship a light and a dark version, and CSS shows the matching one. The
@@ -1439,17 +1302,11 @@ body.is-landing > #root,
   .rg-pillars{ grid-template-columns: repeat(2, 1fr); }
   .rg-nav-links{ display: none; }
   .rg-burger{ display: flex; }
-  .rg-stats{ grid-template-columns: repeat(3, 1fr); }
-  .rg-stat:nth-child(3n+1){ padding-left: 0; }
-  .rg-stat:nth-child(3n){ padding-right: 0; border-right: 0; }
-  .rg-stat:last-child{ border-right: 0; }
-  .rg-stat:nth-child(n+4){ border-top: 1px solid var(--rule); }
   .rg-foot-grid{ grid-template-columns: repeat(2, 1fr); gap: 36px; }
 }
 
 @media (max-width: 880px){
   .rg-role{ grid-template-columns: 1fr; }
-  .rg-sig-grid{ grid-template-columns: 1fr; }
   .rg-evals{ grid-template-columns: 1fr; }
   .rg-eval + .rg-eval{ border-left: 0; border-top: 1px solid var(--rule); }
   .rg-assure, .rg-assure--two{ grid-template-columns: 1fr; }
@@ -1457,7 +1314,6 @@ body.is-landing > #root,
   .rg-mrow{ grid-template-columns: minmax(0, 1fr); gap: 30px; }
   .rg-mrow--flip .rg-mrow-text{ order: 1; }
   .rg-mrow--flip .rg-mrow-art{ order: 2; }
-  .rg-ai-lower{ grid-template-columns: 1fr; }
   .rg-cta-grid{ grid-template-columns: 1fr; }
   .rg-deploy{ grid-template-columns: 1fr; }
   .rg-mode + .rg-mode{ border-left: 0; border-top: 1px solid var(--rule); }
@@ -1468,13 +1324,6 @@ body.is-landing > #root,
 
 @media (max-width: 720px){
   .rg{ font-size: 16px; }
-  .rg-stats{ grid-template-columns: repeat(2, 1fr); }
-  .rg-stat{ padding-left: 18px; padding-right: 18px; }
-  .rg-stat:nth-child(3){ border-right: 1px solid var(--rule); }
-  .rg-stat:nth-child(2n+1){ padding-left: 0; }
-  .rg-stat:nth-child(2n){ border-right: 0; padding-right: 0; }
-  .rg-stat:nth-child(n+3){ border-top: 1px solid var(--rule); }
-  .rg-stat:last-child{ grid-column: 1 / -1; padding-left: 0; border-right: 0; }
   .rg-pillars, .rg-pillars--two{ grid-template-columns: 1fr; }
   .rg-mastery table{ font-size: 12px; }
   .rg-mastery thead th:first-child{ width: 34%; }

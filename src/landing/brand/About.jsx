@@ -1,9 +1,9 @@
 import './register.css';
 import { Icon } from '../_shared/Icon';
 import { Rv, SectionHead, Nav, Footer } from './chrome';
-import { OmrNumber } from './figures';
+import { UsageFigures } from './figures';
 import { useReveal, useSmoothScroll } from './pageMotion';
-import { ABOUT_PAGE, BRAND, TRUST, JOURNEY_HERO } from '../content';
+import { ABOUT_PAGE, BRAND } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
    ABOUT — who makes Evolveus and why, at /about. Facts only, from
@@ -59,12 +59,7 @@ export default function About() {
         <div className="rg-wrap">
           <SectionHead code="§03" kicker={today.kicker} title={today.title} lede={today.text} />
           <div className="rg-about-figs">
-            {TRUST.figures.map((f, i) => (
-              <Rv className="rg-trust-fig" key={f.l} delay={i * 80}>
-                <OmrNumber text={f.n} />
-                <div className="rg-trust-l">{JOURNEY_HERO.figureLabels[i]}</div>
-              </Rv>
-            ))}
+            <UsageFigures />
           </div>
         </div>
       </section>
