@@ -8,7 +8,7 @@ import { motionOK, useReveal, useSmoothScroll } from './pageMotion';
 import { Shot, OmrNumber } from './figures';
 import {
   TRUST, MARKING_SHOTS, REPORTS, MASTERY_SAMPLE, BRAND,
-  JOURNEY_HERO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
+  JOURNEY_NAV, JOURNEY_HERO, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
 } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -56,7 +56,12 @@ function cameraAt(t) {
   };
 }
 
-/* Turns the scroll position into t, from 0 to the number of steps.
+/* Turns the scroll position into t, from 0 to the number of steps + 1.
+
+   The first unit is the gate (--p0): a centred line and a button that
+   fills as the reader scrolls; once it is full, the stage fades in and
+   the sheet unrolls. Steps 1 to n follow as --p1 to --pn. The active index is -1
+   while the gate is up.
 
    The step text and the stage are both pinned (CSS sticky) for as long
    as the story's track is scrolling past, so the reader never scrolls
@@ -65,16 +70,25 @@ function cameraAt(t) {
    80% of its share of the track and holds its finished state for the
    rest. With reduced motion, t snaps to whole steps. */
 const PLAY = 0.8;
+// The share of the gate after which step 1's text takes over.
+const GATE_DONE = 0.82;
+// How the stage follows the scroll: the most units (steps) it moves in a
+// second, and how quickly it eases toward the scroll position.
+const MAX_RATE = 1.4;
+const EASE = 5;
 
 function useJourney(stepCount) {
   const stage = useRef(null);
   const track = useRef(null);
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(-1);
 
   useEffect(() => {
     const el = stage.current;
     const tr = track.current;
     if (!el || !tr) return;
+    // Scroll state goes on the story section, so the gate (outside the
+    // stage) and the stage both inherit it.
+    const host = el.closest('.jy-story') ?? el;
     const smooth = motionOK();
     const narrow = window.matchMedia('(max-width: 880px)');
 
@@ -100,32 +114,78 @@ function useJourney(stepCount) {
       el.style.setProperty('--fit', fit.toFixed(3));
     };
 
-    let last = -1;
-    const update = () => {
-      const u = Math.min(1, Math.max(0, (window.scrollY + pinTop - top) / span)) * stepCount;
-      const idx = Math.min(stepCount - 1, Math.floor(u));
-      let t = idx + Math.min(1, (u - idx) / PLAY);
-      if (!smooth) t = idx + 1;
+    const units = stepCount + 1;
 
-      for (let k = 1; k <= stepCount; k++) {
-        el.style.setProperty(`--p${k}`, Math.min(1, Math.max(0, t - (k - 1))).toFixed(3));
+    // Where the scroll position says the story should be.
+    const target = () => {
+      const u = Math.min(1, Math.max(0, (window.scrollY + pinTop - top) / span)) * units;
+      const idx = Math.min(units - 1, Math.floor(u));
+      return smooth ? idx + Math.min(1, (u - idx) / PLAY) : idx + 1;
+    };
+
+    let last = -2;
+    const render = (t) => {
+      for (let k = 0; k <= stepCount; k++) {
+        host.style.setProperty(`--p${k}`, Math.min(1, Math.max(0, t - k)).toFixed(3));
       }
-      const cam = cameraAt(t);
-      el.style.setProperty('--rx', `${cam.rx.toFixed(2)}deg`);
-      el.style.setProperty('--rz', `${cam.rz.toFixed(2)}deg`);
-      el.style.setProperty('--sc', cam.s.toFixed(3));
-      el.style.setProperty('--cx', `${cam.x.toFixed(1)}px`);
+      // Which unit is playing: unit k covers t in (k, k + 1]. The gate
+      // (unit 0) hands over to step 1 once its button is full and the
+      // stage has faded in (see .jy-gate and .jy-stage in the CSS).
+      const unit = Math.max(0, Math.ceil(t) - 1);
+      const next = unit === 0 && t < GATE_DONE ? -1 : Math.max(0, unit - 1);
+      // The story proper (steps 1 to n) runs on t - 1.
+      const s = Math.max(0, t - 1);
+      const cam = cameraAt(s);
+      host.style.setProperty('--rx', `${cam.rx.toFixed(2)}deg`);
+      host.style.setProperty('--rz', `${cam.rz.toFixed(2)}deg`);
+      host.style.setProperty('--sc', cam.s.toFixed(3));
+      host.style.setProperty('--cx', `${cam.x.toFixed(1)}px`);
       // 3D only once the results start; see .jy-stage[data-depth].
-      el.toggleAttribute('data-depth', t > 3.001);
-      if (idx !== last) {
-        last = idx;
-        setActive(idx);
+      el.toggleAttribute('data-depth', s > 3.001);
+      if (next !== last) {
+        last = next;
+        setActive(next);
       }
     };
 
-    const onResize = () => { measure(); update(); };
-    measure();
-    update();
+    /* The stage follows the scroll position at a limited speed, the way
+       a scrubbed timeline with lag works: it eases toward the target and
+       never moves faster than MAX_RATE units a second. A quick flick
+       still plays every step, over a readable time, instead of all at
+       once; scrolling back rewinds the same way. With reduced motion it
+       jumps straight to the target. */
+    let shown = target();
+    let goal = shown;
+    let frame = 0;
+    let prev = 0;
+    const tick = (now) => {
+      const dt = Math.min(0.05, (now - prev) / 1000);
+      prev = now;
+      const gap = goal - shown;
+      const eased = gap * (1 - Math.exp(-dt * EASE));
+      const cap = MAX_RATE * dt;
+      shown += Math.max(-cap, Math.min(cap, eased));
+      if (Math.abs(goal - shown) < 0.0005) shown = goal;
+      render(shown);
+      frame = shown === goal ? 0 : requestAnimationFrame(tick);
+    };
+    const update = () => {
+      goal = target();
+      if (!smooth) {
+        shown = goal;
+        render(shown);
+        return;
+      }
+      if (!frame) {
+        prev = performance.now();
+        frame = requestAnimationFrame(tick);
+      }
+    };
+
+    // On load and resize, jump to the scroll position rather than
+    // playing the story from the top.
+    const onResize = () => { measure(); shown = goal = target(); render(shown); };
+    onResize();
     const ro = new ResizeObserver(onResize);
     ro.observe(document.body);
     window.addEventListener('scroll', update, { passive: true });
@@ -134,10 +194,38 @@ function useJourney(stepCount) {
       ro.disconnect();
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', onResize);
+      cancelAnimationFrame(frame);
     };
   }, [stepCount]);
 
   return { stage, track, active };
+}
+
+/* True once the visitor has sat on the landing view for a few seconds
+   without scrolling; false for good as soon as they scroll. */
+const HINT_DELAY = 4000;
+
+function useIdleHint() {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    let done = false;
+    const timer = setTimeout(() => {
+      if (!done && window.scrollY < 40) setOn(true);
+    }, HINT_DELAY);
+    const onScroll = () => {
+      if (window.scrollY < 40) return;
+      done = true;
+      clearTimeout(timer);
+      setOn(false);
+      window.removeEventListener('scroll', onScroll);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+  return on;
 }
 
 /* ── The desk ─────────────────────────────────────────────────── */
@@ -330,17 +418,22 @@ function Desk() {
 
 /* ═══════════════════════════════════════════════════════════════ */
 
-const COMPARE_LINK = [{ href: '/compare', label: 'Compare' }];
+const NAV_EXTRA = [
+  { href: '/product', label: 'Product' },
+  { href: '/compare', label: 'Compare' },
+];
+const FOOTER_EXTRA = [{ href: '/compare', label: 'Compare' }];
 const COHORT_SHOT = REPORTS.find((r) => r.id === 'class').shot;
 
 export default function Journey() {
   const root = useReveal();
   useSmoothScroll();
   const { stage, track, active } = useJourney(JOURNEY_STEPS.length);
+  const hint = useIdleHint();
 
   return (
     <div className="rg jy" ref={root}>
-      <Nav extra={COMPARE_LINK} />
+      <Nav links={JOURNEY_NAV} extra={NAV_EXTRA} />
 
       {/* ── HERO ────────────────────────────────────────── */}
       <header className="jy-hero" id="top">
@@ -383,8 +476,30 @@ export default function Journey() {
         </div>
       </header>
 
+      <div className={`jy-hint ${hint ? 'is-on' : ''}`} aria-hidden="true">
+        <span className="rg-mono">Scroll</span>
+        <Icon name="chevronDown" size={16} />
+      </div>
+
       {/* ── THE STORY ───────────────────────────────────── */}
       <section className="jy-story" data-active={active}>
+        <div className="jy-gate" aria-hidden={active !== -1}>
+          <span className="rg-mono jy-gate-k">{JOURNEY_INTRO.kicker}</span>
+          <h2 className="rg-h2 jy-gate-h">{JOURNEY_INTRO.title}</h2>
+          <a className="jy-gate-btn" href="#before" tabIndex={active === -1 ? 0 : -1}>
+            <span className="jy-gate-fill" aria-hidden="true" />
+            <span className="jy-gate-label">
+              {JOURNEY_INTRO.cue}
+              <Icon name="arrowDown" size={15} />
+            </span>
+            {/* The same label in the page colour, shown only below the
+                water line, so it reads on the fill. */}
+            <span className="jy-gate-label jy-gate-label--on" aria-hidden="true">
+              {JOURNEY_INTRO.cue}
+              <Icon name="arrowDown" size={15} />
+            </span>
+          </a>
+        </div>
         <div className="rg-wrap jy-story-in">
           <div className="jy-stage-col">
             <div className="jy-stage" ref={stage}>
@@ -404,9 +519,9 @@ export default function Journey() {
 
           {/* The track sets how long the story scrolls. The anchors mark
               where each step starts, for the nav links. */}
-          <div className="jy-steps" ref={track} style={{ '--n': JOURNEY_STEPS.length }}>
+          <div className="jy-steps" ref={track} style={{ '--n': JOURNEY_STEPS.length + 1 }}>
             {JOURNEY_STEPS.map((s, i) => (
-              <span className="jy-anchor" id={s.id} key={s.id} style={{ '--k': i }} />
+              <span className="jy-anchor" id={s.id} key={s.id} style={{ '--k': i + 1 }} />
             ))}
             <div className="jy-copy">
               {JOURNEY_STEPS.map((s, i) => (
@@ -426,6 +541,10 @@ export default function Journey() {
                       <li key={f}><span className="rg-bub rg-bub--fill" />{f}</li>
                     ))}
                   </ul>
+                  <a className="jy-more" href={s.more} tabIndex={i === active ? 0 : -1}>
+                    More on this
+                    <Icon name="arrowRight" size={13} />
+                  </a>
                 </article>
               ))}
             </div>
@@ -491,7 +610,7 @@ export default function Journey() {
         </div>
       </section>
 
-      <Footer extra={COMPARE_LINK} />
+      <Footer extra={FOOTER_EXTRA} />
     </div>
   );
 }

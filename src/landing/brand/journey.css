@@ -28,10 +28,23 @@
 :root[data-theme="dark"] .jy{ --shadow-ink: rgba(0, 0, 0, 0.5); --bar-label: #082017; }
 
 /* ── Hero ─────────────────────────────────────────────── */
-.jy-hero{ padding: clamp(118px, 13vw, 170px) 0 clamp(36px, 4vw, 56px); }
+.jy-hero{
+  /* The landing view is exactly the hero: headline at the top, the trust
+     row at the foot of the screen, nothing of the story below it. */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  /* Bottom room for the idle "Scroll" hint. */
+  padding: clamp(100px, min(13vw, 16vh), 170px) 0 clamp(72px, 9vh, 104px);
+}
+.jy-hero > .rg-wrap{ flex: 1; display: flex; flex-direction: column; }
 .jy-h1{
   margin: 26px 0 0;
-  font-size: clamp(34px, 4.6vw, 64px);
+  /* Sized by the screen's height as well as its width, so a short
+     laptop screen still fits the headline and the figures. */
+  font-size: clamp(34px, min(4.6vw, 6.4vh), 64px);
   font-weight: 700;
   font-stretch: 110%;
   line-height: 1.06;
@@ -40,12 +53,13 @@
 /* One statement per line. */
 .jy-h1-line{ display: block; }
 .jy-h1 em{ font-style: normal; color: var(--brand); }
+/* Headline, then its call to action directly beneath, both left-aligned
+   so the button sits where the reading ends. */
 .jy-hero-row{
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 28px 40px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(24px, 3.4vh, 36px);
 }
 .jy-hero-row .rg-hero-ctas{ margin: 0; }
 
@@ -54,16 +68,51 @@
   grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
   gap: 0 clamp(20px, 3vw, 44px);
   align-items: end;
-  margin-top: clamp(48px, 6vw, 80px);
+  margin-top: auto;
   padding-top: 26px;
   border-top: 1px solid var(--rule);
 }
+/* Keep a minimum gap above the trust row when the screen is short. */
+.jy-hero-row{ margin-bottom: clamp(36px, min(6vw, 6vh), 80px); }
+/* The logo sits in the middle of the row's height, beside the tall
+   digit grids, rather than on their baseline. */
+.jy-trust-org{ align-self: center; }
 .jy-trust .rg-trust-fig{ border-left: 0; padding: 0; }
 .jy-trust-org .rg-trust-note{ margin-top: 10px; }
+
+/* "Scroll" hint, shown only if the visitor sits on the landing view for a
+   few seconds without scrolling. Fixed to the foot of the screen. */
+.jy-hint{
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  z-index: 20;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  color: var(--ink-70);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.jy-hint.is-on{ opacity: 1; transform: translate(-50%, 0); }
+.jy-hint .rg-mono{ font-size: 11px; letter-spacing: 0.32em; padding-left: 0.32em; }
+.jy-hint svg{ animation: jy-bob 1.8s ease-in-out infinite; }
+@keyframes jy-bob{
+  0%, 100%{ transform: translateY(0); }
+  50%{ transform: translateY(4px); }
+}
 
 /* ── Story layout ─────────────────────────────────────── */
 .jy-hero{ border-bottom: 1px solid var(--rule); }
 .jy-story{
+  /* Scroll state, written here by Journey.jsx so the gate and the stage
+     both inherit it. These are the values before the first write. */
+  --p0: 0; --p1: 0; --p2: 0; --p3: 0; --p4: 0; --p5: 0;
+  --rx: 0deg; --rz: 0deg; --sc: 1; --cx: 0px;
+  /* The sheet unrolls and the bank slides in once the stage is visible. */
+  --open: clamp(0, calc((var(--p0) - 0.78) * 4.6), 1);
   position: relative;
   /* The tilted desk may lean past its column; clip at the section so it
      never widens the page. The 3D layers inside keep overflow visible. */
@@ -82,10 +131,10 @@
   top: 0;
   height: 100vh;
   height: 100svh;
-  /* Defaults before the first scroll write, and the no-JS state. */
-  --p1: 0; --p2: 0; --p3: 0; --p4: 0; --p5: 0; --cx: 0px;
-  --rx: 8deg; --rz: 0deg; --sc: 1; --fit: 0.8;
+  --fit: 0.8;
   perspective-origin: 50% 40%;
+  /* Hidden behind the gate; fades in as the gate's outline closes. */
+  opacity: clamp(0, calc((var(--p0) - 0.72) * 8), 1);
 }
 
 /* The track: one share of scroll per step, plus a screen for the pinned
@@ -146,6 +195,109 @@
   color: var(--ink);
 }
 .jy-facts .rg-bub{ width: 9px; height: 9px; }
+
+/* "More on this": the way into the detail on /product. */
+.jy-more{
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 26px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--brand);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+.jy-more:hover{ border-bottom-color: var(--brand); }
+
+/* ── The gate ───────────────────────────────────────────
+   Pinned over the start of the story (sticky, taking no space). The
+   button fills from the bottom like a glass of water as the reader
+   scrolls; the line above it stays put. When the button is full, line
+   and button lift away together and the stage fades in behind them. */
+.jy-gate{
+  --ring: clamp(0, calc(var(--p0) / 0.7), 1);
+  --leave: clamp(0, calc((var(--p0) - 0.7) * 8), 1);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  height: 100vh;
+  height: 100svh;
+  margin-bottom: -100vh;
+  margin-bottom: -100svh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 18px;
+  padding: 0 var(--gutter);
+  text-align: center;
+  pointer-events: none;
+  opacity: calc(1 - var(--leave));
+  transform: translateY(calc(var(--leave) * -28px));
+}
+.jy-gate[aria-hidden="true"]{ visibility: hidden; }
+.jy-gate-k{ color: var(--brand); }
+.jy-gate-h{ max-width: 18ch; }
+
+.jy-gate-btn{
+  position: relative;
+  display: inline-grid;
+  margin-top: 16px;
+  border: 1.5px solid var(--brand);
+  border-radius: 3px;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  pointer-events: auto;
+}
+.jy-gate-label{
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 26px;
+  color: var(--ink);
+}
+.jy-gate-label svg{ color: var(--brand); }
+/* The page-coloured copy of the label, cut off at the water line. */
+.jy-gate-label--on{
+  position: relative;
+  z-index: 1;
+  color: var(--paper);
+  /* Cut along the middle of the wave rather than its base. */
+  clip-path: inset(calc((1 - var(--ring)) * 100% - 3.5px * var(--ring) * (1 - var(--ring)) * 4) 0 0 0);
+}
+.jy-gate-label--on svg{ color: var(--paper); }
+
+/* The water: a block rising from the bottom, with a wave along its
+   surface that drifts sideways. The wave shows only while the button is
+   part full. */
+.jy-gate-fill{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--ring) * 100%);
+  background: var(--brand);
+}
+.jy-gate-fill::before{
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  width: calc(100% + 40px);
+  height: 7px;
+  background: var(--brand);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='7'%3E%3Cpath d='M0 7V3.5C10 0 10 0 20 3.5S30 7 40 3.5V7z'/%3E%3C/svg%3E") repeat-x 0 0 / 40px 7px;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='7'%3E%3Cpath d='M0 7V3.5C10 0 10 0 20 3.5S30 7 40 3.5V7z'/%3E%3C/svg%3E") repeat-x 0 0 / 40px 7px;
+  opacity: calc(min(1, var(--ring) * 30) * min(1, (1 - var(--ring)) * 30));
+  animation: jy-wave 1.6s linear infinite;
+}
+@keyframes jy-wave{
+  from{ transform: translateX(-40px); }
+  to{ transform: translateX(0); }
+}
 
 /* Step rail: one bubble per step, shaded as the story passes it. */
 .jy-rail{
@@ -215,6 +367,10 @@
   --away: min(1, var(--p4) * 2.5);
   transform: translate(calc(var(--away) * -150px - var(--p5) * 120px), calc(var(--away) * -20px));
   opacity: calc(1 - var(--p5) * 2.5);
+  /* The intro: the sheet starts as its header strip and unrolls down as
+     the reader begins to scroll. Once open, the clip reaches past the
+     sheet so the remark and the stamp can hang over its edges. */
+  clip-path: inset(-60px -220px calc((1 - var(--open)) * (100% - 46px) - var(--open) * 60px) -60px);
 }
 .jy-sheet-head{
   display: flex;
@@ -397,7 +553,17 @@
 .jy-stamp b{ font-size: 15px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.1; }
 
 /* ── §01: the question bank ───────────────────────────── */
-.jy-bank{ position: absolute; left: 40px; top: 120px; }
+.jy-bank{
+  /* The stack slides in from the left as the sheet unrolls. It fades
+     as one group: faded one by one, the stacked cards show through
+     each other. */
+  --in: clamp(0, calc(var(--open) * 2 - 0.6), 1);
+  position: absolute;
+  left: 40px;
+  top: 120px;
+  opacity: var(--in);
+  transform: translateX(calc((1 - var(--in)) * -40px));
+}
 .jy-card{
   /* Each card lifts toward the sheet and is spent as its rows arrive. */
   /* The top card (highest --k) leaves first, like taking from a stack. */
