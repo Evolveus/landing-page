@@ -70,6 +70,17 @@ function cameraAt(t) {
    80% of its share of the track and holds its finished state for the
    rest. With reduced motion, t snaps to whole steps. */
 const PLAY = 0.8;
+// The scroll length of each unit (the gate, then each step), in shares of
+// the track's --per, where it differs from one. Step 2, where the pencil
+// answers six questions, gets twice the room, and plays at half the speed.
+const UNIT_LENGTH = { 2: 2 };
+const unitLength = (k) => UNIT_LENGTH[k] ?? 1;
+// Where each unit starts on the track, in --per shares.
+const unitStarts = (units) => Array.from({ length: units + 1 }, (_, k) => {
+  let at = 0;
+  for (let i = 0; i < k; i++) at += unitLength(i);
+  return at;
+});
 // The share of the gate after which step 1's text takes over.
 const GATE_DONE = 0.82;
 // How the stage follows the scroll: the most units (steps) it moves in a
@@ -173,6 +184,7 @@ function useJourney(stepCount) {
     };
 
     const units = stepCount + 1;
+    const starts = unitStarts(units);
     // Pencil end in use: 0 the point, 1 the eraser. See tick().
     let flip = 0;
     let rewinding = false;
@@ -180,9 +192,11 @@ function useJourney(stepCount) {
 
     // Where the scroll position says the story should be.
     const target = () => {
-      const u = Math.min(1, Math.max(0, (window.scrollY + pinTop - top) / span)) * units;
-      const idx = Math.min(units - 1, Math.floor(u));
-      return smooth ? idx + Math.min(1, (u - idx) / PLAY) : idx + 1;
+      const u = Math.min(1, Math.max(0, (window.scrollY + pinTop - top) / span)) * starts[units];
+      let idx = 0;
+      while (idx < units - 1 && u >= starts[idx + 1]) idx++;
+      const f = (u - starts[idx]) / unitLength(idx);
+      return smooth ? idx + Math.min(1, f / PLAY) : idx + 1;
     };
 
     let last = -2;
@@ -274,7 +288,8 @@ function useJourney(stepCount) {
       if (gap < -0.01) rewinding = true;
       else if (gap > 0.01) rewinding = false;
       const eased = gap * (1 - Math.exp(-dt * EASE));
-      const cap = MAX_RATE * dt;
+      // A longer unit plays slower by the same factor.
+      const cap = MAX_RATE * dt / unitLength(Math.min(units - 1, Math.floor(shown)));
       shown += Math.max(-cap, Math.min(cap, eased));
       if (Math.abs(goal - shown) < 0.0005) shown = goal;
       // The turn itself plays in time, a quick twirl, not with the scroll.
@@ -781,6 +796,9 @@ const NAV_EXTRA = [
 const FOOTER_EXTRA = [{ href: '/compare', label: 'Compare' }];
 const COHORT_SHOT = REPORTS.find((r) => r.id === 'class').shot;
 
+// Where each unit starts on the track: the gate, the steps, and the end.
+const STARTS = unitStarts(JOURNEY_STEPS.length + 1);
+
 export default function Journey() {
   const root = useReveal();
   useSmoothScroll();
@@ -885,9 +903,9 @@ export default function Journey() {
 
           {/* The track sets how long the story scrolls. The anchors mark
               where each step starts, for the nav links. */}
-          <div className="jy-steps" ref={track} style={{ '--n': JOURNEY_STEPS.length + 1 }}>
+          <div className="jy-steps" ref={track} style={{ '--n': STARTS[JOURNEY_STEPS.length + 1] }}>
             {JOURNEY_STEPS.map((s, i) => (
-              <span className="jy-anchor" id={s.id} key={s.id} style={{ '--k': i + 1 }} />
+              <span className="jy-anchor" id={s.id} key={s.id} style={{ '--k': STARTS[i + 1] }} />
             ))}
             <div className="jy-copy">
               {JOURNEY_STEPS.map((s, i) => (
