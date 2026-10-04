@@ -58,9 +58,9 @@ function cameraAt(t) {
 
 /* Turns the scroll position into t, from 0 to the number of steps + 1.
 
-   The first unit is the gate (--p0): a centred line and a button that
-   fills as the reader scrolls; once it is full, the stage fades in and
-   the sheet unrolls. Steps 1 to n follow as --p1 to --pn. The active index is -1
+   The first unit is the gate (--p0): a centred line and a pencil tin
+   whose lid slides off as the reader scrolls; once it is open, the
+   pencil goes to the desk, the stage fades in and the sheet unrolls. Steps 1 to n follow as --p1 to --pn. The active index is -1
    while the gate is up.
 
    The step text and the stage are both pinned (CSS sticky) for as long
@@ -75,6 +75,20 @@ const GATE_DONE = 0.82;
 // How the stage follows the scroll: the most units (steps) it moves in a
 // second, and how quickly it eases toward the scroll position.
 const MAX_RATE = 1.4;
+// The share of the gate at which the gate's pencil hands over to the
+// desk's (the stage has faded in by then).
+const PEN_SWAP = 0.8;
+// How fast the pencil turns over to its eraser and back (turns a second),
+// and how far the eraser's end is from the point, in board px (the
+// drawing is 200 long, shown at 0.8; the eraser cap ends at 199).
+const FLIP_RATE = 3.2;
+// The eraser zone inside step 2 (in story units), where there are marks
+// to rub out: the first answer is shaded from 0.04 into the step (see
+// ROW_WINDOWS). In from ERASE_IN, out below ERASE_OUT; the gap between
+// them is a dead zone, so hovering at the edge cannot set it spinning.
+const ERASE_IN = 2.055;
+const ERASE_OUT = 2.035;
+const PEN_LENGTH = 199 * 0.8;
 const EASE = 5;
 
 function useJourney(stepCount) {
@@ -114,7 +128,55 @@ function useJourney(stepCount) {
       el.style.setProperty('--fit', fit.toFixed(3));
     };
 
+    const desk = el.querySelector('.jy-desk');
+    const anchor = host.querySelector('.jy-gpen-anchor');
+
+    // Board-px points the pencil visits in step 2, read from the sheet.
+    let marks = null;
+    const measureMarks = () => {
+      if (!desk) return;
+      const k = 760 / (desk.offsetWidth || 760);
+      const rows = desk.querySelectorAll('.jy-row');
+      marks = Array.from(rows, (row) => {
+        const pick = row.querySelector('.jy-bub.is-pick');
+        if (pick) {
+          const o = offsetIn(pick, desk);
+          // The shade's 24-unit box spans the bubble plus SHADE_PAD a side.
+          const box = (pick.offsetWidth + SHADE_PAD * 2) * k;
+          const cx = (o.x + pick.offsetWidth / 2) * k;
+          const cy = (o.y + pick.offsetHeight / 2) * k;
+          const shade = SHADES[Number(row.dataset.i) % SHADES.length];
+          return {
+            x: cx,
+            y: cy,
+            path: shade.pts.map(([x, y]) => [cx + ((x - 12) / 24) * box, cy + ((y - 12) / 24) * box]),
+          };
+        }
+        const code = row.querySelectorAll('.jy-code code');
+        if (code.length) {
+          // scrollWidth is the full line, even while typing clips it.
+          return {
+            code: Array.from(code, (c) => {
+              const o = offsetIn(c, desk);
+              return [o.x * k, (o.y + c.offsetHeight / 2) * k, (o.x + c.scrollWidth) * k];
+            }),
+          };
+        }
+        const line = row.querySelector('.jy-lines i');
+        if (line) {
+          const o = offsetIn(line, desk);
+          const y = (o.y + line.offsetHeight / 2) * k;
+          return { line: [o.x * k, y, (o.x + line.offsetWidth) * k] };
+        }
+        return null;
+      });
+    };
+
     const units = stepCount + 1;
+    // Pencil end in use: 0 the point, 1 the eraser. See tick().
+    let flip = 0;
+    let rewinding = false;
+    let erasing = false;
 
     // Where the scroll position says the story should be.
     const target = () => {
@@ -129,7 +191,7 @@ function useJourney(stepCount) {
         host.style.setProperty(`--p${k}`, Math.min(1, Math.max(0, t - k)).toFixed(3));
       }
       // Which unit is playing: unit k covers t in (k, k + 1]. The gate
-      // (unit 0) hands over to step 1 once its button is full and the
+      // (unit 0) hands over to step 1 once its tin is open and the
       // stage has faded in (see .jy-gate and .jy-stage in the CSS).
       const unit = Math.max(0, Math.ceil(t) - 1);
       const next = unit === 0 && t < GATE_DONE ? -1 : Math.max(0, unit - 1);
@@ -142,6 +204,50 @@ function useJourney(stepCount) {
       host.style.setProperty('--cx', `${cam.x.toFixed(1)}px`);
       // 3D only once the results start; see .jy-stage[data-depth].
       el.toggleAttribute('data-depth', s > 3.001);
+
+      // The pencil on the desk.
+      const pk = (k) => clamp01(t - k);
+      const contact = pencilAt({ p2: pk(2), p3: pk(3) }, marks);
+      // Turned over (flip 1), the eraser end touches the paper where the
+      // point would have. Position is set by the point, so step it back
+      // along the pencil's axis by the pencil's length.
+      const fe = flip * flip * (3 - 2 * flip);
+      const angle = contact.a + 180 * fe;
+      const rad = (angle * Math.PI) / 180;
+      const reach = PEN_LENGTH * fe;
+      const pen = {
+        ...contact,
+        x: contact.x - Math.cos(rad) * reach,
+        y: contact.y - Math.sin(rad) * reach,
+        a: angle,
+      };
+      const p0 = pk(0);
+      host.style.setProperty('--pen-x', `${pen.x.toFixed(1)}px`);
+      host.style.setProperty('--pen-y', `${pen.y.toFixed(1)}px`);
+      host.style.setProperty('--pen-a', `${pen.a.toFixed(1)}deg`);
+      host.style.setProperty('--pen-l', pen.lift.toFixed(3));
+      host.style.setProperty('--pen-o', p0 >= PEN_SWAP ? pen.o.toFixed(3) : '0');
+
+      // The gate's pencil glides to the desk's resting spot as the gate
+      // lifts, then hands over to the desk's pencil. Both are pinned by
+      // then, so their positions are read live for the short handover.
+      const m = clamp01((p0 - 0.7) / (PEN_SWAP - 0.7));
+      if (anchor && desk && m > 0 && m < 1) {
+        const a = anchor.getBoundingClientRect();
+        const d = desk.getBoundingClientRect();
+        const fit = parseFloat(el.style.getPropertyValue('--fit')) || 1;
+        host.style.setProperty('--gpen-x', `${((d.left + PEN_REST.x * fit - a.left) * m).toFixed(1)}px`);
+        host.style.setProperty('--gpen-y', `${((d.top + PEN_REST.y * fit - a.top) * m).toFixed(1)}px`);
+        host.style.setProperty('--gpen-s', (1 + (fit - 1) * m).toFixed(3));
+      } else if (m <= 0) {
+        // Back in its slot. Reset explicitly: a fast scroll back up can
+        // skip the handover frames and leave a part-way offset behind.
+        host.style.setProperty('--gpen-x', '0px');
+        host.style.setProperty('--gpen-y', '0px');
+        host.style.setProperty('--gpen-s', '1');
+      }
+      host.style.setProperty('--gpen-m', m.toFixed(3));
+      host.style.setProperty('--gpen-o', p0 >= PEN_SWAP ? '0' : '1');
       if (next !== last) {
         last = next;
         setActive(next);
@@ -162,12 +268,25 @@ function useJourney(stepCount) {
       const dt = Math.min(0.05, (now - prev) / 1000);
       prev = now;
       const gap = goal - shown;
+      // Which way the story is moving: back up the page, the pencil
+      // turns over and rubs the marks out with its eraser. A small dead
+      // zone keeps a hair's wobble from reading as a change of direction.
+      if (gap < -0.01) rewinding = true;
+      else if (gap > 0.01) rewinding = false;
       const eased = gap * (1 - Math.exp(-dt * EASE));
       const cap = MAX_RATE * dt;
       shown += Math.max(-cap, Math.min(cap, eased));
       if (Math.abs(goal - shown) < 0.0005) shown = goal;
+      // The turn itself plays in time, a quick twirl, not with the scroll.
+      // Hysteresis at the edge of step 2: the eraser comes in only once
+      // clearly inside the step and goes only once clearly at its edge,
+      // so hovering on the boundary cannot set the pencil spinning.
+      if (!rewinding || shown <= ERASE_OUT || shown >= 3) erasing = false;
+      else if (shown >= ERASE_IN) erasing = true;
+      const want = erasing ? 1 : 0;
+      flip += Math.max(-FLIP_RATE * dt, Math.min(FLIP_RATE * dt, want - flip));
       render(shown);
-      frame = shown === goal ? 0 : requestAnimationFrame(tick);
+      frame = shown === goal && flip === want ? 0 : requestAnimationFrame(tick);
     };
     const update = () => {
       goal = target();
@@ -184,7 +303,7 @@ function useJourney(stepCount) {
 
     // On load and resize, jump to the scroll position rather than
     // playing the story from the top.
-    const onResize = () => { measure(); shown = goal = target(); render(shown); };
+    const onResize = () => { measure(); measureMarks(); shown = goal = target(); render(shown); };
     onResize();
     const ro = new ResizeObserver(onResize);
     ro.observe(document.body);
@@ -226,6 +345,229 @@ function useIdleHint() {
     };
   }, []);
   return on;
+}
+
+/* ── The pencil ─────────────────────────────────────────────────
+   A flat, drawn HB pencil seen from above, 200 x 16 board px, with the
+   point at the left edge's midpoint. It is positioned by its point:
+   CSS turns it about the point (transform-origin 0 50%). Flat bands of
+   colour stand in for the facets; no gradients. */
+function Pencil({ className }) {
+  return (
+    <svg className={className} width="200" height="16" viewBox="0 0 200 16" aria-hidden="true">
+      <polygon points="0,8 9,5.6 9,10.4" fill="#2f3431" />
+      <polygon points="9,5.6 34,0 34,16 9,10.4" fill="#e6cfa4" />
+      <polygon points="9,8 34,8 34,16 9,10.4" fill="#cfb185" />
+      <rect x="34" y="0" width="136" height="5.3" fill="#2bb377" />
+      <rect x="34" y="5.3" width="136" height="5.4" fill="#1a8d5c" />
+      <rect x="34" y="10.7" width="136" height="5.3" fill="#0f6b45" />
+      <text x="56" y="9.6" fontFamily="DM Mono, monospace" fontSize="4.6" letterSpacing="0.9" fill="#d8efe3">EVOLVEUS · HB</text>
+      <rect x="170" y="0" width="13" height="16" fill="#b9bfbc" />
+      <rect x="173" y="0" width="1.4" height="16" fill="#8f9692" />
+      <rect x="178" y="0" width="1.4" height="16" fill="#8f9692" />
+      <rect x="183" y="0.6" width="16" height="14.8" rx="3" fill="#e59a8c" />
+    </svg>
+  );
+}
+
+/* The rest of the tin: a white eraser in a green paper sleeve, and a
+   metal sharpener. Flat drawings, like the pencil. */
+function Eraser() {
+  return (
+    <svg className="jy-eraser" width="44" height="14" viewBox="0 0 44 14" aria-hidden="true">
+      <rect x="0" y="0" width="44" height="14" rx="3" fill="#f3f1ea" />
+      <rect x="14" y="0" width="30" height="14" fill="#1a8d5c" />
+      <rect x="14" y="0" width="30" height="4.5" fill="#2bb377" />
+      <text x="17" y="10" fontFamily="DM Mono, monospace" fontSize="4.4" letterSpacing="0.6" fill="#d8efe3">ERASER</text>
+    </svg>
+  );
+}
+
+function Sharpener() {
+  return (
+    <svg className="jy-sharp" width="24" height="16" viewBox="0 0 24 16" aria-hidden="true">
+      <rect x="0" y="0" width="24" height="16" rx="2.5" fill="#b9bfbc" />
+      <rect x="0" y="0" width="24" height="5" rx="2.5" fill="#d3d8d5" />
+      <circle cx="8" cy="9" r="4" fill="#5d6460" />
+      <circle cx="8" cy="9" r="1.6" fill="#2f3431" />
+      <rect x="14" y="4.5" width="8" height="2" fill="#8f9692" />
+    </svg>
+  );
+}
+
+/* How a bubble is shaded: one continuous back-and-forth stroke over a
+   wobbly graphite wash, in a 24 x 24 box drawn a little larger than the
+   bubble so the shading strays over its outline. The same points draw
+   the mark (journey.css .jy-shade-line) and steer the pencil's point,
+   so the line always grows from under the point. Three hands, used in
+   turn down the sheet. */
+const SHADES = [
+  {
+    wash: 'M5 10C4 5 9 3 13 3.5S21 7 20.5 12 16 20.5 11 20 3.5 15.5 5 10Z',
+    pts: [[3.5, 14], [10, 3.5], [4.5, 18], [14, 3.6], [6.5, 20.5], [18, 4.4], [9.5, 21], [20.8, 7.2], [13.5, 20.6], [21.4, 12], [17.5, 19.6], [21.6, 15.4]],
+  },
+  {
+    wash: 'M4 12C4 6 8 3.5 12.5 4S20.5 8.5 20 13 15 20.5 10.5 20 4 16.5 4 12Z',
+    pts: [[4.2, 15.5], [9, 4.2], [5, 19.2], [12.4, 3.8], [8, 21.2], [16.2, 4.4], [11.4, 21], [19.4, 6.2], [15.2, 20.4], [21, 9.6]],
+  },
+  {
+    wash: 'M5.5 11C5 6.5 8.5 4 12.5 4S20 6.5 20 11.5 17 19.5 12 19.8 5.8 16 5.5 11Z',
+    pts: [[5, 7.5], [18.5, 5.2], [4.2, 11.2], [20.6, 9], [4.4, 15], [20.2, 13.4], [6.4, 18.8], [18.6, 17.6], [8.6, 21]],
+  },
+];
+const SHADE_PAD = 3.5;
+const shadePath = (pts) => `M${pts.map(([x, y]) => `${x} ${y}`).join('L')}`;
+
+/* A point a fraction u of the way along a polyline, by length. */
+function alongPath(pts, u) {
+  const segs = [];
+  let total = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const len = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+    segs.push(len);
+    total += len;
+  }
+  let d = clamp01(u) * total;
+  for (let i = 0; i < segs.length; i++) {
+    if (d <= segs[i] || i === segs.length - 1) {
+      const f = segs[i] ? Math.min(1, d / segs[i]) : 0;
+      return { x: lerp(pts[i][0], pts[i + 1][0], f), y: lerp(pts[i][1], pts[i + 1][1], f) };
+    }
+    d -= segs[i];
+  }
+  return { x: pts[0][0], y: pts[0][1] };
+}
+
+/* Where the pencil rests, in board px, and its angles. It lies just under
+   the foot of the sheet, close enough that a stage cropped to the sheet
+   (tablets, phones) still shows all of it. */
+const PEN_REST = { x: 430, y: 462 };
+const PEN_ANGLE_REST = -18;
+const PEN_ANGLE_WRITE = -34;
+
+/* When each row is answered in step 2, as shares of the step. The rows
+   get these as --ws/--we (journey.css, .jy-row --e), and the pencil
+   reads the same table, so it arrives just before each answer appears
+   and leaves as it completes. The code row gets the longest window. */
+const ROW_WINDOWS = [
+  [0.04, 0.14],
+  [0.2, 0.28],
+  [0.34, 0.44],
+  [0.5, 0.62],
+  [0.67, 0.83],
+  [0.88, 0.95],
+];
+const PEN_ROWS = [0, 1, 2, 3, 4, 5];
+const fillWindow = (i) => ROW_WINDOWS[i];
+const TRAVEL = 0.055;
+
+const lerp = (a, b, f) => a + (b - a) * f;
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+
+/* The pencil's state for a given story position. `marks` holds, per row,
+   the point to shade, or for the descriptive row a line ([x0, y, x1]),
+   or for the code row its typed lines, measured from the DOM in
+   board px. Returns the point position,
+   angle, lift (0 resting on the paper, 1 held up) and opacity. */
+function pencilAt(p, marks) {
+  const rest = { x: PEN_REST.x, y: PEN_REST.y, a: PEN_ANGLE_REST, lift: 0, o: 1 };
+  if (!marks) return rest;
+  const { p2, p3 } = p;
+
+  // Gone once the paper is submitted: marking happens without it.
+  if (p3 > 0) return { ...rest, o: 0 };
+  // Before step 2: lying at rest beside the sheet.
+  if (p2 <= 0) return rest;
+
+  // Step 2: walk the rows.
+  let from = rest;
+  for (let n = 0; n < PEN_ROWS.length; n++) {
+    const row = PEN_ROWS[n];
+    const m = marks[row];
+    const [ws, we] = fillWindow(row);
+    const startLine = m.line ?? m.code?.[0];
+    const start = startLine
+      ? { x: startLine[0], y: startLine[1] }
+      : m.path ? { x: m.path[0][0], y: m.path[0][1] } : m;
+    // Never before the step starts: the first trip would otherwise
+    // begin part-way, and the pencil would jump at the step's edge.
+    const travelFrom = Math.max(0, ws - TRAVEL);
+    if (p2 < travelFrom) return { ...from, a: n === 0 ? PEN_ANGLE_REST : PEN_ANGLE_WRITE, lift: n === 0 ? 0 : 0.2, o: 1 };
+    if (p2 < ws) {
+      // Travelling: lifted in the middle of the move.
+      const f = clamp01((p2 - travelFrom) / TRAVEL);
+      const e = f * f * (3 - 2 * f);
+      return {
+        x: lerp(from.x, start.x, e),
+        y: lerp(from.y, start.y, e),
+        a: lerp(n === 0 ? PEN_ANGLE_REST : PEN_ANGLE_WRITE, PEN_ANGLE_WRITE, e),
+        lift: Math.sin(Math.PI * f) * 0.9 + 0.1,
+        o: 1,
+      };
+    }
+    if (p2 < we) {
+      const u = (p2 - ws) / (we - ws);
+      if (m.code) {
+        // Writing code: along each line as its characters appear (the
+        // CSS types line k over its half of the window), bobbing like
+        // handwriting.
+        const k = u < 0.5 ? 0 : 1;
+        const c = clamp01(u * 2 - k);
+        const [x0, y, x1] = m.code[k];
+        return {
+          x: lerp(x0, x1, c),
+          y: y + Math.sin(u * Math.PI * 18) * 2.2,
+          a: PEN_ANGLE_WRITE,
+          lift: 0.05 + Math.abs(Math.sin(u * Math.PI * 9)) * 0.12,
+          o: 1,
+        };
+      }
+      if (m.line) {
+        // Writing along the descriptive answer's line.
+        return {
+          x: lerp(m.line[0], m.line[2], u),
+          y: m.line[1] + Math.sin(u * Math.PI * 10) * 1.6,
+          a: PEN_ANGLE_WRITE,
+          lift: 0,
+          o: 1,
+        };
+      }
+      // Shading a bubble: the point runs along the same back-and-forth
+      // stroke the mark is drawn with, as it is drawn.
+      const pt = m.path ? alongPath(m.path, u) : m;
+      return { x: pt.x, y: pt.y, a: PEN_ANGLE_WRITE, lift: 0, o: 1 };
+    }
+    const endLine = m.line ?? m.code?.[m.code.length - 1];
+    from = endLine
+      ? { x: endLine[2], y: endLine[1] }
+      : m.path ? { x: m.path[m.path.length - 1][0], y: m.path[m.path.length - 1][1] } : m;
+  }
+  // After the last answer the paper is submitted: the pencil lifts off
+  // and fades as "Submitted" appears.
+  const last = fillWindow(PEN_ROWS[PEN_ROWS.length - 1])[1];
+  const f = clamp01((p2 - last) / 0.04);
+  return {
+    x: from.x + f * 24,
+    y: from.y - f * 18,
+    a: PEN_ANGLE_WRITE,
+    lift: f,
+    o: 1 - f,
+  };
+}
+
+/* Offset of an element within an ancestor, in that ancestor's own CSS px.
+   Offsets ignore transforms, so this holds wherever the sheet has been
+   moved to. */
+function offsetIn(el, ancestor) {
+  let x = 0;
+  let y = 0;
+  let node = el;
+  while (node && node !== ancestor) {
+    x += node.offsetLeft;
+    y += node.offsetTop;
+    node = node.offsetParent;
+  }
+  return { x, y };
 }
 
 /* ── The desk ─────────────────────────────────────────────────── */
@@ -367,7 +709,12 @@ function Desk() {
 
         <div className="jy-rows">
           {ROWS.map((r, i) => (
-            <div className="jy-row" key={r.n} style={{ '--i': i }}>
+            <div
+              className="jy-row"
+              key={r.n}
+              data-i={i}
+              style={{ '--i': i, '--ws': ROW_WINDOWS[i][0], '--we': ROW_WINDOWS[i][1] }}
+            >
               <span className="jy-row-n">{r.n}</span>
               <span className="jy-row-tag">
                 <b>{r.tag}</b>
@@ -386,6 +733,12 @@ function Desk() {
                 )}
                 {!r.kind && (r.opts ?? [0, 1, 2, 3]).map((o, b) => (
                   <span key={b} className={`jy-bub ${b === r.pick ? 'is-pick' : ''}`}>
+                    {b === r.pick && (
+                      <svg className="jy-shade" viewBox="0 0 24 24" aria-hidden="true">
+                        <path className="jy-shade-wash" d={SHADES[i % SHADES.length].wash} />
+                        <path className="jy-shade-line" d={shadePath(SHADES[i % SHADES.length].pts)} pathLength="1" />
+                      </svg>
+                    )}
                     {typeof o === 'string' && <small>{o}</small>}
                   </span>
                 ))}
@@ -412,6 +765,9 @@ function Desk() {
           <b>Published</b>
         </div>
       </div>
+
+      {/* The pencil, last so it lies on top of the sheet. */}
+      <Pencil className="jy-pencil" />
     </div>
   );
 }
@@ -486,15 +842,25 @@ export default function Journey() {
         <div className="jy-gate" aria-hidden={active !== -1}>
           <span className="rg-mono jy-gate-k">{JOURNEY_INTRO.kicker}</span>
           <h2 className="rg-h2 jy-gate-h">{JOURNEY_INTRO.title}</h2>
-          <a className="jy-gate-btn" href="#before" tabIndex={active === -1 ? 0 : -1}>
-            <span className="jy-gate-fill" aria-hidden="true" />
-            <span className="jy-gate-label">
-              {JOURNEY_INTRO.cue}
-              <Icon name="arrowDown" size={15} />
+          <a
+            className="jy-tin"
+            href="#before"
+            aria-label="Scroll to the first step"
+            tabIndex={active === -1 ? 0 : -1}
+          >
+            <span className="jy-tin-tray" aria-hidden="true">
+              <i className="jy-slot jy-slot--pencil" />
+              <i className="jy-slot jy-slot--eraser" />
+              <i className="jy-slot jy-slot--sharp" />
+              <Eraser />
+              <Sharpener />
             </span>
-            {/* The same label in the page colour, shown only below the
-                water line, so it reads on the fill. */}
-            <span className="jy-gate-label jy-gate-label--on" aria-hidden="true">
+            {/* The pencil's point; it is not in the tray, so it does not
+                fade with the tin when it leaves for the desk. */}
+            <span className="jy-gpen-anchor" aria-hidden="true">
+              <Pencil className="jy-gpen" />
+            </span>
+            <span className="jy-tin-lid" aria-hidden="true">
               {JOURNEY_INTRO.cue}
               <Icon name="arrowDown" size={15} />
             </span>

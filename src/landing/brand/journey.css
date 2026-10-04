@@ -21,11 +21,14 @@
   /* Numbers on the bar tops: white on the light theme's mid-green tops,
      near-black on the dark theme's pale ones. */
   --bar-label: #fff;
+  /* Pencil graphite: dark grey on the light sheet, a silvery sheen on
+     the dark one. */
+  --graphite: #3a3f3c;
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .jy{ --shadow-ink: rgba(0, 0, 0, 0.5); --bar-label: #082017; }
+  :root:not([data-theme="light"]) .jy{ --shadow-ink: rgba(0, 0, 0, 0.5); --bar-label: #082017; --graphite: #c4ccc7; }
 }
-:root[data-theme="dark"] .jy{ --shadow-ink: rgba(0, 0, 0, 0.5); --bar-label: #082017; }
+:root[data-theme="dark"] .jy{ --shadow-ink: rgba(0, 0, 0, 0.5); --bar-label: #082017; --graphite: #c4ccc7; }
 
 /* ── Hero ─────────────────────────────────────────────── */
 .jy-hero{
@@ -111,6 +114,8 @@
      both inherit it. These are the values before the first write. */
   --p0: 0; --p1: 0; --p2: 0; --p3: 0; --p4: 0; --p5: 0;
   --rx: 0deg; --rz: 0deg; --sc: 1; --cx: 0px;
+  --pen-x: 478px; --pen-y: 548px; --pen-a: -18deg; --pen-l: 0; --pen-o: 0;
+  --gpen-x: 0px; --gpen-y: 0px; --gpen-s: 1; --gpen-m: 0; --gpen-o: 1;
   /* The sheet unrolls and the bank slides in once the stage is visible. */
   --open: clamp(0, calc((var(--p0) - 0.78) * 4.6), 1);
   position: relative;
@@ -134,7 +139,7 @@
   --fit: 0.8;
   perspective-origin: 50% 40%;
   /* Hidden behind the gate; fades in as the gate's outline closes. */
-  opacity: clamp(0, calc((var(--p0) - 0.72) * 8), 1);
+  opacity: clamp(0, calc((var(--p0) - 0.7) * 10), 1);
 }
 
 /* The track: one share of scroll per step, plus a screen for the pinned
@@ -212,9 +217,9 @@
 
 /* ── The gate ───────────────────────────────────────────
    Pinned over the start of the story (sticky, taking no space). The
-   button fills from the bottom like a glass of water as the reader
-   scrolls; the line above it stays put. When the button is full, line
-   and button lift away together and the stage fades in behind them. */
+   pencil tin's lid slides off as the reader scrolls; the line above it
+   stays put. When the tin is open, line and tin lift away together, the
+   pencil goes to the desk, and the stage fades in behind them. */
 .jy-gate{
   --ring: clamp(0, calc(var(--p0) / 0.7), 1);
   --leave: clamp(0, calc((var(--p0) - 0.7) * 8), 1);
@@ -232,71 +237,117 @@
   padding: 0 var(--gutter);
   text-align: center;
   pointer-events: none;
+}
+/* The words and the tin lift away; the pencil (see .jy-gpen) does not
+   fade with them, it travels to the desk instead. */
+.jy-gate-k, .jy-gate-h, .jy-tin-tray, .jy-tin-lid{
   opacity: calc(1 - var(--leave));
   transform: translateY(calc(var(--leave) * -28px));
 }
 .jy-gate[aria-hidden="true"]{ visibility: hidden; }
+
+/* ── The pencil ─────────────────────────────────────────
+   Both pencils are placed by their point: the SVG's point sits at its
+   left edge's midpoint, which is the transform origin. */
+.jy-gpen-anchor{
+  /* The pencil's point, at the left end of its slot in the tin. Above
+     the tray, below the lid. */
+  position: absolute;
+  left: 11px;
+  top: 15px;
+  z-index: 1;
+  width: 0;
+  height: 0;
+}
+.jy-gpen, .jy-pencil{
+  /* Drawn at 200 px long; shown at 160 so it stays smaller than a row. */
+  --pen-size: 0.8;
+  position: absolute;
+  left: 0;
+  top: -8px;
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+.jy-gpen{
+  opacity: var(--gpen-o);
+  transform: translate(var(--gpen-x), var(--gpen-y)) rotate(calc(-18deg * var(--gpen-m))) scale(calc(var(--gpen-s) * var(--pen-size)));
+  /* Sits in its slot, then casts a longer shadow as it lifts out. */
+  filter: drop-shadow(calc(1px + var(--gpen-m) * 8px) calc(1px + var(--gpen-m) * 10px) calc(1px + var(--gpen-m) * 4px) var(--shadow-ink));
+}
+/* On the desk: --pen-l lifts it off the paper, scaled up a touch with a
+   longer, softer shadow, which is all the depth it needs. */
+.jy-pencil{
+  opacity: var(--pen-o);
+  transform: translate(var(--pen-x), var(--pen-y)) rotate(var(--pen-a)) scale(calc(var(--pen-size) * (1 + var(--pen-l) * 0.08)));
+  filter: drop-shadow(calc(1.5px + var(--pen-l) * 9px) calc(2px + var(--pen-l) * 12px) calc(1.5px + var(--pen-l) * 5px) var(--shadow-ink));
+}
 .jy-gate-k{ color: var(--brand); }
 .jy-gate-h{ max-width: 18ch; }
 
-.jy-gate-btn{
+/* ── The pencil tin ─────────────────────────────────────
+   The gate's button is a slim tin. Its lid slides down and off as the
+   reader scrolls (how far it has slid is the progress), revealing
+   a pencil, an eraser and a sharpener in moulded slots. When the lid is
+   off, the pencil lifts out and travels to the desk. */
+.jy-tin{
   position: relative;
-  display: inline-grid;
-  margin-top: 16px;
-  border: 1.5px solid var(--brand);
-  border-radius: 3px;
-  overflow: hidden;
-  font-size: 15px;
-  font-weight: 600;
+  display: block;
+  width: 236px;
+  height: 58px;
+  margin-top: 18px;
   pointer-events: auto;
 }
-.jy-gate-label{
-  grid-area: 1 / 1;
-  display: inline-flex;
+.jy-tin-tray{
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  background: var(--paper-2);
+  border: 1.5px solid var(--rule);
+}
+/* Moulded slots: shallow recesses the items sit in. */
+.jy-slot{
+  position: absolute;
+  display: block;
+  border-radius: 7px;
+  background: var(--rule-soft);
+  box-shadow: inset 0 1px 0 var(--rule);
+}
+.jy-slot--pencil{ left: 8px; top: 8px; width: 172px; height: 14px; }
+.jy-slot--eraser{ left: 8px; top: 30px; width: 50px; height: 18px; }
+.jy-slot--sharp{ left: 66px; top: 29px; width: 30px; height: 20px; }
+.jy-eraser, .jy-sharp{ position: absolute; display: block; }
+.jy-eraser{ left: 11px; top: 32px; }
+.jy-sharp{ left: 69px; top: 31px; }
+
+.jy-tin-lid{
+  position: absolute;
+  inset: -1px;
+  z-index: 2;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 15px 26px;
-  color: var(--ink);
-}
-.jy-gate-label svg{ color: var(--brand); }
-/* The page-coloured copy of the label, cut off at the water line. */
-.jy-gate-label--on{
-  position: relative;
-  z-index: 1;
-  color: var(--paper);
-  /* Cut along the middle of the wave rather than its base. */
-  clip-path: inset(calc((1 - var(--ring)) * 100% - 3.5px * var(--ring) * (1 - var(--ring)) * 4) 0 0 0);
-}
-.jy-gate-label--on svg{ color: var(--paper); }
-
-/* The water: a block rising from the bottom, with a wave along its
-   surface that drifts sideways. The wave shows only while the button is
-   part full. */
-.jy-gate-fill{
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: calc(var(--ring) * 100%);
+  border-radius: 9px;
   background: var(--brand);
+  color: var(--paper);
+  font-size: 15px;
+  font-weight: 600;
+  /* Slides down as --ring goes 0 to 1, into the empty space below the
+     tin (sliding up would cross the headline), clear of the tray at the
+     end. */
+  translate: 0 calc(var(--ring) * 112%);
 }
-.jy-gate-fill::before{
+/* A thumb notch at the lid's top edge, where you would pull it. */
+.jy-tin-lid::before{
   content: '';
   position: absolute;
-  left: 0;
-  bottom: 100%;
-  width: calc(100% + 40px);
-  height: 7px;
-  background: var(--brand);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='7'%3E%3Cpath d='M0 7V3.5C10 0 10 0 20 3.5S30 7 40 3.5V7z'/%3E%3C/svg%3E") repeat-x 0 0 / 40px 7px;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='7'%3E%3Cpath d='M0 7V3.5C10 0 10 0 20 3.5S30 7 40 3.5V7z'/%3E%3C/svg%3E") repeat-x 0 0 / 40px 7px;
-  opacity: calc(min(1, var(--ring) * 30) * min(1, (1 - var(--ring)) * 30));
-  animation: jy-wave 1.6s linear infinite;
-}
-@keyframes jy-wave{
-  from{ transform: translateX(-40px); }
-  to{ transform: translateX(0); }
+  left: 50%;
+  top: 6px;
+  width: 22px;
+  height: 4px;
+  margin-left: -11px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--paper) 35%, transparent);
 }
 
 /* Step rail: one bubble per step, shaded as the story passes it. */
@@ -394,7 +445,9 @@
 .jy-row{
   /* --a: the question has arrived (§01). --e: answered (§02). --m: marked (§03). */
   --a: clamp(0, calc(var(--p1) * 8 - var(--i) * 1.1), 1);
-  --e: clamp(0, calc(var(--p2) * 8 - var(--i) * 1.1 - 0.4), 1);
+  /* --ws/--we: the share of §02 over which this row is answered, set per
+     row from ROW_WINDOWS in Journey.jsx so the pencil keeps time. */
+  --e: clamp(0, calc((var(--p2) - var(--ws)) / (var(--we) - var(--ws))), 1);
   --m: clamp(0, calc(var(--p3) * 9 - var(--i) * 1.1 - 0.6), 1);
   display: grid;
   grid-template-columns: 22px 80px minmax(0, 1fr) 46px;
@@ -434,7 +487,7 @@
   border: 1.5px solid var(--ink-25);
 }
 /* The chosen bubble looks like the others until it is filled in. */
-.jy-bub.is-pick{ border-color: color-mix(in srgb, var(--brand) calc(var(--e) * 100%), var(--ink-25)); }
+.jy-bub.is-pick{ border-color: color-mix(in srgb, var(--graphite) calc(var(--e) * 100%), var(--ink-25)); }
 .jy-bub small{
   position: absolute;
   inset: 0;
@@ -451,14 +504,28 @@
   z-index: 1;
   color: color-mix(in srgb, var(--card) calc(var(--e) * 100%), var(--ink-45));
 }
-.jy-bub.is-pick::after{
-  content: '';
+/* Shaded in pencil: see .jy-shade below. */
+.jy-shade{
   position: absolute;
-  inset: 2px;
-  border-radius: 50%;
-  background: var(--brand);
-  opacity: var(--e);
-  transform: scale(calc(0.4 + var(--e) * 0.6));
+  /* The 24-unit box spans the bubble plus SHADE_PAD (3.5px) a side, so
+     the shading strays over the outline. Keep in step with Journey.jsx. */
+  inset: -3.5px;
+  overflow: visible;
+  pointer-events: none;
+}
+/* The wash darkens as the stroke is laid down over it. */
+.jy-shade-wash{ fill: var(--graphite); opacity: calc(var(--e) * 0.4); }
+/* One continuous stroke, drawn from its start as --e runs 0 to 1, under
+   the pencil's point. pathLength="1" makes the dash a fraction. */
+.jy-shade-line{
+  fill: none;
+  stroke: var(--graphite);
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: calc(1 - var(--e));
+  opacity: min(1, calc(var(--e) * 40));
 }
 
 .jy-lines{ display: grid; gap: 5px; width: 100%; }
@@ -471,9 +538,8 @@
   transform: scaleX(var(--e));
 }
 .jy-code{
-  /* Typed over most of §02 rather than the row's short fill, so the
-     characters come at a readable pace. */
-  --ty: clamp(0, calc((var(--p2) - 0.3) / 0.6), 1);
+  /* Typed as the pencil writes it, over the row's own window. */
+  --ty: var(--e);
   display: grid;
   gap: 2px;
   min-width: 0;
@@ -511,7 +577,8 @@
   align-items: baseline;
   padding-top: 10px;
 }
-.jy-saved{ font-size: 9px; color: var(--ink-45); opacity: calc(clamp(0, var(--p2) * 6 - 5, 1) - var(--p3) * 3); }
+/* Appears once the last answer is in (ROW_WINDOWS ends at 0.95). */
+.jy-saved{ font-size: 9px; color: var(--ink-45); opacity: calc(clamp(0, (var(--p2) - 0.95) * 25, 1) - var(--p3) * 3); }
 .jy-score{
   font-family: var(--mono);
   font-size: 18px;
@@ -607,6 +674,8 @@
   opacity: clamp(0, calc(var(--p2) * 6 - var(--k) - 1), 1);
 }
 .jy-log-row:last-child{ border-bottom: 0; }
+/* "Submitted" lands with the sheet's own, after the last answer. */
+.jy-log-row:last-child{ opacity: clamp(0, calc((var(--p2) - 0.95) * 25), 1); }
 .jy-log-row .rg-mono{ font-size: 9px; letter-spacing: 0.06em; color: var(--ink-45); }
 .jy-log-row.is-flag{ color: var(--flag); }
 
