@@ -5,9 +5,9 @@ import { Icon } from '../_shared/Icon';
 import { ContactForm } from '../_shared/ContactForm';
 import { Rv, Nav, Footer } from './chrome';
 import { motionOK, useReveal, useSmoothScroll } from './pageMotion';
-import { Exhibit, ThemedImg, OmrNumber } from './figures';
+import { OmrNumber } from './figures';
 import {
-  TRUST, MARKING_SHOTS, REPORTS, MASTERY_SAMPLE, BRAND,
+  TRUST, MASTERY_SAMPLE, BRAND,
   JOURNEY_NAV, JOURNEY_HERO, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
 } from '../content';
 
@@ -814,81 +814,6 @@ const NAV_EXTRA = [
   { href: '/compare', label: 'Compare' },
 ];
 const FOOTER_EXTRA = [{ href: '/compare', label: 'Compare' }];
-const COHORT_SHOT = REPORTS.find((r) => r.id === 'class').shot;
-
-/* Each proof screen is shown whole, and the detail that makes its point
-   is marked in pencil as its row scrolls up. Marks are drawn in
-   the capture's own px (1200 wide, ih high); ih also gives the figure
-   its size before the image loads. */
-const PROOF_MARKS = [
-  // The remark: a reason given for the mark. Underline the reason.
-  { ih: 986, mark: 'M236 818 C 300 815.6, 420 817.4, 500 816 C 530 815.4, 556 815.8, 578 813' },
-  // The student's pick, marked correct automatically. Ring the pick.
-  { ih: 1003, mark: 'M150 435 C 118 423, 52 424, 36 445 C 24 465, 58 487, 104 487 C 148 487, 166 467, 152 445 C 144 433, 120 427, 92 428' },
-  // The class: the mean, with the bands below it tinted. Ring the mean.
-  { ih: 807, mark: 'M508 336 C 492 320, 418 318, 398 332 C 382 346, 408 360, 456 360 C 508 360, 526 348, 512 332 C 502 322, 470 318, 440 320' },
-];
-
-/* The proof rows play with the scroll. Each row pins in the middle of
-   the screen (CSS sticky) for a short hold: it stands up as it rises into
-   place, its pencil mark is drawn while it is held, and then it scrolls
-   on as the next comes up. Scrolling back undoes it. Writes --v (0 to 1)
-   on each row, and --stick, the pinned row's top, which centres it. */
-const PROOF_RISE = 0.6; // share of --v spent rising into place
-const NAV_H = 58; // the fixed nav's height
-function useRowProgress() {
-  const ref = useRef(null);
-  useEffect(() => {
-    const rows = Array.from(ref.current?.querySelectorAll('.jy-proof-item') ?? []);
-    if (!rows.length) return;
-    const smooth = motionOK();
-    let frame = 0;
-    let sticks = [];
-    // Centre each pinned row in the space below the nav, not the whole
-    // window, or it sits low, as if pushed down by the nav.
-    const measure = () => {
-      const vh = window.innerHeight;
-      sticks = rows.map((r) => {
-        const h = r.querySelector('.jy-proof-pin').offsetHeight;
-        const stick = NAV_H + Math.max(16, (vh - NAV_H - h) / 2);
-        r.style.setProperty('--stick', `${stick.toFixed(0)}px`);
-        return stick;
-      });
-    };
-    const update = () => {
-      frame = 0;
-      const vh = window.innerHeight;
-      rows.forEach((r, i) => {
-        if (!smooth) { r.style.setProperty('--v', '1'); return; }
-        const top = r.getBoundingClientRect().top;
-        const stick = sticks[i];
-        // The hold is the spacer after the pinned row.
-        const hold = r.querySelector('.jy-proof-hold').offsetHeight;
-        const v = top > stick
-          ? PROOF_RISE * Math.min(1, Math.max(0, (vh - top) / (vh - stick)))
-          : PROOF_RISE + (1 - PROOF_RISE) * Math.min(1, (stick - top) / (hold * 0.6));
-        r.style.setProperty('--v', v.toFixed(3));
-      });
-    };
-    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
-    const onResize = () => { measure(); onScroll(); };
-    measure();
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize, { passive: true });
-    // Images arriving change the rows' heights.
-    const ro = new ResizeObserver(onResize);
-    rows.forEach((r) => ro.observe(r.querySelector('.jy-proof-pin')));
-    return () => {
-      cancelAnimationFrame(frame);
-      ro.disconnect();
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
-    };
-  }, []);
-  return ref;
-}
-
 /* Text with one phrase in it underlined in pencil, drawn once the text
    has come in. */
 function Underlined({ text, phrase }) {
@@ -916,7 +841,6 @@ export default function Journey() {
   useSmoothScroll();
   const { stage, track, active } = useJourney(JOURNEY_STEPS.length);
   const hint = useIdleHint();
-  const proof = useRowProgress();
 
   return (
     <div className="rg jy" ref={root}>
@@ -1057,37 +981,17 @@ export default function Journey() {
         </div>
       </section>
 
-      {/* ── PROOF ───────────────────────────────────────── */}
-      <section className="rg-sec jy-proof">
+      {/* ── HANDOFF: the story was a sample; the real screens are on
+          /product, for whoever wants proof. ─────────────────── */}
+      <section className="rg-sec jy-handoff">
         <div className="rg-wrap">
-          <Rv as="h2" className="rg-h2">{JOURNEY_PROOF.title}</Rv>
-          <div className="jy-proof-list" ref={proof}>
-            {[...MARKING_SHOTS, COHORT_SHOT].map((sh, i) => {
-              const { ih, mark } = PROOF_MARKS[i];
-              const item = JOURNEY_PROOF.items[i];
-              return (
-                <article className="jy-proof-item" key={sh.src} style={{ '--ih': ih }}>
-                  <div className="jy-proof-pin">
-                    <figure className="jy-proof-fig">
-                      <Exhibit fig={sh.fig} label={sh.label}>
-                        <div className="jy-marked">
-                          <ThemedImg src={sh.src} alt={sh.alt} />
-                          <svg className="jy-marked-mark" viewBox={`0 0 1200 ${ih}`} aria-hidden="true">
-                            <path className="jy-scribble" d={mark} pathLength="1" />
-                          </svg>
-                        </div>
-                      </Exhibit>
-                    </figure>
-                    <div className="jy-proof-text">
-                      <h3>{item.title}</h3>
-                      <p>{item.text}</p>
-                    </div>
-                  </div>
-                  <div className="jy-proof-hold" />
-                </article>
-              );
-            })}
-          </div>
+          <Rv as="p" className="jy-handoff-line">{JOURNEY_PROOF.line}</Rv>
+          <Rv delay={80}>
+            <a className="jy-more" href="/product">
+              {JOURNEY_PROOF.link}
+              <Icon name="arrowRight" size={14} />
+            </a>
+          </Rv>
         </div>
       </section>
 
