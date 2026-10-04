@@ -273,6 +273,12 @@
   animation: jy-tour-in 0.5s ease both;
 }
 @keyframes jy-tour-in{ from{ opacity: 0; transform: translateY(6px); } }
+.jy-tour-foot{
+  max-width: calc((100vh - 260px) * 1.6);
+  margin: 18px auto 0;
+  text-align: right;
+}
+.jy-tour-foot .jy-more{ margin-top: 0; }
 .jy-tour-shot{
   margin-top: 22px;
   margin-inline: auto;
@@ -1132,11 +1138,14 @@
 .jy-brief{ border-top: 1px solid var(--rule); }
 .jy-brief-grid{
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* The heading and the way to the detail; the two ways it runs. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
   gap: clamp(32px, 5vw, 80px);
+  align-items: start;
 }
+.jy-brief .jy-more{ margin-top: 14px; }
 .jy-brief-h{ font-size: clamp(26px, 2.6vw, 36px); }
-.jy-brief-list{ margin-top: 22px !important; }
+.jy-brief-list{ margin-top: 0 !important; }
 .jy-brief-list li{
   display: grid;
   grid-template-columns: 150px minmax(0, 1fr);
@@ -1163,6 +1172,7 @@
 
 @media (max-width: 880px){
   .jy-handoff-grid{ grid-template-columns: minmax(0, 1fr); }
+  .jy-handoff-figs{ grid-template-columns: minmax(0, 1fr); gap: 26px; }
   .jy-story-in{ grid-template-columns: minmax(0, 1fr); gap: 0; }
   .jy-stage-col{ order: 0; position: sticky; top: 58px; z-index: 2; height: 56svh; }
   .jy-stage{

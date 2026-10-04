@@ -728,9 +728,12 @@ export const JOURNEY_HERO = {
 /* The home page's nav: the story is one section, so one link to it. */
 export const JOURNEY_NAV = [
   { href: '#before', label: 'How it works' },
-  { href: '#roles', label: 'Who uses it' },
-  { href: '#deployment', label: 'Deployment' },
 ];
+
+/* Under the home page's product tour: the way to every role's detail. */
+export const JOURNEY_TOUR = {
+  more: 'Everything each role can do',
+};
 
 /* The opening screen, Apple-style: what it is, then a greeting. */
 export const JOURNEY_OPEN = {
@@ -807,16 +810,9 @@ export const JOURNEY_PROOF = {
 };
 
 export const JOURNEY_BRIEF = {
-  roles: {
-    title: 'Who uses it',
-    items: [
-      { label: 'Administrators', text: 'Set up the university and its accounts.' },
-      { label: 'Faculty', text: 'Set papers, approve grades, follow up.' },
-      { label: 'Students', text: 'Write exams and see their own results.' },
-    ],
-  },
   deploy: {
     title: 'Where it runs',
+    more: 'More on deployment',
     items: [
       { label: 'Our cloud', text: 'We host it, update it and back it up.' },
       // Full isolation needs the AI models on campus too; say so.

@@ -8,7 +8,7 @@ import { motionOK, useReveal, useSmoothScroll } from './pageMotion';
 import { OmrNumber, ThemedImg } from './figures';
 import {
   TRUST, MASTERY_SAMPLE, BRAND,
-  JOURNEY_NAV, JOURNEY_HERO, JOURNEY_OPEN, BRAND_ROLES, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
+  JOURNEY_NAV, JOURNEY_HERO, JOURNEY_OPEN, JOURNEY_TOUR, BRAND_ROLES, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
 } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -888,6 +888,12 @@ function Tour() {
           ))}
         </div>
       </div>
+      <div className="jy-tour-foot">
+        <a className="jy-more" href="/product#roles">
+          {JOURNEY_TOUR.more}
+          <Icon name="arrowRight" size={14} />
+        </a>
+      </div>
     </div>
   );
 }
@@ -1061,22 +1067,27 @@ export default function Journey() {
         </div>
       </section>
 
-      {/* ── WHO AND WHERE ───────────────────────────────── */}
-      <section className="rg-sec jy-brief">
+      {/* ── WHERE IT RUNS: the short version; /product has the rest.
+          (Who uses it is the tour at the top.) ──────────────── */}
+      <section className="rg-sec jy-brief" id="deployment">
         <div className="rg-wrap jy-brief-grid">
-          {[['roles', JOURNEY_BRIEF.roles], ['deployment', JOURNEY_BRIEF.deploy]].map(([id, block]) => (
-            <div id={id} key={id}>
-              <Rv as="h2" className="rg-h2 jy-brief-h">{block.title}</Rv>
-              <ul className="jy-brief-list">
-                {block.items.map((it, i) => (
-                  <Rv as="li" key={it.label} delay={i * 70}>
-                    <b>{it.label}</b>
-                    <span>{it.text}</span>
-                  </Rv>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div>
+            <Rv as="h2" className="rg-h2 jy-brief-h">{JOURNEY_BRIEF.deploy.title}</Rv>
+            <Rv delay={60}>
+              <a className="jy-more" href="/product#deployment">
+                {JOURNEY_BRIEF.deploy.more}
+                <Icon name="arrowRight" size={14} />
+              </a>
+            </Rv>
+          </div>
+          <ul className="jy-brief-list">
+            {JOURNEY_BRIEF.deploy.items.map((it, i) => (
+              <Rv as="li" key={it.label} delay={i * 70}>
+                <b>{it.label}</b>
+                <span>{it.text}</span>
+              </Rv>
+            ))}
+          </ul>
         </div>
       </section>
 
