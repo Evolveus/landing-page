@@ -711,8 +711,8 @@ export const JOURNEY_HERO = {
   figureLabels: ['Students', 'Exams', 'Answers evaluated'],
 };
 
-/* The gate before step 1: a centred line and a button that fills as the
-   reader scrolls; when it is full, the story starts. */
+/* The gate before step 1: a centred line and a pencil tin whose lid
+   slides off as the reader scrolls; when it is open, the story starts. */
 /* The home page's nav: the story is one section, so one link to it. */
 export const JOURNEY_NAV = [
   { href: '#before', label: 'How it works' },
@@ -723,7 +723,7 @@ export const JOURNEY_NAV = [
 export const JOURNEY_INTRO = {
   kicker: 'A sample exam',
   title: 'Run one exam, start to finish.',
-  cue: 'Scroll to begin',
+  cue: 'Scroll',
 };
 
 /* One line of body and two short facts per step: the sheet beside the
