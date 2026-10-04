@@ -600,6 +600,14 @@ const ROWS = [
   { n: '06', tag: 'MATCH', meta: 'L2 · CO2', pick: 3, mark: '2/2', ok: true },
 ];
 
+/* Pencil marks made in §03, hand-drawn rather than geometric: a tick
+   with a short arm and a long one, and a ring that overshoots its start. */
+const TICK = 'M1.5 6.8 C 2.9 7.8, 3.9 9.1, 4.7 10.6 C 6.4 6.6, 8.9 3.3, 12.8 1.2';
+const RING = 'M22.6 4.4 C 15.4 1.2, 3.6 4.2, 2.4 13.8 C 1.4 22.6, 9.6 28.4, 17.2 27.4 C 25.4 26.4, 29.2 19.6, 27.8 12 C 26.8 6.6, 21 2.4, 11.4 3.8';
+// Written by hand under the remark. Keep the font request in index.html
+// in step: it loads only these letters.
+const FACULTY_NOTE = 'Agreed. 4/5';
+
 /* Bottom of the stack first; the last card is on top and is taken first. */
 /* The coding answer, typed out a character at a time in §02. */
 const CODE = ['def lcs(a, b):', '  dp = [[0]*(len(b)+1)'];
@@ -755,12 +763,22 @@ function Desk() {
                       </svg>
                     )}
                     {typeof o === 'string' && <small>{o}</small>}
+                    {/* A wrong pick is ringed in pencil when it is marked. */}
+                    {b === r.pick && !r.ok && (
+                      <svg className="jy-ring" viewBox="0 0 30 30" aria-hidden="true">
+                        <path className="jy-scribble" d={RING} pathLength="1" />
+                      </svg>
+                    )}
                   </span>
                 ))}
               </span>
               <span className={`jy-mark ${r.ok ? '' : 'is-off'}`}>
-                <Icon name={r.ok ? 'check' : 'alert'} size={12} />
-                {r.mark}
+                {r.ok && (
+                  <svg className="jy-tick" viewBox="0 0 14 12" aria-hidden="true">
+                    <path className="jy-scribble" d={TICK} pathLength="1" />
+                  </svg>
+                )}
+                <span className="jy-mark-n">{r.mark}</span>
               </span>
             </div>
           ))}
@@ -774,6 +792,8 @@ function Desk() {
         <div className="jy-note">
           <span className="rg-mono">Remark · Q4</span>
           <p>Explains paging and the TLB clearly. Misses what happens on a page fault.</p>
+          {/* The faculty member's own word on it, in the margin. */}
+          <span className="jy-hand" aria-hidden="true">{FACULTY_NOTE}</span>
         </div>
 
         <div className="jy-stamp">
@@ -807,6 +827,18 @@ export default function Journey() {
 
   return (
     <div className="rg jy" ref={root}>
+      {/* Graphite: pencil marks on the page are run through this, which
+          roughens their edges and breaks the fill into grain, as graphite
+          catches on the tooth of paper. Applied to whole marks in CSS px,
+          so the grain is the same size on every mark. */}
+      <svg className="jy-defs" aria-hidden="true">
+        <filter id="jy-graphite" x="-10%" y="-60%" width="120%" height="220%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.22 1.1" numOctaves="3" seed="7" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.1" xChannelSelector="R" yChannelSelector="G" result="rough" />
+          <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  2.6 0 0 0 -0.45" result="grain" />
+          <feComposite in="rough" in2="grain" operator="in" />
+        </filter>
+      </svg>
       <Nav links={JOURNEY_NAV} extra={NAV_EXTRA} />
 
       {/* ── HERO ────────────────────────────────────────── */}
@@ -824,7 +856,15 @@ export default function Journey() {
                 </Rv>
               ))}
               <Rv as="span" className="jy-h1-line" delay={80 + JOURNEY_HERO.lines.length * 70}>
-                <em>{JOURNEY_HERO.emphasis}</em>
+                <em className="jy-em">
+                  {JOURNEY_HERO.emphasis}
+                  {/* A quick pencil underline, out and back, the way a
+                      teacher marks the point that matters. */}
+                  <svg className="jy-uline" viewBox="0 0 200 14" aria-hidden="true">
+                    <path className="jy-scribble jy-uline-out" d="M2.5 8.6 C 20 7.4, 38 6.6, 61 6.9 C 92 7.3, 124 5.6, 156 5.1 C 175 4.8, 189 4.2, 197.5 3" pathLength="1" />
+                    <path className="jy-scribble jy-uline-back" d="M194 5.2 C 168 7.2, 136 8.1, 104 8.9 C 84 9.4, 64 10.3, 41 11.4" pathLength="1" />
+                  </svg>
+                </em>
               </Rv>
             </h1>
             <Rv className="rg-hero-ctas" delay={420}>
