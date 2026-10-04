@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useScrollProgress, useStuck, useTheme } from './pageMotion';
 import { Icon } from '../_shared/Icon';
 import { FootMural, GraphiteDefs } from './footMural';
-import { BRAND, BRAND_LOGO, BRAND_NAV, BRAND_FOOTER } from '../content';
+import { BRAND, BRAND_LOGO, SITE_NAV, SIGNIN_LINK, BRAND_FOOTER } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
    CHROME — the parts every EvolveUs brand page shares: the reveal
@@ -46,6 +46,8 @@ export function Lockup({ light = false }) {
 /* A link as seen from a page with the given base: an in-page link
    ('#…') is taken to that base; a path is left as it is. */
 const onPage = (base, href) => (href.startsWith('#') ? `${base}${href}` : href);
+// True for a link to the page being shown.
+const isHere = (href) => typeof window !== 'undefined' && href === window.location.pathname;
 
 /* Section header: margin marker + title, split by a full rule. `walk`,
    if given ({ href, label }), adds a small link under the marker, back
@@ -97,7 +99,7 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
   }, []);
 
   const links = [
-    ...(own ?? BRAND_NAV).map((l) => ({ ...l, href: onPage(base, l.href) })),
+    ...(own ?? SITE_NAV).map((l) => ({ ...l, href: onPage(base, l.href) })),
     ...extra,
   ];
 
@@ -109,7 +111,7 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
         </a>
         <div className="rg-nav-links">
           {links.map((l) => (
-            <a key={l.href} href={l.href} aria-current={l.current ? 'page' : undefined}>
+            <a key={l.href} href={l.href} aria-current={isHere(l.href) ? 'page' : undefined}>
               {l.label}
             </a>
           ))}
@@ -122,6 +124,13 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
         >
           <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={17} />
         </button>
+        <a
+          className="rg-btn rg-btn--sm rg-btn--soft"
+          href={SIGNIN_LINK.href}
+          aria-current={isHere(SIGNIN_LINK.href) ? 'page' : undefined}
+        >
+          {SIGNIN_LINK.label}
+        </a>
         <a className="rg-btn rg-btn--sm" href={`${base}#contact`}>
           Book a walkthrough
           <Icon name="arrowRight" size={14} />
@@ -142,7 +151,7 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
 
       <div className="rg-menu" id="rg-menu" hidden={!menu}>
         <div className="rg-wrap">
-          {links.map((l) => (
+          {[...links, SIGNIN_LINK].map((l) => (
             <a key={l.href} href={l.href} onClick={() => setMenu(false)}>
               <span className="rg-bub" />
               {l.label}

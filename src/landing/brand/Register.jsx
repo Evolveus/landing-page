@@ -121,7 +121,7 @@ export default function Register() {
 
   return (
     <div className="rg" ref={root}>
-      <Nav home="/" extra={COMPARE_LINK} />
+      <Nav home="/" />
 
       {/* ── PAGE HEADER: what this page is, the way back to the
           walkthrough, and an index of its sections. The home page is the

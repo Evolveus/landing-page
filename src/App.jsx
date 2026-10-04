@@ -14,6 +14,8 @@ import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
 import Compare from "./landing/brand/Compare";
 import Register from "./landing/brand/Register";
+import About from "./landing/brand/About";
+import SignIn from "./landing/brand/SignIn";
 import Design1 from "./landing/designs/Design1";
 import Design2 from "./landing/designs/Design2";
 import Design3 from "./landing/designs/Design3";
@@ -36,6 +38,8 @@ export default function App() {
     if (path === "/brochure") return "brochure";
     if (path === "/compare") return "compare";
     if (path === "/product") return "product";
+    if (path === "/about") return "about";
+    if (path === "/signin") return "signin";
     if (path === "/1") return "design-1";
     if (path === "/2") return "design-2";
     if (path === "/3") return "design-3";
@@ -57,6 +61,8 @@ export default function App() {
       brochure: "/brochure",
       compare: "/compare",
       product: "/product",
+      about: "/about",
+      signin: "/signin",
       "design-1": "/1",
       "design-2": "/2",
       "design-3": "/3",
@@ -87,7 +93,7 @@ export default function App() {
   // The landing views render full-bleed, so they mark the body explicitly
   // rather than leaving the reset to a :has() selector.
   useLayoutEffect(() => {
-    const fullBleed = view === "landing" || view === "compare" || view === "product" || view.startsWith("design-");
+    const fullBleed = view === "landing" || view === "compare" || view === "product" || view === "about" || view === "signin" || view.startsWith("design-");
     document.body.classList.toggle("is-landing", fullBleed);
     return () => document.body.classList.remove("is-landing");
   }, [view]);
@@ -161,6 +167,22 @@ export default function App() {
     return (
       <div className="landing-shell">
         <Register />
+      </div>
+    );
+  }
+
+  if (view === "about") {
+    return (
+      <div className="landing-shell">
+        <About />
+      </div>
+    );
+  }
+
+  if (view === "signin") {
+    return (
+      <div className="landing-shell">
+        <SignIn />
       </div>
     );
   }
