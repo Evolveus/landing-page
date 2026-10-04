@@ -30,43 +30,8 @@
 }
 :root[data-theme="dark"] .jy{ --shadow-ink: rgba(0, 0, 0, 0.5); --bar-label: #082017; --graphite: #c4ccc7; }
 
-/* ── Hero ─────────────────────────────────────────────── */
-.jy-hero{
-  /* The landing view is exactly the hero: headline at the top, the trust
-     row at the foot of the screen, nothing of the story below it. */
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-height: 100svh;
-  /* Bottom room for the idle "Scroll" hint. */
-  padding: clamp(100px, min(13vw, 16vh), 170px) 0 clamp(72px, 9vh, 104px);
-}
-/* The faint OMR matrix behind the hero, as on /product (.rg-hero). */
-.jy-hero::before{
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(15, 107, 69, 0.16) 1.4px, transparent 1.5px);
-  background-size: 34px 34px;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
-  mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
-  pointer-events: none;
-}
-.jy-hero > .rg-wrap{ position: relative; flex: 1; display: flex; flex-direction: column; }
-.jy-h1{
-  margin: 26px 0 0;
-  /* Sized by the screen's height as well as its width, so a short
-     laptop screen still fits the headline and the figures. */
-  font-size: clamp(34px, min(4.6vw, 6.4vh), 64px);
-  font-weight: 700;
-  font-stretch: 110%;
-  line-height: 1.06;
-  letter-spacing: -0.03em;
-}
-/* One statement per line. */
-.jy-h1-line{ display: block; }
-.jy-h1 em{ font-style: normal; color: var(--brand); }
+/* A pencil underline under a phrase (.jy-em around it, the SVG after
+   it), drawn once its text has come in. */
 .jy-em{ position: relative; display: inline-block; }
 .jy-uline{
   position: absolute;
@@ -76,24 +41,11 @@
   height: auto;
   overflow: visible;
 }
-/* Out with pressure, back lighter and quicker, as a hand does. */
-.jy-uline-out{ stroke-width: 2.1; opacity: 0.85; }
-.jy-uline-back{ stroke-width: 1.3; opacity: 0.6; }
-/* Drawn once the line has risen in, the return stroke straight after. */
-.rg-anim .jy-uline-out{
-  stroke-dashoffset: 1;
-  transition: stroke-dashoffset 0.6s cubic-bezier(0.5, 0, 0.4, 1) 0.95s;
-}
-.rg-anim .jy-uline-back{
-  stroke-dashoffset: 1;
-  transition: stroke-dashoffset 0.35s cubic-bezier(0.3, 0, 0.6, 1) 1.52s;
-}
 .rg-anim .is-in .jy-uline .jy-scribble{ stroke-dashoffset: 0; }
 @media (prefers-reduced-motion: reduce){
   .rg-anim .jy-uline .jy-scribble{ stroke-dashoffset: 0; transition: none; }
 }
 
-/* The graphite filter's own SVG takes no room. */
 /* Not the ticks: at their size the grain breaks the stroke apart. */
 .jy-uline, .jy-ring, .jy-hand{ filter: url(#rg-graphite); }
 
@@ -110,59 +62,8 @@
   stroke-dasharray: 1 1;
   stroke-dashoffset: 0;
 }
-/* Headline, then its call to action directly beneath, both left-aligned
-   so the button sits where the reading ends. */
-.jy-hero-row{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: clamp(24px, 3.4vh, 36px);
-}
-.jy-hero-row .rg-hero-ctas{ margin: 0; }
-
-.jy-trust{
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
-  gap: 0 clamp(20px, 3vw, 44px);
-  align-items: end;
-  margin-top: auto;
-  padding-top: 26px;
-  border-top: 1px solid var(--rule);
-}
-/* Keep a minimum gap above the trust row when the screen is short. */
-.jy-hero-row{ margin-bottom: clamp(36px, min(6vw, 6vh), 80px); }
-/* The logo sits in the middle of the row's height, beside the tall
-   digit grids, rather than on their baseline. */
-.jy-trust-org{ align-self: center; }
-.jy-trust .rg-trust-fig{ border-left: 0; padding: 0; }
-.jy-trust-org .rg-trust-note{ margin-top: 10px; }
-
-/* "Scroll" hint, shown only if the visitor sits on the landing view for a
-   few seconds without scrolling. Fixed to the foot of the screen. */
-.jy-hint{
-  position: fixed;
-  left: 50%;
-  bottom: 22px;
-  z-index: 20;
-  display: grid;
-  justify-items: center;
-  gap: 4px;
-  color: var(--ink-70);
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, 8px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.jy-hint.is-on{ opacity: 1; transform: translate(-50%, 0); }
-.jy-hint .rg-mono{ font-size: 11px; letter-spacing: 0.32em; padding-left: 0.32em; }
-.jy-hint svg{ animation: jy-bob 1.8s ease-in-out infinite; }
-@keyframes jy-bob{
-  0%, 100%{ transform: translateY(0); }
-  50%{ transform: translateY(4px); }
-}
 
 /* ── Story layout ─────────────────────────────────────── */
-.jy-hero{ border-bottom: 1px solid var(--rule); }
 .jy-story{
   /* Scroll state, written here by Journey.jsx so the gate and the stage
      both inherit it. These are the values before the first write. */
@@ -294,7 +195,7 @@
 }
 /* The words and the tin lift away; the pencil (see .jy-gpen) does not
    fade with them, it travels to the desk instead. */
-.jy-gate-k, .jy-gate-h, .jy-tin-tray, .jy-tin-lid{
+.jy-gate-k, .jy-gate-h, .jy-gate-org, .jy-tin-tray, .jy-tin-lid{
   opacity: calc(1 - var(--leave));
   transform: translateY(calc(var(--leave) * -28px));
 }
@@ -335,8 +236,91 @@
   transform: translate(var(--pen-x), var(--pen-y)) rotate(var(--pen-a)) scale(calc(var(--pen-size) * (1 + var(--pen-l) * 0.08)));
   filter: drop-shadow(calc(1.5px + var(--pen-l) * 9px) calc(2px + var(--pen-l) * 12px) calc(1.5px + var(--pen-l) * 5px) var(--shadow-ink));
 }
-.jy-gate-k{ color: var(--brand); }
-.jy-gate-h{ max-width: 18ch; }
+/* The opening screen, Apple-style: what it is, then a greeting, where
+   it is in use, and the tin below them. */
+.jy-gate-k{
+  margin: 0;
+  font-size: clamp(18px, 1.8vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.jy-gate-h{
+  margin: -6px 0 0;
+  font-size: clamp(52px, min(8.4vw, 13vh), 124px);
+  font-weight: 800;
+  font-stretch: 125%;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+.jy-gate-org{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: clamp(8px, 1.6vh, 18px) 0 0;
+  font-size: 14px;
+  color: var(--ink-45);
+}
+.jy-gate-org img{ height: 26px; width: auto; }
+.jy-gate .jy-tin{ margin-top: clamp(28px, 7vh, 72px); }
+/* Oversized answer bubbles down both sides, cropped by the screen's
+   edges (GateBubbles in Journey.jsx). They leave with the words. */
+.jy-bubbles{
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  opacity: calc(1 - var(--leave));
+  pointer-events: none;
+}
+.jy-bubbles-col{
+  --bb: clamp(52px, 4.6vw, 76px);
+  position: absolute;
+  top: 50%;
+  display: grid;
+  grid-template-columns: repeat(2, var(--bb));
+  gap: calc(var(--bb) * 0.38) calc(var(--bb) * 0.34);
+  translate: 0 -50%;
+}
+.jy-bubbles-col--l{ left: calc(var(--bb) * -0.45); }
+.jy-bubbles-col--r{ right: calc(var(--bb) * -0.45); }
+.jy-bb{ width: var(--bb); height: var(--bb); overflow: visible; filter: url(#rg-graphite); }
+.jy-bb-ring{ fill: none; stroke: var(--graphite); stroke-width: 0.55; stroke-linecap: round; opacity: 0.26; }
+.jy-bb-wash{ fill: var(--graphite); opacity: 0.08; }
+.jy-bb-fill{
+  fill: none;
+  stroke: var(--graphite);
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.42;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  /* Filled in one after another as the page opens. */
+  animation: jy-bb-draw 0.55s cubic-bezier(0.45, 0, 0.35, 1) forwards;
+  animation-delay: calc(0.5s + var(--k) * 0.22s);
+}
+@keyframes jy-bb-draw{ to{ stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce){
+  .jy-bb-fill{ animation: none; stroke-dashoffset: 0; }
+}
+/* Phones: no room beside the words. */
+@media (max-width: 700px){ .jy-bubbles{ display: none; } }
+/* The faint OMR matrix behind the opening screen, as on /product's hero;
+   it leaves with the words. */
+.jy-gate::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(circle, rgba(15, 107, 69, 0.16) 1.4px, transparent 1.5px);
+  background-size: 34px 34px;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
+  mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
+  opacity: calc(1 - var(--leave));
+  pointer-events: none;
+}
 
 /* ── The pencil tin ─────────────────────────────────────
    The gate's button is a slim tin. Its lid slides down and off as the
@@ -995,7 +979,21 @@
   letter-spacing: -0.02em;
   color: var(--ink);
 }
-.jy-handoff .jy-more{ margin-top: 14px; }
+.jy-handoff-sub{ margin: 10px 0 0; font-size: 16px; color: var(--ink-70); }
+.jy-handoff .jy-more{ margin-top: 18px; }
+/* The line on the left, the real count on the right. */
+.jy-handoff-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+.jy-handoff-figs{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 44px);
+}
+.jy-handoff-figs .rg-trust-fig{ border-left: 0; padding: 0; }
 
 /* ── Contact: the time underlined in pencil once the line has come in.
    The section is always dark, so the graphite is the light one. ──── */
@@ -1034,17 +1032,8 @@
 /* ── Phones and narrow tablets ────────────────────────────
    The stage pins to the top half of the screen and the step text
    scrolls up beneath it, so the sheet and its words stay together. */
-/* The story's text and sheet sit in the middle of full-screen pinned
-   boxes, so the top of those boxes arrives empty. On desktop, pull the
-   story up so its content starts just below the hero; the empty, see-
-   through top of the boxes overlaps the hero's foot. (Phones pin the
-   stage on a solid ground, so they keep the normal flow.) */
-@media (min-width: 881px){
-  .jy-story{ margin-top: calc(-50vh + 320px); }
-}
-
 @media (max-width: 880px){
-  .jy-trust{ grid-template-columns: 1fr; gap: 22px; }
+  .jy-handoff-grid{ grid-template-columns: minmax(0, 1fr); }
   .jy-story-in{ grid-template-columns: minmax(0, 1fr); gap: 0; }
   .jy-stage-col{ order: 0; position: sticky; top: 58px; z-index: 2; height: 56svh; }
   .jy-stage{
@@ -1084,7 +1073,5 @@
   .jy-brief-grid{ grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 520px){
-  /* Keep each statement on one line at phone width. */
-  .jy-h1{ font-size: clamp(26px, 8vw, 38px); }
   .jy-brief-list li{ grid-template-columns: minmax(0, 1fr); gap: 4px; }
 }

@@ -701,12 +701,6 @@ export const BRAND_CTA = {
    each step passes. Copy is kept short on purpose; the detail lives on
    the home page. */
 export const JOURNEY_HERO = {
-  eyebrow: 'Online exams for universities',
-  // One statement per line, kept to roughly the same length.
-  lines: ['Set the paper.', 'Run the exam.', 'Grade the answers.', 'See the results.'],
-  emphasis: 'One place.',
-  // The logo above already names the university.
-  trustNote: 'Built at its School of AI, Coimbatore.',
   // Short labels: the digit grids carry the figures.
   figureLabels: ['Students', 'Exams', 'Answers evaluated'],
 };
@@ -721,9 +715,13 @@ export const JOURNEY_NAV = [
 ];
 
 export const JOURNEY_INTRO = {
-  kicker: 'A sample exam',
-  title: 'Run one exam, start to finish.',
-  cue: 'Scroll',
+  // The opening screen, Apple-style: what it is, then a greeting.
+  line: 'Online exams for universities',
+  // TODO: placeholder greeting; the wording is the owner's call.
+  title: 'Meet Evolveus.',
+  inUse: 'In use at',
+  // The tin's lid: what scrolling gives you.
+  cue: 'Follow one exam',
 };
 
 /* One line of body and two short facts per step: the sheet beside the
@@ -780,6 +778,7 @@ export const JOURNEY_STEPS = [
    and the real screens are there. */
 export const JOURNEY_PROOF = {
   line: 'That was a sample exam.',
+  sub: 'These are the real ones so far.',
   link: 'See the real screens',
 };
 

@@ -335,33 +335,6 @@ function useJourney(stepCount) {
   return { stage, track, active };
 }
 
-/* True once the visitor has sat on the landing view for a few seconds
-   without scrolling; false for good as soon as they scroll. */
-const HINT_DELAY = 4000;
-
-function useIdleHint() {
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    let done = false;
-    const timer = setTimeout(() => {
-      if (!done && window.scrollY < 40) setOn(true);
-    }, HINT_DELAY);
-    const onScroll = () => {
-      if (window.scrollY < 40) return;
-      done = true;
-      clearTimeout(timer);
-      setOn(false);
-      window.removeEventListener('scroll', onScroll);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('scroll', onScroll);
-    };
-  }, []);
-  return on;
-}
-
 /* ── The pencil ─────────────────────────────────────────────────
    A flat, drawn HB pencil seen from above, 200 x 16 board px, with the
    point at the left edge's midpoint. It is positioned by its point:
@@ -432,6 +405,53 @@ const SHADES = [
 ];
 const SHADE_PAD = 3.5;
 const shadePath = (pts) => `M${pts.map(([x, y]) => `${x} ${y}`).join('L')}`;
+
+/* ── The opening screen's bubbles ─────────────────────────────
+   Oversized answer bubbles drawn in faint pencil down both sides of the
+   opening screen, cropped by its edges: up close, the page's dot grid
+   becomes an answer sheet. A few are shaded, with the same strokes the
+   pencil uses in step 2, filled in one after another as the page opens.
+   Drawn on the 24 x 24 board of SHADES, the ring at radius about 8.5. */
+const RINGS = [
+  'M19.4 7.4 C 17.4 4.3, 12.6 3.1, 8.7 4.4 C 4.6 5.9, 3 10.4, 3.7 14.3 C 4.6 18.6, 9 21, 13.1 20.5 C 17.6 19.8, 20.8 16, 20.5 11.7 C 20.3 9.7, 19.4 7.9, 17.7 6.4',
+  'M6.2 5.8 C 9.4 3.4, 14.6 3.2, 17.8 5.9 C 20.9 8.6, 21.2 13.6, 18.9 17 C 16.4 20.6, 11.2 21.4, 7.6 19.4 C 4 17.3, 2.9 12.4, 4.3 8.9 C 4.8 7.7, 5.5 6.6, 6.6 5.6',
+  'M12.6 3.6 C 17.2 3.8, 20.6 7.6, 20.4 12.2 C 20.2 16.8, 16.4 20.6, 11.8 20.4 C 7.2 20.2, 3.6 16.2, 3.8 11.6 C 4 7.4, 7.4 4, 11.6 3.6 C 12.4 3.5, 13.4 3.6, 14.2 3.8',
+];
+const BUBBLE_ROWS = 9;
+const BUBBLE_COLS = 2;
+// The shaded bubbles, [row, column] per side; column 0 is the outer one.
+const BUBBLE_SHADED = {
+  l: [[1, 0], [3, 1], [4, 0], [6, 1], [8, 0]],
+  r: [[0, 1], [2, 0], [5, 1], [7, 0]],
+};
+
+function GateBubbles() {
+  let n = 0;
+  return (
+    <div className="jy-bubbles" aria-hidden="true">
+      {['l', 'r'].map((side) => (
+        <div key={side} className={`jy-bubbles-col jy-bubbles-col--${side}`}>
+          {Array.from({ length: BUBBLE_ROWS * BUBBLE_COLS }, (_, k) => {
+            const row = Math.floor(k / BUBBLE_COLS);
+            // Column 0 is the outer one, at the screen's edge.
+            const col = side === 'l' ? k % BUBBLE_COLS : BUBBLE_COLS - 1 - (k % BUBBLE_COLS);
+            const shaded = BUBBLE_SHADED[side].some(([r, c]) => r === row && c === col);
+            const shade = SHADES[k % SHADES.length];
+            return (
+              <svg key={k} viewBox="0 0 24 24" className="jy-bb">
+                {shaded && <path className="jy-bb-wash" d={shade.wash} />}
+                {shaded && (
+                  <path className="jy-bb-fill" d={shadePath(shade.pts)} pathLength="1" style={{ '--k': n++ }} />
+                )}
+                <path className="jy-bb-ring" d={RINGS[(k + (side === 'r' ? 1 : 0)) % RINGS.length]} />
+              </svg>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 /* A point a fraction u of the way along a polyline, by length. */
 function alongPath(pts, u) {
@@ -840,75 +860,30 @@ export default function Journey() {
   const root = useReveal();
   useSmoothScroll();
   const { stage, track, active } = useJourney(JOURNEY_STEPS.length);
-  const hint = useIdleHint();
 
   return (
     <div className="rg jy" ref={root}>
       <Nav links={JOURNEY_NAV} extra={NAV_EXTRA} />
 
-      {/* ── HERO ────────────────────────────────────────── */}
-      <header className="jy-hero" id="top">
-        <div className="rg-wrap">
-          <Rv className="rg-eyebrow">
-            <span className="rg-bub rg-bub--fill" />
-            <span className="rg-mono">{JOURNEY_HERO.eyebrow}</span>
-          </Rv>
-          <div className="jy-hero-row">
-            <h1 className="jy-h1">
-              {JOURNEY_HERO.lines.map((line, i) => (
-                <Rv as="span" className="jy-h1-line" key={line} delay={80 + i * 70}>
-                  {line}
-                </Rv>
-              ))}
-              <Rv as="span" className="jy-h1-line" delay={80 + JOURNEY_HERO.lines.length * 70}>
-                <em className="jy-em">
-                  {JOURNEY_HERO.emphasis}
-                  {/* A quick pencil underline, out and back, the way a
-                      teacher marks the point that matters. */}
-                  <svg className="jy-uline" viewBox="0 0 200 14" aria-hidden="true">
-                    <path className="jy-scribble jy-uline-out" d="M2.5 8.6 C 20 7.4, 38 6.6, 61 6.9 C 92 7.3, 124 5.6, 156 5.1 C 175 4.8, 189 4.2, 197.5 3" pathLength="1" />
-                    <path className="jy-scribble jy-uline-back" d="M194 5.2 C 168 7.2, 136 8.1, 104 8.9 C 84 9.4, 64 10.3, 41 11.4" pathLength="1" />
-                  </svg>
-                </em>
-              </Rv>
-            </h1>
-            <Rv className="rg-hero-ctas" delay={420}>
-              <a className="rg-btn" href="#contact">
-                Book a walkthrough
-                <Icon name="arrowRight" size={15} />
-              </a>
-            </Rv>
-          </div>
-
-          <div className="jy-trust">
-            <Rv className="jy-trust-org">
-              <img className="rg-trust-logo" src={TRUST.logo} alt={TRUST.org} />
-              <p className="rg-trust-note">{JOURNEY_HERO.trustNote}</p>
-            </Rv>
-            {TRUST.figures.map((f, i) => (
-              <Rv className="rg-trust-fig" key={f.l} delay={i * 80}>
-                <OmrNumber text={f.n} />
-                <div className="rg-trust-l">{JOURNEY_HERO.figureLabels[i]}</div>
-              </Rv>
-            ))}
-          </div>
-        </div>
-      </header>
-
-      <div className={`jy-hint ${hint ? 'is-on' : ''}`} aria-hidden="true">
-        <span className="rg-mono">Scroll</span>
-        <Icon name="chevronDown" size={16} />
-      </div>
-
       {/* ── THE STORY ───────────────────────────────────── */}
-      <section className="jy-story" data-active={active}>
+      {/* The page opens on the gate: what it is, a greeting, where it is
+          in use, and the pencil tin. Scrolling opens the
+          tin and the story starts. */}
+      <section className="jy-story" id="top" data-active={active}>
         <div className="jy-gate" aria-hidden={active !== -1}>
-          <span className="rg-mono jy-gate-k">{JOURNEY_INTRO.kicker}</span>
-          <h2 className="rg-h2 jy-gate-h">{JOURNEY_INTRO.title}</h2>
+          <GateBubbles />
+          <p className="jy-gate-k">{JOURNEY_INTRO.line}</p>
+          <h1 className="jy-gate-h">
+            {JOURNEY_INTRO.title}
+          </h1>
+          <p className="jy-gate-org">
+            {JOURNEY_INTRO.inUse}
+            <img src={TRUST.logo} alt={TRUST.org} />
+          </p>
           <a
             className="jy-tin"
             href="#before"
-            aria-label="Scroll to the first step"
+            aria-label="Follow one exam, from the first step"
             tabIndex={active === -1 ? 0 : -1}
           >
             <span className="jy-tin-tray" aria-hidden="true">
@@ -981,17 +956,29 @@ export default function Journey() {
         </div>
       </section>
 
-      {/* ── HANDOFF: the story was a sample; the real screens are on
-          /product, for whoever wants proof. ─────────────────── */}
+      {/* ── HANDOFF: the story was one sample exam; beside it, the real
+          count, written the way a roll number is filled on an answer
+          sheet; and the way to the real screens on /product. ──── */}
       <section className="rg-sec jy-handoff">
-        <div className="rg-wrap">
-          <Rv as="p" className="jy-handoff-line">{JOURNEY_PROOF.line}</Rv>
-          <Rv delay={80}>
-            <a className="jy-more" href="/product">
-              {JOURNEY_PROOF.link}
-              <Icon name="arrowRight" size={14} />
-            </a>
-          </Rv>
+        <div className="rg-wrap jy-handoff-grid">
+          <div>
+            <Rv as="p" className="jy-handoff-line">{JOURNEY_PROOF.line}</Rv>
+            <Rv as="p" className="jy-handoff-sub" delay={60}>{JOURNEY_PROOF.sub}</Rv>
+            <Rv delay={120}>
+              <a className="jy-more" href="/product">
+                {JOURNEY_PROOF.link}
+                <Icon name="arrowRight" size={14} />
+              </a>
+            </Rv>
+          </div>
+          <div className="jy-handoff-figs">
+            {TRUST.figures.map((f, i) => (
+              <Rv className="rg-trust-fig" key={f.l} delay={i * 80}>
+                <OmrNumber text={f.n} />
+                <div className="rg-trust-l">{JOURNEY_HERO.figureLabels[i]}</div>
+              </Rv>
+            ))}
+          </div>
         </div>
       </section>
 
