@@ -726,9 +726,9 @@ export const JOURNEY_HERO = {
 /* The gate before step 1: a centred line and a pencil tin whose lid
    slides off as the reader scrolls; when it is open, the story starts. */
 /* The home page's nav: the story is one section, so one link to it. */
-export const JOURNEY_NAV = [
-  { href: '#before', label: 'How it works' },
-];
+/* The home page's own nav links: none. Its header links to the other
+   pages (see NAV_EXTRA in Journey.jsx), not into the story. */
+export const JOURNEY_NAV = [];
 
 /* Under the home page's product tour: the way to every role's detail. */
 export const JOURNEY_TOUR = {
@@ -829,30 +829,32 @@ export const JOURNEY_CTA = {
   underline: 'half an hour',
 };
 
+/* The footer is the same on every page, so its links to /product's
+   sections are full paths; only '#contact' stays on the page you are on. */
 export const BRAND_FOOTER = {
   tagline: 'Online exams, marking, and reports for universities.',
   columns: [
     {
       title: 'Platform',
       links: [
-        { href: '#before', label: 'Setting papers' },
-        { href: '#security', label: 'Exam security' },
-        { href: '#marking', label: 'Marking' },
-        { href: '#reports', label: 'Reports' },
+        { href: '/product#before', label: 'Setting papers' },
+        { href: '/product#security', label: 'Exam security' },
+        { href: '/product#marking', label: 'Marking' },
+        { href: '/product#reports', label: 'Reports' },
       ],
     },
     {
       title: 'Deployment',
       links: [
-        { href: '#deployment', label: 'Hosted by us' },
-        { href: '#deployment', label: 'On your campus' },
+        { href: '/product#deployment', label: 'Hosted by us' },
+        { href: '/product#deployment', label: 'On your campus' },
       ],
     },
     {
       title: 'Talk to us',
       links: [
         { href: '#contact', label: 'Book a walkthrough' },
-        { href: '#roles', label: 'Who uses it' },
+        { href: '/product#roles', label: 'Who uses it' },
       ],
     },
   ],
