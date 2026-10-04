@@ -409,6 +409,24 @@ export const BRAND_NAV = [
   { href: '#deployment', label: 'Deployment' },
 ];
 
+/* /product's own header: what the page is and the way back to the
+   walkthrough on the home page. Its index is BRAND_NAV. */
+export const PRODUCT_PAGE = {
+  eyebrow: 'Product',
+  title: 'How Evolveus works',
+  sub: 'Every part of an exam in detail, in the order it runs. For the short version, see',
+  walk: 'the walkthrough on the home page',
+};
+
+/* The sections of /product that the home page's walkthrough covers, and
+   the step each one links back to. */
+export const PRODUCT_WALK = {
+  before: { href: '/#before', label: 'Walkthrough · step 01' },
+  security: { href: '/#security', label: 'Walkthrough · step 02' },
+  marking: { href: '/#marking', label: 'Walkthrough · step 03' },
+  reports: { href: '/#reports', label: 'Walkthrough · step 04' },
+};
+
 export const BRAND_HERO = {
   eyebrow: 'Online exams for universities',
   headline: 'Set the paper, run the exam, mark it, see the results. One place.',

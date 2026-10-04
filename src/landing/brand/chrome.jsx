@@ -43,8 +43,10 @@ export function Lockup({ light = false }) {
   );
 }
 
-/* Section header: margin marker + title, split by a full rule. */
-export function SectionHead({ code, kicker, title, lede }) {
+/* Section header: margin marker + title, split by a full rule. `walk`,
+   if given ({ href, label }), adds a small link under the marker, back
+   to the matching step of the walkthrough on the home page. */
+export function SectionHead({ code, kicker, title, lede, walk }) {
   return (
     <header className="rg-sechead rg-rule" data-rv>
       <Rv className="rg-secmark">
@@ -53,6 +55,12 @@ export function SectionHead({ code, kicker, title, lede }) {
           <span className="rg-mono">{code}</span>
         </span>
         <span className="rg-mono rg-secmark-kicker">{kicker}</span>
+        {walk && (
+          <a className="rg-mono rg-secmark-walk" href={walk.href}>
+            {walk.label}
+            <Icon name="arrowUpRight" size={12} />
+          </a>
+        )}
       </Rv>
       <div className="rg-sechead-body">
         <Rv as="h2" className="rg-h2 rg-rv--mask" delay={60}>{title}</Rv>
