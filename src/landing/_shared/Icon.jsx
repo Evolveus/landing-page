@@ -29,6 +29,7 @@ const PATHS = {
   zap: 'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
   arrowRight: 'M5 12h14 M12 5l7 7-7 7',
   arrowDown: 'M12 5v14 M19 12l-7 7-7-7',
+  arrowUpRight: 'M7 17L17 7 M8 7h9v9',
   chevronDown: 'M6 9l6 6 6-6',
   monitor: 'M2 4h20v12H2z M2 16h20 M8 21h8 M12 17v4',
   terminal: 'M4 17l6-6-6-6 M12 19h8',
