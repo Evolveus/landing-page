@@ -140,23 +140,51 @@ export function FootMural() {
       return;
     }
     let frame = 0;
+    // On a page short enough that the footer is on screen from the start,
+    // scrolling alone would leave the drawing half done. There it draws
+    // itself in once, over time (intro, 0 to 1: the mural, then the
+    // doodles), and then stays drawn.
+    let intro = 0;
+    let introFrame = 0;
     const update = () => {
       frame = 0;
       const vh = window.innerHeight;
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - vh);
       // The mural: 0 as its top enters the screen, 1 once two-thirds up.
+      // If the page ends before it gets that far, the page's end is 1.
       const top = el.getBoundingClientRect().top;
-      el.style.setProperty('--d', Math.min(1, Math.max(0, (vh - top) / (vh * 0.62))).toFixed(3));
+      const span = vh * 0.62;
+      const reach = Math.min(1, (vh - (top + window.scrollY - maxScroll)) / span);
+      let d = Math.min(1, Math.max(0, (vh - top) / span) / Math.max(0.05, reach));
       // The doodles: over the last 240px before the footer's foot
       // reaches the bottom of the screen, where the page ends.
       const foot = dd.getBoundingClientRect().bottom;
-      dd.style.setProperty('--d', Math.min(1, Math.max(0, (vh + 240 - foot) / 240)).toFixed(3));
+      let dDoodle = Math.min(1, Math.max(0, (vh + 240 - foot) / 240));
+      if (introFrame || intro) {
+        // While it draws itself in, the timeline alone sets the pace;
+        // once done, it stays drawn.
+        d = Math.min(1, intro / 0.65);
+        dDoodle = Math.min(1, Math.max(0, (intro - 0.65) / 0.35));
+      }
+      el.style.setProperty('--d', d.toFixed(3));
+      dd.style.setProperty('--d', dDoodle.toFixed(3));
     };
+    if (el.getBoundingClientRect().top < window.innerHeight) {
+      const t0 = performance.now();
+      const play = (now) => {
+        intro = Math.min(1, (now - t0) / 3200);
+        update();
+        introFrame = intro < 1 ? requestAnimationFrame(play) : 0;
+      };
+      introFrame = requestAnimationFrame(play);
+    }
     const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(introFrame);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
