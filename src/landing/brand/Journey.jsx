@@ -889,6 +889,25 @@ function useRowProgress() {
   return ref;
 }
 
+/* Text with one phrase in it underlined in pencil, drawn once the text
+   has come in. */
+function Underlined({ text, phrase }) {
+  const at = phrase ? text.indexOf(phrase) : -1;
+  if (at < 0) return text;
+  return (
+    <>
+      {text.slice(0, at)}
+      <span className="jy-em jy-cta-uline">
+        {phrase}
+        <svg className="jy-uline" viewBox="0 0 200 14" aria-hidden="true">
+          <path className="jy-scribble" d="M3 8.4 C 40 6.2, 92 7.4, 140 6 C 166 5.3, 186 5.6, 198 4" pathLength="1" />
+        </svg>
+      </span>
+      {text.slice(at + phrase.length)}
+    </>
+  );
+}
+
 // Where each unit starts on the track: the gate, the steps, and the end.
 const STARTS = unitStarts(JOURNEY_STEPS.length + 1);
 
@@ -1101,7 +1120,9 @@ export default function Journey() {
                 <span className="rg-mono">{JOURNEY_CTA.eyebrow}</span>
               </Rv>
               <Rv as="h2" className="rg-h2 rg-cta-h rg-rv--mask" delay={60}>{JOURNEY_CTA.headline}</Rv>
-              <Rv as="p" className="rg-lede" delay={120} style={{ marginTop: 22 }}>{JOURNEY_CTA.sub}</Rv>
+              <Rv as="p" className="rg-lede" delay={120} style={{ marginTop: 22 }}>
+                <Underlined text={JOURNEY_CTA.sub} phrase={JOURNEY_CTA.underline} />
+              </Rv>
               <Rv className="rg-cta-contact" delay={180}>
                 <a href={`mailto:${BRAND.email}`}>
                   <Icon name="mail" size={14} />
