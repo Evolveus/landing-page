@@ -1050,6 +1050,19 @@
   stroke-dashoffset: calc(1 - clamp(0, (var(--v) - 0.62) / 0.33, 1));
 }
 
+/* ── Contact: the time underlined in pencil once the line has come in.
+   The section is always dark, so the graphite is the light one. ──── */
+.jy-cta-uline .jy-uline{ filter: url(#rg-graphite); }
+.jy-cta-uline .jy-scribble{ stroke: #c4ccc7; stroke-width: 2; opacity: 0.8; }
+.rg-anim .jy-cta-uline .jy-scribble{
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.7s cubic-bezier(0.5, 0, 0.4, 1) 0.9s;
+}
+.rg-anim .is-in .jy-cta-uline .jy-scribble{ stroke-dashoffset: 0; }
+@media (prefers-reduced-motion: reduce){
+  .rg-anim .jy-cta-uline .jy-scribble{ stroke-dashoffset: 0; transition: none; }
+}
+
 /* ── Who and where ────────────────────────────────────── */
 .jy-brief{ border-top: 1px solid var(--rule); }
 .jy-brief-grid{

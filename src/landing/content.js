@@ -809,6 +809,8 @@ export const JOURNEY_CTA = {
   eyebrow: 'Book a walkthrough',
   headline: 'See it with your own question paper.',
   sub: "Send us a paper you've set. We'll run it with your team as a real exam. It takes half an hour.",
+  // Underlined in pencil; must appear in sub.
+  underline: 'half an hour',
 };
 
 export const BRAND_FOOTER = {
