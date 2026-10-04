@@ -711,11 +711,27 @@ export const JOURNEY_HERO = {
   figureLabels: ['Students', 'Exams', 'Answers evaluated'],
 };
 
+/* The gate before step 1: a centred line and a button that fills as the
+   reader scrolls; when it is full, the story starts. */
+/* The home page's nav: the story is one section, so one link to it. */
+export const JOURNEY_NAV = [
+  { href: '#before', label: 'How it works' },
+  { href: '#roles', label: 'Who uses it' },
+  { href: '#deployment', label: 'Deployment' },
+];
+
+export const JOURNEY_INTRO = {
+  kicker: 'A sample exam',
+  title: 'Run one exam, start to finish.',
+  cue: 'Scroll to begin',
+};
+
 /* One line of body and two short facts per step: the sheet beside the
    text does the explaining. */
 export const JOURNEY_STEPS = [
   {
     id: 'before',
+    more: '/product#before',
     n: '01',
     kicker: 'Before the exam',
     title: 'Set the paper from a shared bank',
@@ -724,6 +740,7 @@ export const JOURNEY_STEPS = [
   },
   {
     id: 'security',
+    more: '/product#security',
     n: '02',
     kicker: 'During the exam',
     title: 'Run it in your labs',
@@ -732,6 +749,7 @@ export const JOURNEY_STEPS = [
   },
   {
     id: 'marking',
+    more: '/product#marking',
     n: '03',
     kicker: 'After the exam',
     title: 'Graded in about ten minutes',
@@ -740,6 +758,7 @@ export const JOURNEY_STEPS = [
   },
   {
     id: 'reports',
+    more: '/product#reports',
     n: '04',
     kicker: 'Results',
     title: 'See how the class did',
@@ -748,6 +767,7 @@ export const JOURNEY_STEPS = [
   },
   {
     id: 'mastery',
+    more: '/product#reports',
     n: '05',
     kicker: 'Across a course',
     title: 'Find the weak topic in time',
