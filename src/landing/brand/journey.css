@@ -1,0 +1,741 @@
+/* ═══════════════════════════════════════════════════════════════
+   JOURNEY — the scroll-story prototype at /journey.
+
+   Builds on register.css (tokens, nav, buttons, footer). The one new
+   idea is depth, used only where it carries meaning: a question lifts
+   off the bank onto the sheet, the remark sits above the paper, and at
+   the end the sheet lies back so the results can rise out of it.
+
+   One deliberate exception to register.css's "no drop shadows on
+   content": paper on the desk casts a short contact shadow, because
+   without it the lifted layers read as flat rectangles.
+
+   Every state is a function of --p1 to --p4 (0 to 1 per step), which
+   Journey.jsx writes on .jy-stage as the reader scrolls.
+   ═══════════════════════════════════════════════════════════════ */
+
+.jy{
+  --shadow-ink: rgba(13, 31, 23, 0.16);
+  --bar-side: color-mix(in srgb, var(--brand) 72%, #000);
+  --bar-top: var(--brand-lift);
+  /* Numbers on the bar tops: white on the light theme's mid-green tops,
+     near-black on the dark theme's pale ones. */
+  --bar-label: #fff;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .jy{ --shadow-ink: rgba(0, 0, 0, 0.5); --bar-label: #082017; }
+}
+:root[data-theme="dark"] .jy{ --shadow-ink: rgba(0, 0, 0, 0.5); --bar-label: #082017; }
+
+/* ── Hero ─────────────────────────────────────────────── */
+.jy-hero{ padding: clamp(118px, 13vw, 170px) 0 clamp(36px, 4vw, 56px); }
+.jy-h1{
+  margin: 26px 0 0;
+  font-size: clamp(34px, 4.6vw, 64px);
+  font-weight: 700;
+  font-stretch: 110%;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+}
+/* One statement per line. */
+.jy-h1-line{ display: block; }
+.jy-h1 em{ font-style: normal; color: var(--brand); }
+.jy-hero-row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px 40px;
+}
+.jy-hero-row .rg-hero-ctas{ margin: 0; }
+
+.jy-trust{
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(20px, 3vw, 44px);
+  align-items: end;
+  margin-top: clamp(48px, 6vw, 80px);
+  padding-top: 26px;
+  border-top: 1px solid var(--rule);
+}
+.jy-trust .rg-trust-fig{ border-left: 0; padding: 0; }
+.jy-trust-org .rg-trust-note{ margin-top: 10px; }
+
+/* ── Story layout ─────────────────────────────────────── */
+.jy-hero{ border-bottom: 1px solid var(--rule); }
+.jy-story{
+  position: relative;
+  /* The tilted desk may lean past its column; clip at the section so it
+     never widens the page. The 3D layers inside keep overflow visible. */
+  overflow-x: clip;
+}
+.jy-story-in{
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(24px, 4vw, 64px);
+}
+.jy-steps{ order: 1; }
+.jy-stage-col{ order: 2; }
+
+.jy-stage{
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  /* Defaults before the first scroll write, and the no-JS state. */
+  --p1: 0; --p2: 0; --p3: 0; --p4: 0; --p5: 0; --cx: 0px;
+  --rx: 8deg; --rz: 0deg; --sc: 1; --fit: 0.8;
+  perspective-origin: 50% 40%;
+}
+
+/* The track: one share of scroll per step, plus a screen for the pinned
+   text to sit in. */
+.jy-steps{
+  --per: 110vh;
+  --pin-h: 100vh;
+  position: relative;
+  height: calc(var(--n) * var(--per) + var(--pin-h));
+}
+.jy-anchor{
+  position: absolute;
+  left: 0;
+  top: calc(var(--k) * var(--per) + 80px);
+}
+.jy-copy{
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  align-items: center;
+}
+/* Every step sits in the same place; the active one fades in. */
+.jy-step{
+  grid-area: 1 / 1;
+  max-width: 460px;
+  opacity: 0;
+  transform: translateY(14px);
+  visibility: hidden;
+  transition: opacity 0.45s ease, transform 0.45s ease, visibility 0s linear 0.45s;
+}
+.jy-step.is-active{
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  transition: opacity 0.45s ease 0.1s, transform 0.45s ease 0.1s, visibility 0s;
+}
+.jy-step-k{
+  display: flex;
+  gap: 14px;
+  color: var(--brand);
+}
+.jy-step-k .rg-mono + .rg-mono{ color: var(--ink-45); }
+.jy-step-h{ margin-top: 16px; font-size: clamp(30px, 3.2vw, 44px); }
+.jy-step-body{
+  margin-top: 18px !important;
+  color: var(--ink-70);
+  font-size: clamp(16px, 1.25vw, 18px);
+  line-height: 1.6;
+}
+.jy-facts{ margin-top: 22px !important; display: grid; gap: 10px; }
+.jy-facts li{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: var(--ink);
+}
+.jy-facts .rg-bub{ width: 9px; height: 9px; }
+
+/* Step rail: one bubble per step, shaded as the story passes it. */
+.jy-rail{
+  position: absolute;
+  right: 0;
+  bottom: clamp(24px, 6vh, 56px);
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: var(--ink-25);
+}
+.jy-rail li{ display: flex; align-items: center; gap: 7px; transition: color 0.3s ease; }
+.jy-rail li.is-on{ color: var(--brand); }
+.jy-rail li.is-on .rg-bub{ background: var(--brand); }
+.jy-rail .rg-mono{ font-size: 10.5px; }
+
+/* ── The scene ────────────────────────────────────────── */
+.jy-scene{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 760px;
+  height: 600px;
+  margin: -300px 0 0 -380px;
+  /* Fit with zoom, not scale(): zoom lays the board out at the larger
+     size, so text and rules render sharp instead of being a stretched
+     bitmap. The camera's own small zoom and pan stay in the transform. */
+  zoom: var(--fit);
+}
+.jy-desk{
+  position: absolute;
+  inset: 0;
+}
+
+/* Depth is switched on only for the results (data-depth, set from
+   Journey.jsx). Until then the page is plain 2D: the paper is drawn as
+   ordinary text, sharp and smoothed, rather than as a 3D texture, and
+   the lifts in steps 1 to 3 are made with 2D scale and shadow. */
+.jy-stage[data-depth]{ perspective: 1500px; }
+.jy-stage[data-depth] .jy-scene{
+  transform: translateX(var(--cx)) scale(var(--sc));
+  transform-style: preserve-3d;
+}
+.jy-stage[data-depth] .jy-desk{
+  transform: rotateX(var(--rx)) rotateZ(var(--rz));
+  transform-style: preserve-3d;
+}
+
+/* Shared paper surface. */
+.jy-sheet, .jy-card, .jy-log, .jy-follow, .jy-note{
+  position: absolute;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 var(--rule), 0 10px 18px -12px var(--shadow-ink);
+}
+
+/* ── The answer sheet ─────────────────────────────────── */
+.jy-sheet{
+  left: 230px;
+  top: 64px;
+  width: 340px;
+  padding: 16px 18px 14px;
+  /* §04 pushes the sheet aside to make room for the results. */
+  --away: min(1, var(--p4) * 2.5);
+  transform: translate(calc(var(--away) * -150px - var(--p5) * 120px), calc(var(--away) * -20px));
+  opacity: calc(1 - var(--p5) * 2.5);
+}
+.jy-sheet-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-45);
+}
+.jy-sheet-head .rg-mono{ font-size: 9px; letter-spacing: 0.12em; }
+
+/* The status in the corner swaps as the exam moves on. */
+.jy-state{ position: relative; display: grid; justify-items: end; }
+.jy-state > span{ grid-area: 1 / 1; display: flex; align-items: center; gap: 5px; }
+.jy-state-a{ opacity: calc(1 - min(1, var(--p2) * 4)); }
+.jy-state-b{ color: var(--brand); opacity: calc(min(1, var(--p2) * 4) - min(1, var(--p3) * 4)); }
+.jy-state-b i{ width: 5px; height: 5px; border-radius: 50%; background: var(--brand); animation: rg-pulse 2.2s ease-in-out infinite; }
+.jy-state-c{ color: var(--ink); opacity: min(1, var(--p3) * 4); }
+
+.jy-rows{ display: grid; }
+.jy-row{
+  /* --a: the question has arrived (§01). --e: answered (§02). --m: marked (§03). */
+  --a: clamp(0, calc(var(--p1) * 8 - var(--i) * 1.1), 1);
+  --e: clamp(0, calc(var(--p2) * 8 - var(--i) * 1.1 - 0.4), 1);
+  --m: clamp(0, calc(var(--p3) * 9 - var(--i) * 1.1 - 0.6), 1);
+  display: grid;
+  grid-template-columns: 22px 80px minmax(0, 1fr) 46px;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--rule-soft);
+  position: relative;
+}
+/* Before a question arrives its row is an empty numbered line, so the
+   sheet starts as a clean blank answer sheet. */
+.jy-row::after{
+  content: '';
+  position: absolute;
+  left: 32px;
+  right: 0;
+  top: 50%;
+  border-top: 1px dashed var(--rule);
+  opacity: calc(1 - var(--a));
+}
+.jy-row-tag, .jy-row-ans{
+  opacity: var(--a);
+  transform: translateX(calc((1 - var(--a)) * -24px));
+}
+.jy-row-n{ font-family: var(--mono); font-size: 11px; color: var(--ink-45); }
+.jy-row-tag{ display: grid; line-height: 1.2; }
+.jy-row-tag b{ font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: 0.1em; color: var(--ink-70); }
+.jy-row-tag small{ font-family: var(--mono); font-size: 9px; color: var(--brand); }
+.jy-row-ans{ display: flex; align-items: center; gap: 9px; min-width: 0; }
+
+.jy-bub{
+  position: relative;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-25);
+}
+/* The chosen bubble looks like the others until it is filled in. */
+.jy-bub.is-pick{ border-color: color-mix(in srgb, var(--brand) calc(var(--e) * 100%), var(--ink-25)); }
+.jy-bub small{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1;
+  color: var(--ink-45);
+}
+/* The letter always shows; on the chosen bubble it turns from ink to
+   paper as the fill comes in underneath it. */
+.jy-bub.is-pick small{
+  z-index: 1;
+  color: color-mix(in srgb, var(--card) calc(var(--e) * 100%), var(--ink-45));
+}
+.jy-bub.is-pick::after{
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--brand);
+  opacity: var(--e);
+  transform: scale(calc(0.4 + var(--e) * 0.6));
+}
+
+.jy-lines{ display: grid; gap: 5px; width: 100%; }
+.jy-lines i{
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--ink-25);
+  transform-origin: left;
+  transform: scaleX(var(--e));
+}
+.jy-code{
+  /* Typed over most of §02 rather than the row's short fill, so the
+     characters come at a readable pace. */
+  --ty: clamp(0, calc((var(--p2) - 0.3) / 0.6), 1);
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+/* Typewriter: the font is monospaced, so the visible width is a whole
+   number of characters. Line k types during its half of --ty. */
+.jy-code code{
+  --c: clamp(0, calc(var(--ty) * 2 - var(--k)), 1);
+  width: calc(round(down, var(--c) * var(--len), 1) * 1ch);
+  max-width: 100%;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--brand);
+  white-space: pre;
+  overflow: hidden;
+}
+
+.jy-mark{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--brand);
+  opacity: var(--m);
+  transform: scale(calc(1.6 - var(--m) * 0.6));
+}
+.jy-mark.is-off{ color: var(--flag); }
+
+.jy-sheet-foot{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 10px;
+}
+.jy-saved{ font-size: 9px; color: var(--ink-45); opacity: calc(clamp(0, var(--p2) * 6 - 5, 1) - var(--p3) * 3); }
+.jy-score{
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink);
+  opacity: clamp(0, calc(var(--p3) * 5 - 3.6), 1);
+}
+
+/* The written-answer remark lifts off the sheet over Q4. */
+.jy-note{
+  --n: clamp(0, calc(var(--p3) * 4 - 1.4), 1);
+  left: 236px;
+  top: 172px;
+  width: 196px;
+  padding: 10px 12px;
+  border-color: var(--brand);
+  opacity: calc(var(--n) - var(--p4) * 6);
+  transform: rotate(-3deg) scale(calc(0.9 + var(--n) * 0.1));
+  box-shadow: 0 1px 0 var(--rule), 0 calc(var(--n) * 22px) calc(var(--n) * 30px) calc(var(--n) * -16px) var(--shadow-ink);
+}
+.jy-note .rg-mono{ font-size: 8.5px; color: var(--brand); }
+.jy-note p{ margin-top: 5px !important; font-size: 11.5px; line-height: 1.4; color: var(--ink); }
+
+/* The faculty stamp lands last. */
+.jy-stamp{
+  --s: clamp(0, calc(var(--p3) * 6 - 4.8), 1);
+  position: absolute;
+  left: 18px;
+  bottom: -16px;
+  display: grid;
+  justify-items: center;
+  padding: 5px 12px;
+  border: 2px solid var(--brand);
+  border-radius: 3px;
+  color: var(--brand);
+  opacity: var(--s);
+  transform: rotate(-8deg) scale(calc(1.6 - var(--s) * 0.6));
+}
+.jy-stamp b{ font-size: 15px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.1; }
+
+/* ── §01: the question bank ───────────────────────────── */
+.jy-bank{ position: absolute; left: 40px; top: 120px; }
+.jy-card{
+  /* Each card lifts toward the sheet and is spent as its rows arrive. */
+  /* The top card (highest --k) leaves first, like taking from a stack. */
+  --f: clamp(0, calc(var(--p1) * 3 - (2 - var(--k)) * 0.7), 1);
+  left: 0;
+  top: 0;
+  width: 166px;
+  padding: 11px 13px;
+  display: grid;
+  gap: 4px;
+  opacity: calc(1 - var(--f));
+  transform: translate(calc(var(--k) * 8px + var(--f) * 210px), calc(var(--k) * -8px)) scale(calc(1 + var(--f) * 0.06));
+}
+.jy-card .rg-mono{ font-size: 8.5px; color: var(--brand); }
+.jy-card b{ font-size: 13px; font-weight: 600; }
+.jy-card-lines{ display: grid; gap: 4px; margin-top: 4px; }
+.jy-card-lines i{ display: block; height: 3px; background: var(--rule); border-radius: 2px; }
+.jy-card-lines i:last-child{ width: 60%; }
+
+/* ── §02: the invigilation log ────────────────────────── */
+.jy-log{
+  --l: clamp(0, calc(var(--p2) * 3), 1);
+  left: 400px;
+  top: 120px;
+  width: 196px;
+  padding: 10px 12px;
+  opacity: calc(min(1, var(--l) * 3) - var(--p3) * 2.5);
+  transform: translateX(calc(var(--l) * 192px));
+}
+.jy-log-bar{ display: flex; justify-content: space-between; align-items: center; color: var(--ink-45); padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+.jy-log-bar .rg-mono{ font-size: 8.5px; }
+.jy-log-bar i{ width: 5px; height: 5px; border-radius: 50%; background: var(--brand); animation: rg-pulse 2.2s ease-in-out infinite; }
+.jy-log-row{
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 6px;
+  padding: 6px 0;
+  font-size: 11px;
+  color: var(--ink-70);
+  border-bottom: 1px solid var(--rule-soft);
+  opacity: clamp(0, calc(var(--p2) * 6 - var(--k) - 1), 1);
+}
+.jy-log-row:last-child{ border-bottom: 0; }
+.jy-log-row .rg-mono{ font-size: 9px; letter-spacing: 0.06em; color: var(--ink-45); }
+.jy-log-row.is-flag{ color: var(--flag); }
+
+/* ── §04: results rise off the desk ───────────────────── */
+.jy-chart{
+  position: absolute;
+  left: 430px;
+  top: 250px;
+  width: 320px;
+  height: 40px;
+  transform-style: preserve-3d;
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+}
+.jy-chart-label{
+  position: absolute;
+  left: 0;
+  top: 46px;
+  font-size: 8.5px;
+  color: var(--ink-45);
+  white-space: nowrap;
+  opacity: calc(min(1, var(--p4) * 3) - var(--p5) * 2.5);
+}
+/* A bar is a box: front and side faces stood up off the desk, and a lid
+   at the bar's height. H is the risen height in px. */
+.jy-bar{
+  --g: clamp(0, calc(var(--p4) * 4.5 - 1.6 - var(--i) * 0.28), 1);
+  --H: calc(var(--h) * var(--g) * 1px);
+  --bw: 30px;
+  position: relative;
+  flex-shrink: 0;
+  width: var(--bw);
+  height: var(--bw);
+  transform-style: preserve-3d;
+  /* The footprint is an outline, not a border: a border would shrink
+     the box the faces sit in, leaving the lid 2px narrower than the
+     sides, with a sliver of side face showing past it. */
+  outline: 1px dashed color-mix(in srgb, var(--rule) calc((1 - var(--g)) * 100%), transparent);
+  outline-offset: -1px;
+  opacity: calc(clamp(0, var(--p4) * 6 - 2.4, 1) - var(--p5) * 2.5);
+}
+/* This paper's score band, set apart in ink. */
+.jy-bar.is-own{
+  --face: var(--ink);
+  --face-side: color-mix(in srgb, var(--ink) 75%, var(--paper));
+  --face-top: var(--ink-70);
+}
+.jy-bar i{ position: absolute; display: block; background: var(--c); }
+/* Each side face carries a 1px outline in its own colour. It lies in the
+   face's plane and laps over the corner it shares with the next face,
+   covering the hairline seam the browser leaves between them. */
+.jy-bar-front, .jy-bar-back, .jy-bar-side, .jy-bar-left, .jy-bar-top{ outline: 1px solid var(--c); }
+.jy-bar-front{
+  --c: var(--face, var(--brand));
+  left: 0;
+  bottom: 0;
+  width: var(--bw);
+  height: var(--H);
+  transform-origin: bottom;
+  transform: rotateX(-90deg);
+}
+.jy-bar-back{
+  --c: var(--face, var(--brand));
+  left: 0;
+  top: 0;
+  width: var(--bw);
+  height: var(--H);
+  transform-origin: top;
+  transform: rotateX(90deg);
+}
+.jy-bar-side{
+  --c: var(--face-side, var(--bar-side));
+  left: var(--bw);
+  top: 0;
+  width: var(--H);
+  height: var(--bw);
+  transform-origin: left;
+  transform: rotateY(-90deg);
+}
+.jy-bar-left{
+  --c: var(--face-side, var(--bar-side));
+  left: calc(var(--H) * -1);
+  top: 0;
+  width: var(--H);
+  height: var(--bw);
+  transform-origin: right;
+  transform: rotateY(90deg);
+}
+.jy-bar-top{
+  --c: var(--face-top, var(--bar-top));
+  inset: 0;
+  transform: translateZ(var(--H));
+}
+
+/* "This paper" stands up on top of its bar, facing the reader. */
+.jy-own-tag{
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  padding: 5px 9px;
+  white-space: nowrap;
+  background: var(--card);
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  color: var(--ink);
+  transform-origin: 50% 100%;
+  transform: translateX(-50%) translateZ(calc(var(--H) + 26px)) rotateX(-90deg);
+  opacity: clamp(0, calc(var(--p4) * 4 - 2.6), 1);
+}
+.jy-own-tag .rg-mono{ font-size: 8px; color: var(--ink-45); }
+.jy-own-tag b{ font-family: var(--mono); font-size: 13px; font-weight: 500; }
+
+/* ── §05: topic mastery, topics by sections ─────────────
+   Depth is a real axis here: each section is a column of bars. */
+.jy-mastery{
+  position: absolute;
+  left: 220px;
+  top: 120px;
+  width: 300px;
+  height: 300px;
+  transform-style: preserve-3d;
+  opacity: min(1, var(--p5) * 4);
+}
+.jy-mastery-title{
+  position: absolute;
+  left: 0;
+  top: calc(26px + 6 * 46px + 26px);
+  font-size: 8.5px;
+  color: var(--ink-45);
+  white-space: nowrap;
+}
+.jy-mastery-col{
+  position: absolute;
+  top: calc(26px + 6 * 46px);
+  left: calc(160px + var(--c) * 46px - 8px);
+  width: 46px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 10px;
+  color: var(--ink-45);
+}
+.jy-mastery-row{
+  position: absolute;
+  left: 0;
+  top: calc(26px + var(--r) * 46px);
+  width: 148px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 11.5px;
+  color: var(--ink-70);
+  white-space: nowrap;
+}
+.jy-mbar{
+  --g: clamp(0, calc(var(--p5) * 3 - var(--i) * 0.07), 1);
+  --bw: 30px;
+  position: absolute;
+  left: calc(160px + var(--c) * 46px);
+  top: calc(26px + var(--r) * 46px);
+  opacity: 1;
+}
+.jy-mbar.is-weak{
+  --face: var(--flag);
+  --face-side: color-mix(in srgb, var(--flag) 70%, #000);
+  --face-top: color-mix(in srgb, var(--flag) 70%, #fff);
+  /* The weak tops are pale in both themes, so their numbers stay dark. */
+  --bar-label: #2b1405;
+}
+.jy-mbar .jy-bar-top{
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  color: var(--bar-label);
+}
+
+.jy-follow{
+  --w: clamp(0, calc(var(--p4) * 3 - 1.2), 1);
+  left: 430px;
+  top: 340px;
+  width: 290px;
+  padding: 11px 13px;
+  display: grid;
+  gap: 2px;
+  opacity: calc(var(--w) - var(--p5) * 2.5);
+  transform: translateY(calc((1 - var(--w)) * 40px));
+}
+.jy-follow > .rg-mono{ font-size: 8.5px; color: var(--ink-45); margin-bottom: 4px; }
+.jy-follow-row{
+  display: grid;
+  grid-template-columns: 12px 92px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 11.5px;
+  color: var(--ink-70);
+  border-top: 1px solid var(--rule-soft);
+}
+.jy-follow-row .rg-bub{ width: 8px; height: 8px; background: var(--flag); border-color: var(--flag); }
+.jy-follow-row b{ font-weight: 600; color: var(--ink); }
+
+/* ── Proof strip: three real screens, tilted back on the desk and
+   standing up as they scroll in. ─────────────────────── */
+.jy-proof-lede{ margin-top: 14px; }
+.jy-proof-row{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2.4vw, 32px);
+  margin-top: clamp(32px, 4vw, 52px);
+  perspective: 1400px;
+}
+.jy-tilt .rg-shot-fig{ transform-origin: 50% 100%; }
+.rg-anim .jy-tilt .rg-rv{ transform: rotateX(28deg) translateY(30px); }
+.rg-anim .jy-tilt .rg-rv.is-in{ transform: none; transition-duration: 1.1s; }
+.jy-tilt .rg-exhibit{ transition: transform 0.4s ease, box-shadow 0.4s ease; }
+.jy-tilt:hover .rg-exhibit{ transform: translateY(-6px); box-shadow: 0 18px 30px -22px var(--shadow-ink); }
+
+/* ── Who and where ────────────────────────────────────── */
+.jy-brief{ border-top: 1px solid var(--rule); }
+.jy-brief-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(32px, 5vw, 80px);
+}
+.jy-brief-h{ font-size: clamp(26px, 2.6vw, 36px); }
+.jy-brief-list{ margin-top: 22px !important; }
+.jy-brief-list li{
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--rule);
+  font-size: 15.5px;
+  color: var(--ink-70);
+  line-height: 1.55;
+}
+.jy-brief-list b{ color: var(--ink); font-weight: 600; }
+
+/* ── Phones and narrow tablets ────────────────────────────
+   The stage pins to the top half of the screen and the step text
+   scrolls up beneath it, so the sheet and its words stay together. */
+/* The story's text and sheet sit in the middle of full-screen pinned
+   boxes, so the top of those boxes arrives empty. On desktop, pull the
+   story up so its content starts just below the hero; the empty, see-
+   through top of the boxes overlaps the hero's foot. (Phones pin the
+   stage on a solid ground, so they keep the normal flow.) */
+@media (min-width: 881px){
+  .jy-story{ margin-top: calc(-50vh + 320px); }
+}
+
+@media (max-width: 880px){
+  .jy-trust{ grid-template-columns: 1fr; gap: 22px; }
+  .jy-story-in{ grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .jy-stage-col{ order: 0; position: sticky; top: 58px; z-index: 2; height: 56svh; }
+  .jy-stage{
+    position: relative;
+    height: 100%;
+    overflow: clip;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .jy-rail{ bottom: 12px; right: 0; }
+  /* Centre the sheet; the bank leans in from the edge. For the results
+     the camera pulls back and over to the chart. */
+  .jy-scene{ margin-left: -400px; }
+  .jy-stage[data-depth] .jy-scene{
+    transform: translateX(var(--cx)) scale(calc(var(--sc) * (1 - var(--p4) * 0.3)));
+  }
+  .jy-note{ left: 150px; top: 196px; }
+  /* No room beside the sheet: the log lifts over its lower corner. */
+  .jy-log{
+    top: 250px;
+    transform: translateX(calc(var(--l) * 40px));
+    z-index: 1;
+  }
+  .jy-steps{ padding: 4vh 0 18vh; }
+  .jy-steps{ --per: 90svh; --pin-h: calc(100svh - 58px - 56svh); }
+  /* Pin the text in the space below the stage. */
+  .jy-copy{
+    top: calc(58px + 56svh);
+    height: calc(100svh - 58px - 56svh);
+    align-items: start;
+    padding-top: 18px;
+  }
+  .jy-proof-row{ grid-template-columns: minmax(0, 1fr); }
+  .jy-brief-grid{ grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px){
+  /* Keep each statement on one line at phone width. */
+  .jy-h1{ font-size: clamp(26px, 8vw, 38px); }
+  .jy-brief-list li{ grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
