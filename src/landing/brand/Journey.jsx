@@ -5,10 +5,10 @@ import { Icon } from '../_shared/Icon';
 import { ContactForm } from '../_shared/ContactForm';
 import { Rv, Nav, Footer } from './chrome';
 import { motionOK, useReveal, useSmoothScroll } from './pageMotion';
-import { OmrNumber } from './figures';
+import { OmrNumber, ThemedImg } from './figures';
 import {
   TRUST, MASTERY_SAMPLE, BRAND,
-  JOURNEY_NAV, JOURNEY_HERO, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
+  JOURNEY_NAV, JOURNEY_HERO, JOURNEY_OPEN, BRAND_ROLES, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
 } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -410,7 +410,7 @@ const shadePath = (pts) => `M${pts.map(([x, y]) => `${x} ${y}`).join('L')}`;
    Oversized answer bubbles drawn in faint pencil down both sides of the
    opening screen, cropped by its edges: up close, the page's dot grid
    becomes an answer sheet. A few are shaded, with the same strokes the
-   pencil uses in step 2, filled in one after another as the page opens.
+   pencil uses in step 2, filled in one after another as the page loads.
    Drawn on the 24 x 24 board of SHADES, the ring at radius about 8.5. */
 const RINGS = [
   'M19.4 7.4 C 17.4 4.3, 12.6 3.1, 8.7 4.4 C 4.6 5.9, 3 10.4, 3.7 14.3 C 4.6 18.6, 9 21, 13.1 20.5 C 17.6 19.8, 20.8 16, 20.5 11.7 C 20.3 9.7, 19.4 7.9, 17.7 6.4',
@@ -425,7 +425,7 @@ const BUBBLE_SHADED = {
   r: [[0, 1], [2, 0], [5, 1], [7, 0]],
 };
 
-function GateBubbles() {
+function OpenBubbles() {
   let n = 0;
   return (
     <div className="jy-bubbles" aria-hidden="true">
@@ -829,6 +829,69 @@ function Desk() {
 
 /* ═══════════════════════════════════════════════════════════════ */
 
+/* ── The product tour ─────────────────────────────────────────
+   The real screens, one role at a time, in /product's browser frame.
+   It moves on by itself every few seconds while it is on screen, a
+   line filling under the current tab to show when; pointing at it or
+   focusing it pauses it, and a tab jumps to that role. With reduced
+   motion it stays put. */
+const TOUR_ROLES = ['faculty', 'student', 'admin']
+  .map((id) => BRAND_ROLES.find((r) => r.id === id))
+  .filter(Boolean);
+
+function Tour() {
+  const [at, setAt] = useState(0);
+  const [inView, setInView] = useState(false);
+  const ref = useRef(null);
+  const auto = motionOK();
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !auto || !('IntersectionObserver' in window)) return;
+    // Play only once most of it is in view, so it starts on the first
+    // role rather than cycling while it only peeks in below the opening.
+    const io = new IntersectionObserver(([e]) => setInView(e.intersectionRatio >= 0.6), { threshold: [0, 0.6] });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [auto]);
+  const role = TOUR_ROLES[at];
+  const next = () => setAt((k) => (k + 1) % TOUR_ROLES.length);
+  return (
+    <div className={`rg-wrap jy-tour-in ${auto ? '' : 'is-still'} ${inView ? 'is-playing' : ''}`} ref={ref}>
+      <div className="jy-tour-head">
+        <div className="rg-tabs jy-tour-tabs" role="tablist">
+          {TOUR_ROLES.map((r, k) => (
+            <button
+              key={r.id}
+              role="tab"
+              aria-selected={k === at}
+              className={`rg-tab ${k === at ? 'is-on' : ''}`}
+              onClick={() => setAt(k)}
+            >
+              <span className="rg-bub" />
+              {r.label}
+              {k === at && <i key={at} className="jy-tour-bar" onAnimationEnd={next} />}
+            </button>
+          ))}
+        </div>
+        <p className="jy-tour-sum" key={role.id}>{role.summary}</p>
+      </div>
+      <div className="rg-shot jy-tour-shot">
+        <div className="rg-shot-bar">
+          <span className="rg-mono">{BRAND.domain} / {role.id}</span>
+          <span className="rg-shot-dots"><i /><i /><i /></span>
+        </div>
+        <div className="jy-tour-stack">
+          {TOUR_ROLES.map((r, k) => (
+            <div key={r.id} className={`jy-tour-img ${k === at ? 'is-on' : ''}`} aria-hidden={k !== at}>
+              <ThemedImg src={r.src} alt={`The ${r.label.toLowerCase()} view in Evolveus`} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const NAV_EXTRA = [
   { href: '/product', label: 'Product' },
   { href: '/compare', label: 'Compare' },
@@ -866,22 +929,32 @@ export default function Journey() {
       <Nav links={JOURNEY_NAV} extra={NAV_EXTRA} />
 
       {/* ── THE STORY ───────────────────────────────────── */}
-      {/* The page opens on the gate: what it is, a greeting, where it is
-          in use, and the pencil tin. Scrolling opens the
-          tin and the story starts. */}
-      <section className="jy-story" id="top" data-active={active}>
+      {/* ── OPENING: what it is, a greeting, where it is in use. The
+          top of the product frame below peeks in at the foot. ──── */}
+      <header className="jy-open" id="top">
+        <OpenBubbles />
+        <p className="jy-open-k">{JOURNEY_OPEN.line}</p>
+        <h1 className="jy-open-h">{JOURNEY_OPEN.title}</h1>
+        <p className="jy-open-org">
+          {JOURNEY_OPEN.inUse}
+          <img src={TRUST.logo} alt={TRUST.org} />
+        </p>
+      </header>
+
+      {/* ── THE PRODUCT: the real screens, one role at a time. ──── */}
+      <section className="jy-tour" aria-label="Evolveus, by role">
+        <Tour />
+      </section>
+
+      {/* ── THE STORY: the gate (a pencil tin; scrolling opens it), then
+          one sample exam, step by step. ─────────────────────── */}
+      <section className="jy-story" data-active={active}>
         <div className="jy-gate" aria-hidden={active !== -1}>
-          <GateBubbles />
-          <p className="jy-gate-k">{JOURNEY_INTRO.line}</p>
-          <h1 className="jy-gate-h">
-            {JOURNEY_INTRO.title}
-          </h1>
-          <p className="jy-gate-org">
-            {JOURNEY_INTRO.inUse}
-            <img src={TRUST.logo} alt={TRUST.org} />
-          </p>
+          <span className="rg-mono jy-gate-k">{JOURNEY_INTRO.kicker}</span>
+          <h2 className="rg-h2 jy-gate-h">{JOURNEY_INTRO.title}</h2>
           <a
             className="jy-tin"
+            data-rv
             href="#before"
             aria-label="Follow one exam, from the first step"
             tabIndex={active === -1 ? 0 : -1}

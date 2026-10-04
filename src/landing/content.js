@@ -714,12 +714,18 @@ export const JOURNEY_NAV = [
   { href: '#deployment', label: 'Deployment' },
 ];
 
-export const JOURNEY_INTRO = {
-  // The opening screen, Apple-style: what it is, then a greeting.
+/* The opening screen, Apple-style: what it is, then a greeting. */
+export const JOURNEY_OPEN = {
   line: 'Online exams for universities',
   // TODO: placeholder greeting; the wording is the owner's call.
   title: 'Meet Evolveus.',
   inUse: 'In use at',
+};
+
+/* The gate before the story: a pencil tin; scrolling opens it. */
+export const JOURNEY_INTRO = {
+  kicker: 'A sample exam',
+  title: 'Run one exam, start to finish.',
   // The tin's lid: what scrolling gives you.
   cue: 'Follow one exam',
 };
