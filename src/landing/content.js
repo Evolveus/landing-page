@@ -11,6 +11,7 @@ export const SUMMARY =
 export const BRAND = {
   name: 'Evolveus',
   domain: 'evolveus.in',
+  email: 'aksay@evolveus.in',
 };
 
 export const NAV_LINKS = [

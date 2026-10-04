@@ -1325,6 +1325,12 @@ body.is-landing > #root,
 }
 .rg-theme:hover{ color: var(--brand); border-color: var(--brand); }
 .rg-theme:focus-visible{ outline: 2px solid var(--brand); outline-offset: 2px; }
+/* On desktop the toggle sits beside the nav links, so it drops the border
+   and reads as one more quiet control. Phones keep the outlined button. */
+@media (min-width: 1081px){
+  .rg-theme{ border-color: transparent; }
+  .rg-theme:hover{ border-color: transparent; background: var(--brand-wash); }
+}
 
 @media (max-width: 1080px){
   .rg{ --rail: 108px; }
