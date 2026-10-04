@@ -264,6 +264,38 @@
 }
 .jy-gate-org img{ height: 26px; width: auto; }
 .jy-gate .jy-tin{ margin-top: clamp(28px, 7vh, 72px); }
+/* The desk the tin rests on: a pencil line across the screen through
+   the tin's foot, fading out at both ends, drawn out both ways from under
+   the tin as the page opens. It leaves with the tin. */
+.jy-desk-line{
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  z-index: -1;
+  width: 100vw;
+  height: auto;
+  translate: -50% -50%;
+  overflow: visible;
+  pointer-events: none;
+  filter: url(#rg-graphite);
+  -webkit-mask-image: linear-gradient(90deg, transparent 4%, #000 26%, #000 74%, transparent 96%);
+  mask-image: linear-gradient(90deg, transparent 4%, #000 26%, #000 74%, transparent 96%);
+  opacity: calc(1 - var(--leave));
+}
+.jy-desk-line path{
+  fill: none;
+  stroke: var(--graphite);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.55;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  animation: jy-bb-draw 1.1s cubic-bezier(0.3, 0, 0.3, 1) 0.25s forwards;
+}
+@media (prefers-reduced-motion: reduce){
+  .jy-desk-line path{ animation: none; stroke-dashoffset: 0; }
+}
+
 /* Oversized answer bubbles down both sides, cropped by the screen's
    edges (GateBubbles in Journey.jsx). They leave with the words. */
 .jy-bubbles{
