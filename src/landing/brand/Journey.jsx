@@ -889,6 +889,110 @@ function useRowProgress() {
   return ref;
 }
 
+/* The footer's mural: the exam retold in pencil, drawn left to right as
+   the footer scrolls in. The sheet is set, the locked laptop runs it, a
+   tick grades it, the bars show the results, and the pencil goes back
+   into its tin, closing what the gate opened. Board px are 1200 x 170.
+   Each stroke is its own path, in drawing order: a dash restarts at
+   every subpath, so one path could not draw them one after another.
+   Each word is written as the line reaches it (at: share of the line);
+   its letters must be in the Caveat request in index.html. */
+const MURAL_STROKES = [
+  // The base line runs the whole way; the things stand on it.
+  'M8 130 C 24 126, 40 133, 60 129',
+  // The sheet: outline, folded corner, three lines of questions.
+  'M60 129 L 60 42 L 124 40 L 146 60 L 148 128',
+  'M124 41 L 125 60 L 146 60',
+  'M74 64 L 130 63',
+  'M74 78 L 136 77',
+  'M74 92 L 116 91',
+  // On to the laptop: its base, its screen, the padlock on it.
+  'M148 128 C 190 133, 236 125, 286 128 L 298 114 L 440 114 L 452 128',
+  'M314 114 L 312 44 L 426 46 L 424 114',
+  'M360 76 C 359 61, 381 61, 380 76',
+  'M355 76 L 385 76 L 385 98 L 355 98 Z',
+  'M370 84 L 370 90',
+  // On, and the tick above the line.
+  'M452 128 C 482 131, 516 126, 548 128',
+  'M552 92 C 564 102, 574 112, 584 124 C 604 88, 632 56, 666 30',
+  // The results: axis, then four bars.
+  'M548 128 C 620 131, 690 125, 760 128 L 760 34',
+  'M760 128 L 912 128',
+  'M772 128 L 772 104 L 796 104 L 797 128',
+  'M806 128 L 806 82 L 830 82 L 830 128',
+  'M840 128 L 840 58 L 864 58 L 864 128',
+  'M874 128 L 874 94 L 898 94 L 898 128',
+  // Along to the tin, side on, open at its left end: the pencil slides
+  // in, point out (the cone, its lead, the scallop where the paint stops),
+  // and the lid slides shut over the rest.
+  'M912 128 C 950 131, 984 125, 1012 128 L 1186 128 L 1186 70 L 1012 70 L 1012 128',
+  'M1012 92 L 978 92 L 946 104 L 978 116 L 1012 116',
+  'M946 104 L 957 100 L 957 108 Z',
+  'M978 92 L 984 98 L 978 104 L 984 110 L 978 116',
+  'M984 104 L 1012 104',
+  'M1042 70 L 1042 60 L 1192 60 L 1192 70',
+];
+const MURAL_WORDS = [
+  { x: 104, at: 0.14, word: 'set' },
+  { x: 369, at: 0.36, word: 'run' },
+  { x: 612, at: 0.52, word: 'grade' },
+  { x: 836, at: 0.74, word: 'see' },
+  { x: 1100, at: 0.92, word: 'One place.' },
+];
+
+function Mural() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Give each stroke its share of the drawing, by its length, so the
+    // line moves at one speed: --s and --e, where it starts and ends.
+    const paths = Array.from(el.querySelectorAll('.jy-mural-line'));
+    const lens = paths.map((p) => p.getTotalLength());
+    const total = lens.reduce((a, b) => a + b, 0);
+    let at = 0;
+    paths.forEach((p, i) => {
+      p.style.setProperty('--s', (at / total).toFixed(4));
+      at += lens[i];
+      p.style.setProperty('--e', (at / total).toFixed(4));
+    });
+    if (!motionOK()) {
+      el.style.setProperty('--d', '1');
+      return;
+    }
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const vh = window.innerHeight;
+      const top = el.getBoundingClientRect().top;
+      // 0 as the mural's top enters the screen, 1 once it is two-thirds up.
+      const d = Math.min(1, Math.max(0, (vh - top) / (vh * 0.62)));
+      el.style.setProperty('--d', d.toFixed(3));
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+  return (
+    <div className="jy-mural" ref={ref} aria-hidden="true">
+      <svg viewBox="0 0 1200 170">
+        {MURAL_STROKES.map((d) => (
+          <path key={d} className="jy-mural-line" d={d} pathLength="1" />
+        ))}
+        {MURAL_WORDS.map(({ x, at, word }) => (
+          <text key={word} className="jy-mural-word" x={x} y="160" style={{ '--at': at }}>{word}</text>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 // Where each unit starts on the track: the gate, the steps, and the end.
 const STARTS = unitStarts(JOURNEY_STEPS.length + 1);
 
@@ -1128,7 +1232,9 @@ export default function Journey() {
         </div>
       </section>
 
-      <Footer extra={FOOTER_EXTRA} />
+      <Footer extra={FOOTER_EXTRA}>
+        <Mural />
+      </Footer>
     </div>
   );
 }
