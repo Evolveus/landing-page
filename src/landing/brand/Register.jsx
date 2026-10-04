@@ -590,9 +590,9 @@ export default function Register() {
               <Rv as="h2" className="rg-h2 rg-cta-h rg-rv--mask" delay={60}>{BRAND_CTA.headline}</Rv>
               <Rv as="p" className="rg-lede" delay={120} style={{ marginTop: 22 }}>{BRAND_CTA.sub}</Rv>
               <Rv className="rg-cta-contact" delay={180}>
-                <a href={`https://${BRAND.domain}`} target="_blank" rel="noreferrer">
-                  <Icon name="globe" size={14} />
-                  {BRAND.domain}
+                <a href={`mailto:${BRAND.email}`}>
+                  <Icon name="mail" size={14} />
+                  {BRAND.email}
                 </a>
               </Rv>
             </div>
