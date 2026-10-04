@@ -8,7 +8,7 @@ import { motionOK, useReveal, useSmoothScroll } from './pageMotion';
 import { OmrNumber, ThemedImg } from './figures';
 import {
   TRUST, MASTERY_SAMPLE, BRAND,
-  JOURNEY_NAV, JOURNEY_HERO, JOURNEY_OPEN, JOURNEY_TOUR, BRAND_ROLES, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
+  JOURNEY_HERO, JOURNEY_OPEN, JOURNEY_TOUR, BRAND_ROLES, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
 } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -898,10 +898,6 @@ function Tour() {
   );
 }
 
-const NAV_EXTRA = [
-  { href: '/product', label: 'Product' },
-  { href: '/compare', label: 'Compare' },
-];
 const FOOTER_EXTRA = [{ href: '/compare', label: 'Compare' }];
 /* Text with one phrase in it underlined in pencil, drawn once the text
    has come in. */
@@ -932,7 +928,7 @@ export default function Journey() {
 
   return (
     <div className="rg jy" ref={root}>
-      <Nav links={JOURNEY_NAV} extra={NAV_EXTRA} />
+      <Nav />
 
       {/* ── THE STORY ───────────────────────────────────── */}
       {/* ── OPENING: what it is, a greeting, where it is in use. The

@@ -726,9 +726,16 @@ export const JOURNEY_HERO = {
 /* The gate before step 1: a centred line and a pencil tin whose lid
    slides off as the reader scrolls; when it is open, the story starts. */
 /* The home page's nav: the story is one section, so one link to it. */
-/* The home page's own nav links: none. Its header links to the other
-   pages (see NAV_EXTRA in Journey.jsx), not into the story. */
-export const JOURNEY_NAV = [];
+/* The header on every page: the other pages, not sections of the one
+   you are on (/product has its own index for that). */
+export const SITE_NAV = [
+  { href: '/product', label: 'Product' },
+  { href: '/compare', label: 'Compare' },
+  { href: '/about', label: 'About' },
+];
+
+/* Sign in sits apart from the links, as a button of its own. */
+export const SIGNIN_LINK = { href: '/signin', label: 'Sign in' };
 
 /* Under the home page's product tour: the way to every role's detail. */
 export const JOURNEY_TOUR = {
@@ -855,6 +862,8 @@ export const BRAND_FOOTER = {
       links: [
         { href: '#contact', label: 'Book a walkthrough' },
         { href: '/product#roles', label: 'Who uses it' },
+        { href: '/about', label: 'About' },
+        { href: '/signin', label: 'Sign in' },
       ],
     },
   ],
@@ -1080,4 +1089,69 @@ export const COMPARE_CTA = {
   eyebrow: 'Judge it yourself',
   headline: 'Put it beside whatever you use now.',
   sub: 'Send us the paper you set last semester. We will run it through Evolveus and show you the supervision log, the corrected scripts, and the report your department would have received.',
+};
+
+/* ── /about ──────────────────────────────────────────────────────
+   Facts only, from docs/evolveus-context.md. No team story beyond what
+   the founding notes say. */
+export const ABOUT_PAGE = {
+  eyebrow: 'About',
+  title: 'About Evolveus',
+  lede: 'Evolveus is an exam platform for universities: setting the paper, running the exam, marking it and reporting on it, in one system. It grew out of the School of AI, Amrita Vishwa Vidyapeetham, Coimbatore.',
+  origin: {
+    kicker: 'Where it started',
+    title: 'Built for our own exams first',
+    text: 'At the School of AI, we needed regular tests, and our courses mix multiple choice, written answers and code, often in the same paper. None of the tools we tried handled that mix well, so we built one for the department. That became Evolveus.',
+  },
+  covers: {
+    kicker: 'What it covers',
+    title: 'Everything one exam needs',
+    text: 'It started with our own question types. It now runs the whole exam, from the question bank to the reports.',
+    items: [
+      { label: 'Eight question types', text: 'Multiple choice, multiple correct, true or false, fill in the blank, matching, descriptive, file upload and coding, in one paper.' },
+      { label: 'Code in seven languages', text: 'Java, Python, C++, JavaScript, C, Octave and Scala, run against visible and hidden test cases, with partial marks.' },
+      { label: 'Marked with a reason', text: 'Written and coding answers are marked against the faculty rubric with a remark for each one. Faculty approve before results go out.' },
+      { label: 'On our cloud or your campus', text: 'We host it, or we install it on your own servers and keep it running.' },
+    ],
+  },
+  today: {
+    kicker: 'Today',
+    title: 'In use at Amrita',
+    text: 'Amrita uses Evolveus free of charge, and we maintain it. On most weekdays a few batches write exams on it, about 500 students a day.',
+  },
+  why: {
+    kicker: 'Why we build it',
+    title: 'From our founding notes',
+    lines: ['We like helping students.', 'We enjoy building it.'],
+  },
+  next: {
+    kicker: 'Where it is going',
+    title: 'More than exams',
+    text: 'The longer-term idea is a learning platform for students and staff, with exams as one part of it.',
+  },
+  contact: {
+    title: 'Talk to us',
+    text: 'Write to us, or book a walkthrough with a paper of your own.',
+  },
+};
+
+/* ── /signin ─────────────────────────────────────────────────────
+   Each institution signs in at its own address. Add one entry per
+   institution; the page lists them in this order. */
+export const INSTITUTIONS = [
+  {
+    id: 'amrita-cb',
+    name: 'Amrita Vishwa Vidyapeetham',
+    place: 'Coimbatore',
+    logo: '/Amrita_Logo.svg',
+    url: 'https://evolveus.cb.amrita.edu/',
+  },
+];
+
+export const SIGNIN_PAGE = {
+  eyebrow: 'Sign in',
+  title: 'Choose your institution',
+  lede: 'Each institution has its own Evolveus. Pick yours to go to its sign-in page.',
+  missing: 'Not listed? Evolveus is set up for each institution.',
+  missingLink: 'Book a walkthrough',
 };

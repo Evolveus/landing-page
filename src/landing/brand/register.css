@@ -299,6 +299,14 @@ body.is-landing > #root,
 .rg-btn--ghost:hover{ background: transparent; border-color: var(--brand); color: var(--brand); }
 
 .rg-btn--sm{ height: 40px; padding: 0 18px; font-size: 13.5px; }
+/* A coloured, quieter button beside the main one: Sign in. */
+.rg-btn--soft{
+  background: color-mix(in srgb, var(--brand) 12%, transparent);
+  border-color: transparent;
+  color: var(--brand);
+}
+.rg-btn--soft:hover{ background: color-mix(in srgb, var(--brand) 20%, transparent); border-color: transparent; color: var(--brand); }
+.rg-nav-in .rg-btn--soft{ margin-right: -18px; }
 
 /* ── Mobile menu ──────────────────────────────────── */
 .rg-burger{
@@ -421,6 +429,82 @@ body.is-landing > #root,
 .rg-index a svg{ margin-left: auto; color: var(--ink-45); transition: transform 0.2s ease; }
 .rg-index a:hover{ background: var(--paper-2); }
 .rg-index a:hover svg{ transform: translateY(2px); color: var(--brand); }
+/* ── /about ───────────────────────────────────────────── */
+.rg-about-figs{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px clamp(20px, 3vw, 44px);
+  margin-top: clamp(36px, 4vw, 52px);
+}
+.rg-about-figs .rg-trust-fig{ border-left: 0; padding: 0; }
+/* What it covers: label and line, two to a row. */
+.rg-about-covers{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(28px, 4vw, 64px);
+  margin: clamp(32px, 4vw, 48px) 0 0 !important;
+  padding: 0;
+  list-style: none;
+}
+.rg-about-covers li{ display: grid; gap: 6px; padding: 22px 0; border-top: 1px solid var(--rule); }
+.rg-about-covers b{ font-size: 17px; font-weight: 600; color: var(--ink); }
+.rg-about-covers span{ font-size: 15.5px; line-height: 1.6; color: var(--ink-70); }
+.rg-about-why{ max-width: 640px; margin-top: clamp(28px, 3vw, 40px) !important; }
+.rg-about-why li{ font-size: clamp(19px, 1.7vw, 23px); }
+.rg-about-contact{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px clamp(32px, 5vw, 80px);
+  align-items: end;
+}
+.rg-about-contact .rg-lede{ margin-top: 14px; }
+.rg-about-contact-ways{ display: grid; justify-items: start; gap: 18px; }
+.rg-about-mail{ display: inline-flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 13px; color: var(--brand); }
+
+/* ── /signin ──────────────────────────────────────────── */
+.rg-signin{ position: relative; padding: clamp(120px, 14vw, 180px) 0 clamp(72px, 9vw, 120px); overflow: hidden; }
+.rg-signin::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(15, 107, 69, 0.16) 1.4px, transparent 1.5px);
+  background-size: 34px 34px;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
+  mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
+  pointer-events: none;
+}
+.rg-signin-in{ position: relative; max-width: 760px; }
+.rg-signin-h{ font-size: clamp(38px, 4.6vw, 64px); margin: 0 0 18px; }
+/* One row per institution, read like a line on an answer sheet. */
+.rg-inst{ margin: clamp(32px, 4vw, 48px) 0 0 !important; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+.rg-inst li{ border-bottom: 1px solid var(--rule); }
+.rg-inst a{
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 16px;
+  color: var(--ink);
+  transition: background 0.2s ease;
+}
+.rg-inst a:hover{ background: var(--paper-2); }
+.rg-inst img{ width: 44px; height: 44px; object-fit: contain; }
+.rg-inst-name{ display: grid; gap: 2px; }
+.rg-inst-name b{ font-size: 17px; font-weight: 600; }
+.rg-inst-name span{ font-size: 14px; color: var(--ink-45); }
+.rg-inst-host{ font-size: 11px; color: var(--ink-45); }
+.rg-inst a svg{ color: var(--brand); transition: transform 0.2s ease; }
+.rg-inst a:hover svg{ transform: translateX(3px); }
+.rg-signin-missing{ margin-top: 26px !important; font-size: 14.5px; color: var(--ink-45); }
+.rg-signin-missing a{ color: var(--brand); border-bottom: 1px solid currentColor; }
+
+@media (max-width: 720px){
+  .rg-about-figs{ grid-template-columns: minmax(0, 1fr); }
+  .rg-about-covers{ grid-template-columns: minmax(0, 1fr); }
+  .rg-about-contact{ grid-template-columns: minmax(0, 1fr); }
+  .rg-inst a{ grid-template-columns: auto minmax(0, 1fr) auto; }
+  .rg-inst-host{ display: none; }
+}
 @media (max-width: 720px){
   .rg-index{ grid-template-columns: minmax(0, 1fr); }
   .rg-index li:not(:nth-child(3n)){ border-right: 0; }
@@ -1315,9 +1399,9 @@ body.is-landing > #root,
 /* Primary buttons: the bright dark-theme green is too light for white
    text, so buttons keep a deeper green of their own. */
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .rg-btn:not(.rg-btn--ghost){ background: #15784f; border-color: #15784f; }
+  :root:not([data-theme="light"]) .rg-btn:not(.rg-btn--ghost):not(.rg-btn--soft){ background: #15784f; border-color: #15784f; }
 }
-:root[data-theme="dark"] .rg-btn:not(.rg-btn--ghost){ background: #15784f; border-color: #15784f; }
+:root[data-theme="dark"] .rg-btn:not(.rg-btn--ghost):not(.rg-btn--soft){ background: #15784f; border-color: #15784f; }
 
 /* One element per theme: the header mark and every product screenshot
    ship a light and a dark version, and CSS shows the matching one. The
@@ -1414,5 +1498,8 @@ body.is-landing > #root,
 /* With the theme toggle in the nav, a phone has no room for the nav CTA.
    The hero carries the same button immediately below. */
 @media (max-width: 430px){
-  .rg-nav-in .rg-btn--sm{ display: none; }
+  .rg-nav-in .rg-btn--sm:not(.rg-btn--soft){ display: none; }
+  /* Sign in stays: students sign in from their phones. */
+  .rg-nav-in{ gap: 14px; }
+  .rg-nav-in .rg-btn--soft{ margin-right: 0; }
 }

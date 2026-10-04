@@ -18,9 +18,7 @@ import {
    this page; the facts come from ../content.js.
    ═══════════════════════════════════════════════════════════════ */
 
-const NAV_EXTRA = [{ href: '/compare', label: 'Compare', current: true }];
-// The nav links to the other pages, not into /product's sections.
-const NAV_PAGES = [{ href: '/product', label: 'Product' }];
+const FOOTER_EXTRA = [{ href: '/compare', label: 'Compare' }];
 
 const MARK = {
   full: { label: 'Built for this', icon: 'check' },
@@ -47,7 +45,7 @@ export default function Compare() {
 
   return (
     <div className="rg cm" ref={root}>
-      <Nav base="/" links={NAV_PAGES} extra={NAV_EXTRA} />
+      <Nav base="/" />
 
       {/* ── HERO ────────────────────────────────────────── */}
       <header className="rg-hero cm-hero" id="top">
@@ -246,7 +244,7 @@ export default function Compare() {
         </div>
       </section>
 
-      <Footer base="/" extra={NAV_EXTRA} />
+      <Footer base="/" extra={FOOTER_EXTRA} />
     </div>
   );
 }
