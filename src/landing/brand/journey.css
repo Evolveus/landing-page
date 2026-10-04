@@ -42,7 +42,18 @@
   /* Bottom room for the idle "Scroll" hint. */
   padding: clamp(100px, min(13vw, 16vh), 170px) 0 clamp(72px, 9vh, 104px);
 }
-.jy-hero > .rg-wrap{ flex: 1; display: flex; flex-direction: column; }
+/* The faint OMR matrix behind the hero, as on /product (.rg-hero). */
+.jy-hero::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(15, 107, 69, 0.16) 1.4px, transparent 1.5px);
+  background-size: 34px 34px;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
+  mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
+  pointer-events: none;
+}
+.jy-hero > .rg-wrap{ position: relative; flex: 1; display: flex; flex-direction: column; }
 .jy-h1{
   margin: 26px 0 0;
   /* Sized by the screen's height as well as its width, so a short
