@@ -778,6 +778,12 @@ export const JOURNEY_STEPS = [
 
 export const JOURNEY_PROOF = {
   title: 'From a real exam',
+  // One per screen, in order: the marked answer, the attempt, the class.
+  items: [
+    { title: 'Clear remarks', text: 'Every answer comes back with the reason for its mark.' },
+    { title: 'Every attempt on record', text: 'For each question: the answer, the time spent, how often it was opened, and the clicks it took.' },
+    { title: 'The class at a glance', text: 'Where the class landed, with the bands below the mean picked out.' },
+  ],
 };
 
 export const JOURNEY_BRIEF = {
