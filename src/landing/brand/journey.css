@@ -468,7 +468,11 @@
 /* A bar is a box: front and side faces stood up off the desk, and a lid
    at the bar's height. H is the risen height in px. */
 .jy-bar{
-  --g: clamp(0, calc(var(--p4) * 4.5 - 1.6 - var(--i) * 0.28), 1);
+  /* Rises through §04 left to right; in §05 sinks back into the desk
+     right to left before the mastery grid comes up. */
+  --rise: clamp(0, calc(var(--p4) * 4.5 - 1.6 - var(--i) * 0.28), 1);
+  --sink: clamp(0, calc(var(--p5) * 3.2 - (7 - var(--i)) * 0.08), 1);
+  --g: calc(var(--rise) * (1 - var(--sink)));
   --H: calc(var(--h) * var(--g) * 1px);
   --bw: 30px;
   position: relative;
@@ -481,7 +485,8 @@
      sides, with a sliver of side face showing past it. */
   outline: 1px dashed color-mix(in srgb, var(--rule) calc((1 - var(--g)) * 100%), transparent);
   outline-offset: -1px;
-  opacity: calc(clamp(0, var(--p4) * 6 - 2.4, 1) - var(--p5) * 2.5);
+  /* The flat footprint fades once the bar has sunk most of the way. */
+  opacity: calc(clamp(0, var(--p4) * 6 - 2.4, 1) - clamp(0, var(--p5) * 7 - 2.6, 1));
 }
 /* This paper's score band, set apart in ink. */
 .jy-bar.is-own{
@@ -490,10 +495,10 @@
   --face-top: var(--ink-70);
 }
 .jy-bar i{ position: absolute; display: block; background: var(--c); }
-/* Each side face carries a 1px outline in its own colour. It lies in the
-   face's plane and laps over the corner it shares with the next face,
-   covering the hairline seam the browser leaves between them. */
-.jy-bar-front, .jy-bar-back, .jy-bar-side, .jy-bar-left, .jy-bar-top{ outline: 1px solid var(--c); }
+/* All four sides are drawn, not just the two the camera sees: where two
+   visible faces meet, the browser leaves a hairline seam, and with the
+   back and left faces behind it the seam shows bar colour rather than
+   the page. */
 .jy-bar-front{
   --c: var(--face, var(--brand));
   left: 0;
@@ -552,7 +557,7 @@
   color: var(--ink);
   transform-origin: 50% 100%;
   transform: translateX(-50%) translateZ(calc(var(--H) + 26px)) rotateX(-90deg);
-  opacity: clamp(0, calc(var(--p4) * 4 - 2.6), 1);
+  opacity: calc(clamp(0, var(--p4) * 4 - 2.6, 1) - var(--p5) * 5);
 }
 .jy-own-tag .rg-mono{ font-size: 8px; color: var(--ink-45); }
 .jy-own-tag b{ font-family: var(--mono); font-size: 13px; font-weight: 500; }
@@ -566,7 +571,8 @@
   width: 300px;
   height: 300px;
   transform-style: preserve-3d;
-  opacity: min(1, var(--p5) * 4);
+  /* Comes up as the histogram finishes sinking. */
+  opacity: clamp(0, calc(var(--p5) * 5 - 1.7), 1);
 }
 .jy-mastery-title{
   position: absolute;
@@ -600,7 +606,9 @@
   white-space: nowrap;
 }
 .jy-mbar{
-  --g: clamp(0, calc(var(--p5) * 3 - var(--i) * 0.07), 1);
+  /* Starts rising only once the grid has fully faded in (p5 = 0.54), so
+     no bar is already part-risen when it first shows. */
+  --g: clamp(0, calc((var(--p5) - 0.54) * 5 - var(--i) * 0.07), 1);
   --bw: 30px;
   position: absolute;
   left: calc(160px + var(--c) * 46px);
