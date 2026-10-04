@@ -65,8 +65,11 @@ export function SectionHead({ code, kicker, title, lede }) {
 
    `base` prefixes the section anchors. On the home page the sections are
    on this document, so it is empty. On any other page it is "/", which
-   turns each link into a real navigation back to the home page's anchor. */
-export function Nav({ base = '', extra = [] }) {
+   turns each link into a real navigation back to the home page's anchor.
+   `home` is where the logo goes; a page that is not the home page but
+   keeps its own anchors (base empty) passes "/". `links` replaces the
+   standard section links for a page with sections of its own. */
+export function Nav({ base = '', home, links: own, extra = [] }) {
   const stuck = useStuck();
   const progress = useScrollProgress();
   const [theme, toggleTheme] = useTheme();
@@ -81,14 +84,14 @@ export function Nav({ base = '', extra = [] }) {
   }, []);
 
   const links = [
-    ...BRAND_NAV.map((l) => ({ ...l, href: `${base}${l.href}` })),
+    ...(own ?? BRAND_NAV).map((l) => ({ ...l, href: `${base}${l.href}` })),
     ...extra,
   ];
 
   return (
     <nav className={`rg-nav ${stuck ? 'is-stuck' : ''}`}>
       <div className="rg-wrap rg-nav-in">
-        <a className="rg-brand" href={base || '#top'} aria-label={BRAND.name}>
+        <a className="rg-brand" href={home ?? (base || '#top')} aria-label={BRAND.name}>
           <Lockup />
         </a>
         <div className="rg-nav-links">
