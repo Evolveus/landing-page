@@ -83,9 +83,8 @@
 }
 
 /* The graphite filter's own SVG takes no room. */
-.jy-defs{ position: absolute; width: 0; height: 0; overflow: hidden; }
 /* Not the ticks: at their size the grain breaks the stroke apart. */
-.jy-uline, .jy-ring, .jy-marked-mark, .jy-hand{ filter: url(#jy-graphite); }
+.jy-uline, .jy-ring, .jy-marked-mark, .jy-hand{ filter: url(#rg-graphite); }
 
 /* A pencil mark: one stroke of graphite that draws from its start.
    pathLength="1" on the path makes the dash a fraction, so a mark is
@@ -1051,35 +1050,6 @@
   stroke-dashoffset: calc(1 - clamp(0, (var(--v) - 0.62) / 0.33, 1));
 }
 
-/* ── Footer mural: the exam in one pencil line (MURAL_PATH in
-   Journey.jsx), drawn as --d runs 0 to 1. The footer is always dark, so
-   the graphite is the light one. ─────────────────────── */
-.jy-mural{
-  --d: 1;
-  margin-bottom: clamp(36px, 4vw, 56px);
-  overflow: hidden;
-}
-.jy-mural svg{ display: block; width: 100%; height: auto; overflow: visible; filter: url(#jy-graphite); }
-.jy-mural-line{
-  fill: none;
-  stroke: #c4ccc7;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1 1;
-  /* This stroke's part of the drawing: from --s to --e of the line. */
-  stroke-dashoffset: calc(1 - clamp(0, (var(--d) - var(--s, 0)) / (var(--e, 1) - var(--s, 0)), 1));
-  opacity: 0.85;
-}
-.jy-mural-word{
-  font-family: 'Caveat', 'Segoe Print', cursive;
-  font-size: 26px;
-  font-weight: 500;
-  fill: #c4ccc7;
-  text-anchor: middle;
-  opacity: clamp(0, calc((var(--d) - var(--at)) * 14), 0.85);
-}
-
 /* ── Who and where ────────────────────────────────────── */
 .jy-brief{ border-top: 1px solid var(--rule); }
 .jy-brief-grid{
@@ -1152,9 +1122,6 @@
   /* One column: cap each figure so its crop is not enlarged past the
      capture's own size on a tablet. */
   /* One column: the line first, then the screen it is about. */
-  /* Too narrow to read whole: the mural is drawn larger and pans along
-     with the drawing, keeping the stroke being drawn on screen. */
-  .jy-mural svg{ width: 220%; transform: translateX(calc(var(--d) * -54.5%)); }
   .jy-proof-pin,
   .jy-proof-item:nth-child(even) .jy-proof-pin{ grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .jy-proof-text{ order: -1; }
