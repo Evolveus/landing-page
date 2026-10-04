@@ -1,4 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
 
 /* ═══════════════════════════════════════════════════════════════
    PAGE MOTION — the scroll behaviour every EvolveUs brand page
@@ -154,4 +156,21 @@ export function useTheme() {
   };
 
   return [theme, toggle];
+}
+
+/* Eased, weighted scrolling for pages that tell a story on scroll.
+
+   Lenis still moves the real window, so sticky elements, scroll events
+   and the hooks above work unchanged. It turns smoothing off by itself
+   when the visitor asks for reduced motion. In-page links glide to their
+   target, stopping below the fixed nav. */
+export function useSmoothScroll() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      autoRaf: true,
+      lerp: 0.075,
+      anchors: { offset: -64 },
+    });
+    return () => lenis.destroy();
+  }, []);
 }
