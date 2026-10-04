@@ -35,18 +35,28 @@ export function useReveal() {
       return;
     }
 
+    // A masked headline starts fully clipped (clip-path), and Chrome counts
+    // the target's own clip-path as zero visible area, so it would never
+    // report as intersecting. Watch its unclipped parent instead.
+    const watched = new Map();
+    nodes.forEach((n) => {
+      const target = n.classList.contains('rg-rv--mask') && n.parentElement ? n.parentElement : n;
+      if (!watched.has(target)) watched.set(target, []);
+      watched.get(target).push(n);
+    });
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (!e.isIntersecting) return;
-          e.target.classList.add('is-in');
+          watched.get(e.target)?.forEach((n) => n.classList.add('is-in'));
           io.unobserve(e.target);
         });
       },
       { rootMargin: '0px 0px -12% 0px', threshold: 0.06 },
     );
 
-    nodes.forEach((n) => io.observe(n));
+    watched.forEach((_, target) => io.observe(target));
 
     // Safety net: if nothing has reported by now, the observer is not
     // working here. Show everything rather than leave the page empty.
