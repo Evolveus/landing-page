@@ -142,7 +142,7 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
 }
 
 /* The footer. `base` behaves as it does in the nav. */
-export function Footer({ base = '', extra = [] }) {
+export function Footer({ base = '', extra = [], children }) {
   const columns = BRAND_FOOTER.columns.map((col) => ({
     ...col,
     links: col.links.map((l) => ({ ...l, href: `${base}${l.href}` })),
@@ -154,6 +154,8 @@ export function Footer({ base = '', extra = [] }) {
   return (
     <footer className="rg-foot">
       <div className="rg-wrap rg-foot-in">
+        {/* Anything a page sets above the footer's columns. */}
+        {children}
         <div className="rg-foot-grid">
           <div>
             <div className="rg-brand"><Lockup light /></div>
