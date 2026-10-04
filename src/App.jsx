@@ -13,6 +13,7 @@ import RolesPage from "./components/pages/RolesPage";
 import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
 import Compare from "./landing/brand/Compare";
+import Journey from "./landing/brand/Journey";
 import Design1 from "./landing/designs/Design1";
 import Design2 from "./landing/designs/Design2";
 import Design3 from "./landing/designs/Design3";
@@ -34,6 +35,7 @@ export default function App() {
     const path = window.location.pathname;
     if (path === "/brochure") return "brochure";
     if (path === "/compare") return "compare";
+    if (path === "/journey") return "journey";
     if (path === "/1") return "design-1";
     if (path === "/2") return "design-2";
     if (path === "/3") return "design-3";
@@ -54,6 +56,7 @@ export default function App() {
     const paths = {
       brochure: "/brochure",
       compare: "/compare",
+      journey: "/journey",
       "design-1": "/1",
       "design-2": "/2",
       "design-3": "/3",
@@ -76,7 +79,7 @@ export default function App() {
   // The landing views render full-bleed, so they mark the body explicitly
   // rather than leaving the reset to a :has() selector.
   useLayoutEffect(() => {
-    const fullBleed = view === "landing" || view === "compare" || view.startsWith("design-");
+    const fullBleed = view === "landing" || view === "compare" || view === "journey" || view.startsWith("design-");
     document.body.classList.toggle("is-landing", fullBleed);
     return () => document.body.classList.remove("is-landing");
   }, [view]);
@@ -144,6 +147,14 @@ export default function App() {
 
   if (view === "flyer-v4") {
     return <FlyerV4 onHome={() => setView("landing")} />;
+  }
+
+  if (view === "journey") {
+    return (
+      <div className="landing-shell">
+        <Journey />
+      </div>
+    );
   }
 
   if (view === "compare") {

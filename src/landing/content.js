@@ -696,6 +696,95 @@ export const BRAND_CTA = {
   sub: 'Send us a paper you have already set. We will run it as a real exam with your team, from setting it up to the report at the end. It takes about half an hour.',
 };
 
+/* ── /journey prototype ─────────────────────────────────────
+   One exam told as a scroll story: the sheet on the right changes as
+   each step passes. Copy is kept short on purpose; the detail lives on
+   the home page. */
+export const JOURNEY_HERO = {
+  eyebrow: 'Online exams for universities',
+  // One statement per line, kept to roughly the same length.
+  lines: ['Set the paper.', 'Run the exam.', 'Grade the answers.', 'See the results.'],
+  emphasis: 'One place.',
+  // The logo above already names the university.
+  trustNote: 'Built at its School of AI, Coimbatore.',
+  // Short labels: the digit grids carry the figures.
+  figureLabels: ['Students', 'Exams', 'Answers evaluated'],
+};
+
+/* One line of body and two short facts per step: the sheet beside the
+   text does the explaining. */
+export const JOURNEY_STEPS = [
+  {
+    id: 'before',
+    n: '01',
+    kicker: 'Before the exam',
+    title: 'Set the paper from a shared bank',
+    body: "Every question is tagged by topic, difficulty and Bloom's level.",
+    facts: ['Eight question types, coding included', 'Questions drafted from your notes'],
+  },
+  {
+    id: 'security',
+    n: '02',
+    kicker: 'During the exam',
+    title: 'Run it in your labs',
+    body: 'A locked browser, in full screen, on your lab network only. Every tab switch is logged.',
+    facts: ['A password to start', 'Ten kinds of violation logged'],
+  },
+  {
+    id: 'marking',
+    n: '03',
+    kicker: 'After the exam',
+    title: 'Graded in about ten minutes',
+    body: 'Descriptive and coding answers are graded against your rubric, with a reason for every mark.',
+    facts: ['Faculty approve before results go out', 'Code run against hidden tests'],
+  },
+  {
+    id: 'reports',
+    n: '04',
+    kicker: 'Results',
+    title: 'See how the class did',
+    body: 'Every score in context, and the students who need a follow-up.',
+    facts: ['Rank and class average for each student', 'Export to Excel'],
+  },
+  {
+    id: 'mastery',
+    n: '05',
+    kicker: 'Across a course',
+    title: 'Find the weak topic in time',
+    body: 'Mastery by topic, compared across sections and semesters.',
+    facts: ['Course outcomes, CO1 to CO8', 'Every batch, every semester'],
+  },
+];
+
+export const JOURNEY_PROOF = {
+  title: 'From a real exam',
+};
+
+export const JOURNEY_BRIEF = {
+  roles: {
+    title: 'Who uses it',
+    items: [
+      { label: 'Administrators', text: 'Set up the university and its accounts.' },
+      { label: 'Faculty', text: 'Set papers, approve grades, follow up.' },
+      { label: 'Students', text: 'Write exams and see their own results.' },
+    ],
+  },
+  deploy: {
+    title: 'Where it runs',
+    items: [
+      { label: 'Our cloud', text: 'We host it, update it and back it up.' },
+      // Full isolation needs the AI models on campus too; say so.
+      { label: 'Your campus', text: 'On your servers, maintained by us. Run the AI models there too for full isolation.' },
+    ],
+  },
+};
+
+export const JOURNEY_CTA = {
+  eyebrow: 'Book a walkthrough',
+  headline: 'See it with your own question paper.',
+  sub: "Send us a paper you've set. We'll run it with your team as a real exam. It takes half an hour.",
+};
+
 export const BRAND_FOOTER = {
   tagline: 'Online exams, marking, and reports for universities.',
   columns: [
