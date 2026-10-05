@@ -716,16 +716,16 @@ export const COMPARE_CTA = {
 export const ABOUT_PAGE = {
   eyebrow: 'About',
   title: 'About Evolveus',
-  lede: 'Evolveus is an exam platform for universities: setting the paper, running the exam, marking it and reporting on it, in one system. It grew out of the School of AI, Amrita Vishwa Vidyapeetham, Coimbatore.',
+  lede: 'Evolveus is an exam platform for universities: setting the paper, running the exam, marking it and reporting on it, in one system. It is in use at the School of AI, Amrita Vishwa Vidyapeetham, Coimbatore.',
   origin: {
     kicker: 'Where it started',
-    title: 'Built for our own exams first',
-    text: 'At the School of AI, we needed regular tests, and our courses mix multiple choice, written answers and code, often in the same paper. None of the tools we tried handled that mix well, so we built one for the department. That became Evolveus.',
+    title: 'It began as a student project',
+    text: 'Evolveus started as a small project by students. As more faculty asked to use it, the whole School of AI at Amrita took it up. Amrita does not pay for it, and our team maintains it.',
   },
   covers: {
     kicker: 'What it covers',
     title: 'Everything one exam needs',
-    text: 'It started with our own question types. It now runs the whole exam, from the question bank to the reports.',
+    text: 'It started with a few question types. It now runs the whole exam, from the question bank to the reports.',
     items: [
       { label: 'Eight question types', text: 'Multiple choice, multiple correct, true or false, fill in the blank, matching, descriptive, file upload and coding, in one paper.' },
       { label: 'Code in seven languages', text: 'Java, Python, C++, JavaScript, C, Octave and Scala, run against visible and hidden test cases, with partial marks.' },
