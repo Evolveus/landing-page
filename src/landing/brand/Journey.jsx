@@ -69,7 +69,7 @@ function cameraAt(t) {
    from one step to the next: scrolling only advances t, and the text
    swaps in place when the step changes. Each step plays over the first
    80% of its share of the track and holds its finished state for the
-   rest. With reduced motion, t snaps to whole steps. */
+   rest. Reduced-motion users still scrub every state, without catch-up easing. */
 const PLAY = 0.8;
 // The scroll length of each unit (the gate, then each step), in shares of
 // the track's --per, where it differs from one. Step 2, where the pencil
@@ -148,18 +148,25 @@ function useJourney(stepCount) {
 
     // Board-px points the pencil visits in step 2, read from the sheet.
     let marks = null;
+    let marksReady = false;
     const measureMarks = () => {
       if (!desk) return;
-      const k = 760 / (desk.offsetWidth || 760);
+      const deskRect = desk.getBoundingClientRect();
+      if (!deskRect.width || !deskRect.height) return;
+      const boardScale = 760 / deskRect.width;
+      const cssScale = deskRect.width / (desk.offsetWidth || 760);
+      const toBoard = (x, y) => ({
+        x: (x - deskRect.left) * boardScale,
+        y: (y - deskRect.top) * boardScale,
+      });
       const rows = desk.querySelectorAll('.jy-row');
       marks = Array.from(rows, (row) => {
         const pick = row.querySelector('.jy-bub.is-pick');
         if (pick) {
-          const o = offsetIn(pick, desk);
+          const rect = pick.getBoundingClientRect();
+          const { x: cx, y: cy } = toBoard(rect.left + rect.width / 2, rect.top + rect.height / 2);
           // The shade's 24-unit box spans the bubble plus SHADE_PAD a side.
-          const box = (pick.offsetWidth + SHADE_PAD * 2) * k;
-          const cx = (o.x + pick.offsetWidth / 2) * k;
-          const cy = (o.y + pick.offsetHeight / 2) * k;
+          const box = rect.width * boardScale + SHADE_PAD * 2;
           const shade = SHADES[Number(row.dataset.i) % SHADES.length];
           return {
             x: cx,
@@ -172,16 +179,17 @@ function useJourney(stepCount) {
           // scrollWidth is the full line, even while typing clips it.
           return {
             code: Array.from(code, (c) => {
-              const o = offsetIn(c, desk);
-              return [o.x * k, (o.y + c.offsetHeight / 2) * k, (o.x + c.scrollWidth) * k];
+              const rect = c.getBoundingClientRect();
+              const start = toBoard(rect.left, rect.top + rect.height / 2);
+              return [start.x, start.y, start.x + c.scrollWidth * cssScale * boardScale];
             }),
           };
         }
         const line = row.querySelector('.jy-lines i');
         if (line) {
-          const o = offsetIn(line, desk);
-          const y = (o.y + line.offsetHeight / 2) * k;
-          return { line: [o.x * k, y, (o.x + line.offsetWidth) * k] };
+          const rect = line.getBoundingClientRect();
+          const start = toBoard(rect.left, rect.top + rect.height / 2);
+          return { line: [start.x, start.y, start.x + line.offsetWidth * cssScale * boardScale] };
         }
         return null;
       });
@@ -194,13 +202,14 @@ function useJourney(stepCount) {
     let rewinding = false;
     let erasing = false;
 
-    // Where the scroll position says the story should be.
+    // Scroll always controls the full story range. Reduced-motion users
+    // skip the catch-up easing below, but must still see each scroll state.
     const target = () => {
       const u = clamp01((window.scrollY + pinTop - top) / span) * starts[units];
       let idx = 0;
       while (idx < units - 1 && u >= starts[idx + 1]) idx++;
       const f = (u - starts[idx]) / unitLength(idx);
-      return smooth ? idx + Math.min(1, f / PLAY) : idx + 1;
+      return idx + Math.min(1, f / PLAY);
     };
 
     let last = -2;
@@ -225,7 +234,13 @@ function useJourney(stepCount) {
 
       // The pencil on the desk.
       const pk = (k) => clamp01(t - k);
-      const contact = pencilAt({ p2: pk(2), p3: pk(3) }, marks);
+      const p2 = pk(2);
+      if (p2 > 0 && !marksReady) {
+        // All rows are settled by step 2, so viewport geometry is stable.
+        measureMarks();
+        marksReady = true;
+      }
+      const contact = pencilAt({ p2, p3: pk(3) }, marks);
       // Turned over (flip 1), the eraser end touches the paper where the
       // point would have. Position is set by the point, so step it back
       // along the pencil's axis by the pencil's length.
@@ -322,14 +337,14 @@ function useJourney(stepCount) {
 
     // On load and resize, jump to the scroll position rather than
     // playing the story from the top.
-    const onResize = () => { measure(); measureMarks(); shown = goal = target(); render(shown); };
+    const onResize = () => { measure(); marks = null; marksReady = false; shown = goal = target(); render(shown); };
     onResize();
-    const ro = new ResizeObserver(onResize);
-    ro.observe(document.body);
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(onResize);
+    ro?.observe(document.body);
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', onResize, { passive: true });
     return () => {
-      ro.disconnect();
+      ro?.disconnect();
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', onResize);
       cancelAnimationFrame(frame);
@@ -589,20 +604,6 @@ function pencilAt(p, marks) {
   };
 }
 
-/* Offset of an element within an ancestor, in that ancestor's own CSS px.
-   Offsets ignore transforms, so this holds wherever the sheet has been
-   moved to. */
-function offsetIn(el, ancestor) {
-  let x = 0;
-  let y = 0;
-  let node = el;
-  while (node && node !== ancestor) {
-    x += node.offsetLeft;
-    y += node.offsetTop;
-    node = node.offsetParent;
-  }
-  return { x, y };
-}
 
 /* ── The desk ─────────────────────────────────────────────────── */
 

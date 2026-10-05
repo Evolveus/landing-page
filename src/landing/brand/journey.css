@@ -70,8 +70,8 @@
   /* The sheet unrolls and the bank slides in once the stage is visible. */
   --open: clamp(0, calc((var(--p0) - 0.78) * 4.6), 1);
   position: relative;
-  /* The tilted desk may lean past its column; clip at the section so it
-     never widens the page. The 3D layers inside keep overflow visible. */
+  /* Safari before 16.4 ignores `clip`; hidden preserves containment there. */
+  overflow-x: hidden;
   overflow-x: clip;
 }
 .jy-story-in{
@@ -1159,6 +1159,7 @@
   .jy-stage{
     position: relative;
     height: 100%;
+    overflow: hidden;
     overflow: clip;
     background: var(--paper);
     border-bottom: 1px solid var(--rule);
