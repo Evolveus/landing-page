@@ -27,6 +27,18 @@
     {
       "source": "/flyer/v1",
       "destination": "/"
+    },
+    {
+      "source": "/product",
+      "destination": "/"
+    },
+    {
+      "source": "/about",
+      "destination": "/"
+    },
+    {
+      "source": "/signin",
+      "destination": "/"
     }
   ],
   "functions": {

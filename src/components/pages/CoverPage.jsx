@@ -41,7 +41,7 @@ export default function CoverPage() {
             </div>
             <div className="p1-meta-row">
               <span className="p1-meta-key">Pages</span>
-              <span className="p1-meta-val">07</span>
+              <span className="p1-meta-val">09</span>
             </div>
             <div className="p1-meta-row">
               <span className="p1-meta-key">Read time</span>
