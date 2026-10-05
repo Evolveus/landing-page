@@ -340,11 +340,13 @@
 .fl-dd--bulb{ top: 18px; left: 150px; width: 40px; height: 40px; transform: rotate(8deg); }
 .fl-dd--aplus{ bottom: 150px; right: 70px; width: 40px; height: 40px; transform: rotate(-5deg); }
 
-/* ── Print: the sheet alone, one A4 page, colours as drawn ── */
+/* ── Print: the sheet alone, one A4 page, colours as drawn ──
+   Scoped to this view: the stylesheet loads on every route, and an
+   unscoped rule would blank out other pages' prints. */
 @page{ size: A4; margin: 0; }
 @media print{
-  html, body{ margin: 0; padding: 0; background: #fff; }
-  body *{ visibility: hidden; }
+  html:has(.fl-sheet), body:has(.fl-sheet){ margin: 0; padding: 0; background: #fff; }
+  body:has(.fl-sheet) *{ visibility: hidden; }
   .fl-sheet, .fl-sheet *{ visibility: visible; }
   .fl-root{ padding: 0; min-height: 0; background: none; display: block; }
   .fl-sheet{

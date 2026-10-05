@@ -1,0 +1,785 @@
+/* ─────────────────────────────────────────────────────────────
+   The A4 brochure, an eight-page booklet. The same print system as the
+   flyer (DESIGN.md §8): solid lines, text 14mm or more from the edge,
+   body at 12px or more, nothing animated. Light to print, dark
+   (.br-sheet--dark) for screens.
+
+   Where the flyer is one annotated card, the booklet's character is its
+   pacing: forest-panel pages (.br-sheet--panel) between paper ones,
+   chapter numerals drawn huge in outline, real screens printed large and
+   running off the page edge, and a little pencil.
+   ───────────────────────────────────────────────────────────── */
+
+/* The handwriting at the weight the pencil notes use (see flyer.css). */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap');
+
+.br-root{
+  min-height: 100vh;
+  background: #e6e9e6;
+  padding: 40px 24px 64px;
+  box-sizing: border-box;
+}
+.br-doc{ display: flex; flex-direction: column; align-items: center; gap: 32px; }
+
+/* ── Toolbar (screen only, outside the sheets) ────────── */
+.br-toolbar{ position: fixed; top: 18px; right: 18px; z-index: 50; display: flex; gap: 10px; }
+.br-btn{
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid #0f6b45;
+  border-radius: 3px;
+  padding: 11px 18px;
+  background: #0f6b45;
+  color: #fff;
+  font: 600 13px 'Archivo', system-ui, sans-serif;
+  cursor: pointer;
+}
+.br-btn:hover{ background: #0a5236; border-color: #0a5236; }
+.br-btn--ghost{ background: #fff; color: #0d1f17; border-color: #c4ccc7; }
+.br-btn--ghost:hover{ background: #f4f6f2; border-color: #a3b3aa; }
+.br-themes{ display: flex; }
+.br-themes .br-btn{ border-radius: 0; }
+.br-themes .br-btn:first-child{ border-radius: 3px 0 0 3px; }
+.br-themes .br-btn:last-child{ border-radius: 0 3px 3px 0; margin-left: -1px; }
+.br-themes .br-btn[aria-pressed="true"]{ background: #0d1f17; color: #fff; border-color: #0d1f17; }
+
+/* ── The sheet ────────────────────────────────────────── */
+.br-sheet{
+  /* Light values, set here so the system theme can't reach the pages;
+     .br-sheet--dark swaps them. Solid lines for office printers. */
+  --paper: #ffffff;
+  --paper-2: #f4f6f2;
+  --card: #ffffff;
+  --ink: #0d1f17;
+  --ink-70: #3f564a;
+  --ink-45: #6d8378;
+  --rule: #c4ccc7;
+  --rule-soft: #dfe4e0;
+  --brand: #0f6b45;
+  --brand-wash: #f0f6f2;
+  --graphite: #3a3f3c;
+  --flag: #a8551b;
+  --sans: 'Archivo', 'Inter', system-ui, sans-serif;
+  --mono: 'DM Mono', 'JetBrains Mono', monospace;
+  --hand: 'Caveat', 'Segoe Print', cursive;
+  /* The forest panel, and what is drawn on it. */
+  --panel: #0c2b1f;
+  --on-panel: #eef4f0;
+  --on-panel-70: #b5c8bd;
+  --on-panel-45: #87a294;
+  --panel-brand: #5fd39f;
+  --panel-rule: #2b4b3d;
+  --panel-pencil: #d3dcd6;
+
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  box-sizing: border-box;
+  padding: 14mm;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(13, 31, 23, 0.12);
+}
+.br-sheet *, .br-sheet *::before, .br-sheet *::after{ box-sizing: border-box; }
+.br-sheet p, .br-sheet h1, .br-sheet h2, .br-sheet h3,
+.br-sheet figure, .br-sheet blockquote, .br-sheet ul, .br-sheet pre{ margin: 0; }
+.br-sheet a{ color: inherit; text-decoration: none; }
+
+/* Dark, for screens: the site's dark theme, with its lines made solid. */
+.br-sheet--dark{
+  --paper: #0b1411;
+  --paper-2: #111c17;
+  --card: #15211c;
+  --ink: #e4eee8;
+  --ink-70: #a7bbb0;
+  --ink-45: #7d9488;
+  --rule: #2b3833;
+  --rule-soft: #1d2924;
+  --brand: #3fbf86;
+  --brand-wash: #10201a;
+  --graphite: #c4ccc7;
+  --flag: #e0915a;
+  /* On a dark page the forest panel has to be lifted to read as a panel. */
+  --panel: #173a2b;
+  --panel-rule: #36594a;
+}
+.br-sheet--dark .br-org img{ filter: brightness(0) invert(1); opacity: 0.9; }
+
+
+/* ── Type ─────────────────────────────────────────────── */
+.br-mono{
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+.br-h1{
+  font-size: 84px;
+  font-weight: 700;
+  font-stretch: 112%;
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.br-h1 > span{ display: block; }
+.br-h2{
+  font-size: 30px;
+  font-weight: 700;
+  font-stretch: 108%;
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+.br-h3{
+  font-size: 13.5px;
+  font-weight: 600;
+  font-stretch: 105%;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.br-h3--big{ font-size: 17px; line-height: 1.2; letter-spacing: -0.015em; }
+.br-sheet p{ font-size: 12px; line-height: 1.5; color: var(--ink-70); }
+.br-sheet .br-h3 + p{ margin-top: 5px; }
+.br-n{
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--brand);
+  letter-spacing: 0.05em;
+}
+.br-label{ display: block; margin-bottom: 8px; }
+.br-fig{ color: var(--brand); margin-right: 10px; }
+
+/* The AI marker: what the context doc marks as using an AI model. */
+.br-ai{
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 4px;
+  border: 1px solid var(--brand);
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  color: var(--brand);
+  vertical-align: 2px;
+}
+
+/* ── Running head and foot ────────────────────────────── */
+.br-head{
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+.br-brand{
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: 17px; font-weight: 700; font-stretch: 110%; letter-spacing: -0.025em;
+}
+.br-brand img{ height: 24px; width: auto; display: block; }
+.br-foot{
+  margin-top: auto;
+  display: flex; justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule-soft);
+}
+
+/* ── The forest panel ─────────────────────────────────────
+   Office printers can't print to the edge, so a dark page is a panel
+   inset 8mm, with a paper frame that looks meant. Inside, the page's own
+   tokens are swapped for the panel's, so every part draws itself in the
+   right colours. Text sits 18mm from the sheet's edge. */
+.br-sheet--panel{ padding: 8mm; }
+.br-panel{
+  --ink: var(--on-panel);
+  --ink-70: var(--on-panel-70);
+  --ink-45: var(--on-panel-45);
+  --brand: var(--panel-brand);
+  --rule: var(--panel-rule);
+  --rule-soft: var(--panel-rule);
+  --graphite: var(--panel-pencil);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10mm;
+  background: var(--panel);
+  color: var(--ink);
+  border-radius: 3px;
+}
+.br-panel .br-head{ border-bottom: 0; }
+/* Single-colour partner logos are drawn white on the panel. */
+.br-panel .br-org img{ filter: brightness(0) invert(1); opacity: 0.92; }
+
+/* ── Pencil ───────────────────────────────────────────── */
+.br-note path, .br-underline path, .br-time-arrow path{
+  fill: none;
+  stroke: var(--graphite);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.br-note{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--hand);
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.05;
+  color: var(--graphite);
+}
+.br-note svg{ width: 40px; height: 16px; flex-shrink: 0; overflow: visible; }
+
+.br-dd{ position: absolute; width: 44px; height: 44px; overflow: visible; }
+.br-dd path{
+  fill: none;
+  stroke: var(--graphite);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.45;
+}
+
+/* ── Cover ────────────────────────────────────────────── */
+.br-cover{ flex: 1; display: flex; flex-direction: column; }
+.br-cover ~ .br-foot{ display: none; }
+.br-cover .br-h1{ margin-top: 92px; }
+.br-h1-second{ position: relative; color: var(--brand); }
+.br-underline{
+  position: absolute;
+  left: 0; bottom: -10px;
+  width: 62%; height: 18px;
+  overflow: visible;
+}
+.br-underline path{ stroke-width: 2.2; }
+.br-sheet .br-cover-tag{
+  margin-top: 36px;
+  max-width: 34ch;
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--ink-70);
+}
+
+.br-sheet .br-time{ margin-top: auto; padding-top: 22px; border-top: 1px solid var(--rule); }
+.br-time-row{ display: flex; align-items: flex-end; gap: 22px; }
+.br-time-v{ display: flex; flex-direction: column; gap: 6px; }
+.br-time-v b{
+  font-size: 76px;
+  font-weight: 700;
+  font-stretch: 112%;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--brand);
+}
+.br-time-v small{ margin-left: 5px; font-size: 26px; letter-spacing: -0.01em; }
+.br-time-v--before b{ color: var(--ink-45); }
+.br-time-arrow{ width: 140px; height: 34px; margin-bottom: 20px; overflow: visible; }
+.br-time-arrow path{ stroke-width: 1.9; }
+.br-sheet .br-time figcaption{ margin-top: 12px; font-size: 12.5px; color: var(--ink-70); }
+
+.br-cover-foot{
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 26px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--ink-45);
+}
+.br-org{ display: inline-flex; flex-shrink: 0; align-items: center; gap: 10px; white-space: nowrap; }
+.br-org img{ height: 28px; width: auto; display: block; }
+
+/* ── Chapter opener ───────────────────────────────────────
+   The numeral, huge and drawn in outline, like a question number in an
+   answer sheet's margin; the chapter's name and title beside it. */
+.br-opener{
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 24px;
+  align-items: end;
+  padding: 34px 0 26px;
+  border-bottom: 1.5px solid var(--ink);
+}
+.br-numeral{
+  font-size: 168px;
+  font-weight: 700;
+  font-stretch: 112%;
+  line-height: 0.76;
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1.6px var(--brand);
+}
+.br-chapter{ display: block; margin-bottom: 10px; color: var(--brand); }
+.br-sheet .br-intro{ margin-top: 12px; font-size: 13.5px; line-height: 1.55; }
+
+/* ── Chapter III: marking ─────────────────────────────── */
+.br-kinds{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding: 20px 0 24px;
+}
+.br-kinds .br-n{ display: block; margin-bottom: 5px; font-size: 12px; }
+
+/* A real screen, large, cut off by the page's left edge. Only its outer
+   margin is lost to an office printer's unprinted strip. */
+.br-show{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px;
+  gap: 26px;
+  margin-left: -14mm;
+}
+.br-bleed img{ display: block; width: 100%; height: auto; }
+.br-cap{ display: block; padding: 8px 0 0 14mm; font-size: 8.5px; }
+.br-show-side{ display: flex; flex-direction: column; padding-top: 6px; }
+.br-show-side .br-label{ color: var(--brand); }
+.br-note--shot{ margin-top: auto; margin-bottom: 64px; margin-left: -36px; }
+
+/* ── For students (on the panel) ──────────────────────── */
+.br-stu{ position: relative; flex: 1; display: flex; flex-direction: column; padding-top: 40px; }
+.br-stu > .br-label{ color: var(--brand); }
+.br-say-title{
+  font-size: 64px;
+  font-weight: 700;
+  font-stretch: 112%;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+.br-say-title span{ display: block; }
+.br-say-title span + span{ color: var(--brand); }
+.br-sheet .br-say-lede{ margin-top: 22px; max-width: 44ch; font-size: 15px; line-height: 1.45; }
+.br-stu-body{
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 30px;
+  align-items: start;
+  margin-top: auto;
+  margin-bottom: 24px;
+}
+.br-stu-shot img{ display: block; width: 100%; height: auto; border-radius: 6px; }
+.br-stu-shot .br-cap{ padding-left: 0; }
+.br-stu-list{ margin: 0; padding: 0; list-style: none; }
+.br-stu-list li{
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 2px 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+}
+.br-stu-list li:last-child{ border-bottom: 1px solid var(--rule); }
+.br-stu-list .br-say-n{ grid-row: span 2; }
+.br-say-n{
+  font-size: 28px;
+  font-weight: 700;
+  font-stretch: 112%;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.2px var(--brand);
+}
+.br-stu-list h3{ margin: 0; font-size: 16px; font-weight: 600; font-stretch: 106%; letter-spacing: -0.015em; }
+.br-sheet .br-stu-list p{ font-size: 12.5px; color: var(--ink-70); }
+
+/* What faculty can still do with the marks: one quiet row (chapter III). */
+.br-can{ margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--rule); }
+.br-can ul{ display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.br-can li{ font-size: 11.5px; line-height: 1.4; color: var(--ink-70); }
+.br-can b{ display: block; font-size: 12.5px; font-weight: 600; color: var(--ink); }
+
+.br-dd--book{ top: 118px; right: 60px; transform: rotate(6deg); }
+.br-dd--chart{ bottom: 120px; right: 70px; transform: rotate(-4deg); }
+.br-dd--say{ top: 40px; right: 0; width: 64px; height: 64px; transform: rotate(-6deg); }
+
+
+/* ── Cards drawn from the product (sample data) ───────── */
+.br-card{
+  position: relative;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--card);
+}
+.br-card-head{
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.br-card-foot{
+  padding: 8px 14px;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 8.5px;
+}
+.br-sample{ display: block; margin-top: 7px; font-size: 8px; }
+
+/* ── The case ─────────────────────────────────────────── */
+.br-case-top{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 40px;
+  padding: 40px 0 34px;
+}
+.br-sheet .br-case-lede{
+  font-size: 21px;
+  font-weight: 500;
+  font-stretch: 104%;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.br-contents ol{ margin: 0; padding: 0; list-style: none; border-top: 1.5px solid var(--ink); }
+.br-contents li{
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--rule-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+.br-contents-n{ font-family: var(--mono); font-size: 11px; color: var(--brand); }
+.br-contents-say{ font-weight: 500; color: var(--ink-70); }
+
+.br-replaces{ padding-top: 26px; border-top: 1px solid var(--rule); }
+.br-replaces .br-h2{ margin-bottom: 16px; }
+.br-table{ border-top: 1.5px solid var(--ink); }
+.br-tr{
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 24px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.br-eg{ display: block; margin-top: 2px; font-size: 10.5px; color: var(--ink-45); }
+
+.br-proof{ margin-top: auto; padding-bottom: 22px; }
+.br-figures{ display: flex; gap: 46px; padding-bottom: 18px; }
+.br-figures div{ display: flex; flex-direction: column; gap: 6px; }
+.br-figures b{
+  font-size: 46px;
+  font-weight: 700;
+  font-stretch: 112%;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+.br-figures div:last-child b{ color: var(--brand); }
+.br-proof-row{
+  display: flex; align-items: center; gap: 26px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--ink-45);
+}
+.br-sheet .br-origin{ color: var(--ink-45); }
+
+/* ── Chapter I: setting ───────────────────────────────── */
+.br-set{
+  display: grid;
+  grid-template-columns: 400px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  padding-top: 26px;
+}
+.br-pdf{ position: relative; }
+.br-pdf-file{
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 10px;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.br-pdf-icon{
+  grid-row: span 2;
+  width: 30px; height: 36px;
+  display: grid; place-items: end center;
+  padding-bottom: 4px;
+  border: 1px solid var(--rule);
+  border-radius: 2px 8px 2px 2px;
+  font-family: var(--mono); font-size: 7.5px; font-weight: 500;
+  color: var(--brand);
+}
+.br-pdf-file b{ font-size: 12px; font-weight: 600; }
+.br-pdf-file small{ margin-left: 8px; font-size: 10.5px; color: var(--ink-45); }
+.br-pdf-ask{ font-size: 8.5px; }
+.br-drafts{ margin: 0; padding: 0 14px; list-style: none; }
+.br-drafts li{ padding: 9px 0; border-bottom: 1px solid var(--rule-soft); }
+.br-drafts li:last-child{ border-bottom: 0; }
+.br-drafts .br-mono{ font-size: 8px; color: var(--brand); }
+.br-sheet .br-drafts p{ margin-top: 3px; font-size: 12px; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.br-acts{ display: flex; gap: 6px; margin-top: 6px; }
+.br-acts span{
+  padding: 1px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-size: 10px; font-weight: 600;
+  color: var(--ink-70);
+}
+.br-acts span:first-child{ border-color: var(--brand); color: var(--brand); }
+.br-note--pdf{ position: absolute; left: calc(100% + 14px); bottom: 34px; width: 210px; }
+
+.br-rubric{ margin-top: 128px; }
+.br-sheet .br-rubric-q{ padding: 10px 14px 4px; font-size: 12px; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.br-rubric ul{ margin: 0; padding: 4px 14px 10px; list-style: none; }
+.br-rubric li{
+  display: flex; justify-content: space-between; gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-size: 11.5px;
+  color: var(--ink-70);
+}
+.br-rubric li b{ font-family: var(--mono); font-weight: 500; color: var(--brand); }
+
+.br-stats{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1.5px solid var(--ink);
+}
+.br-stats b{
+  display: block;
+  font-size: 48px;
+  font-weight: 700;
+  font-stretch: 112%;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: transparent;
+  -webkit-text-stroke: 1.4px var(--brand);
+}
+.br-sheet .br-stats p{ margin-top: 8px; }
+.br-sheet .br-also{
+  display: flex; flex-wrap: wrap; gap: 4px 0;
+  margin-top: 22px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-70);
+}
+.br-sheet .br-also{ gap: 6px 18px; }
+.br-also span::before{ content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--brand); vertical-align: 1px; }
+
+/* ── Chapter II: sitting ──────────────────────────────── */
+.br-sit{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 30px;
+  align-items: start;
+  padding-top: 26px;
+}
+.br-controls{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 22px; }
+.br-controls .br-n{ display: block; margin-bottom: 4px; font-size: 12px; }
+.br-log{ position: relative; }
+.br-sheet .br-log-sub{ padding: 8px 14px 4px; font-size: 11px; color: var(--ink-45); }
+.br-log table{ width: calc(100% - 28px); margin: 0 14px 10px; border-collapse: collapse; }
+.br-log td{ padding: 6px 0; border-bottom: 1px solid var(--rule-soft); font-size: 11.5px; color: var(--ink-70); }
+.br-log tr:last-child td{ border-bottom: 0; }
+.br-log td.br-mono{ width: 70px; font-size: 9.5px; letter-spacing: 0.05em; }
+.br-log td:nth-child(2){ width: 82px; font-weight: 600; color: var(--ink); }
+.br-flag{
+  display: inline-block;
+  width: 7px; height: 7px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: var(--flag);
+}
+.br-note--log{ margin-top: 10px; margin-left: 140px; transform: rotate(-2deg); }
+.br-note--log svg{ transform: rotate(60deg); }
+
+.br-replay{
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 30px;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: 26px;
+  padding: 22px 24px 20px;
+  background: var(--brand-wash);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+.br-replay .br-label{ color: var(--brand); }
+.br-track{ padding: 0 10px; }
+.br-track-line{
+  position: relative;
+  height: 96px;
+  margin: 0 28px;
+  background: linear-gradient(var(--ink-45), var(--ink-45)) left 50% / 100% 2px no-repeat;
+}
+.br-step{
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 6px;
+  margin-top: -6px;
+}
+.br-step i{
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--brand);
+  background: var(--card);
+}
+.br-step > span{
+  position: absolute;
+  bottom: 18px;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.05em;
+  color: var(--ink-70);
+}
+.br-step--low > span{ bottom: auto; top: 18px; }
+.br-step--flag i{ border-color: var(--flag); background: var(--flag); }
+.br-step--flag > span{ color: var(--flag); }
+.br-step:first-child i, .br-step:last-child i{ background: var(--brand); }
+
+/* ── Chapter IV: reading ──────────────────────────────── */
+.br-show--right{
+  grid-template-columns: 200px minmax(0, 1fr);
+  margin-left: 0;
+  margin-right: -14mm;
+  padding-top: 26px;
+}
+.br-show--right .br-cap{ padding-left: 0; }
+.br-chat .br-label{ color: var(--brand); }
+.br-sheet .br-chat-q{
+  margin-left: 22px;
+  padding: 8px 10px;
+  background: var(--brand-wash);
+  border: 1px solid var(--rule);
+  border-radius: 8px 8px 2px 8px;
+  font-size: 12px; font-weight: 600; line-height: 1.4;
+  color: var(--ink);
+}
+.br-sheet .br-chat-a{
+  margin-top: 8px;
+  margin-right: 14px;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 8px 8px 8px 2px;
+  background: var(--card);
+  font-size: 11.5px; line-height: 1.45;
+}
+.br-sheet .br-chat-body{ margin-top: 14px; }
+.br-note--chat{ margin-top: 14px; margin-left: 4px; transform: rotate(-2deg); }
+.br-note--chat svg{ transform: rotate(90deg); }
+.br-rep{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+.br-rep .br-h3{ font-size: 13px; }
+
+/* ── Chapter V: running, and the offer ────────────────── */
+.br-pair{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+.br-pair > div{ padding: 16px 18px; }
+.br-pair > div + div{ border-left: 1px solid var(--rule); background: var(--brand-wash); }
+.br-it{
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  gap: 28px;
+  margin-top: 22px;
+}
+.br-sheet .br-it-ai{ font-size: 13px; line-height: 1.55; }
+.br-list{ margin: 0; padding: 0; list-style: none; }
+.br-list li{
+  position: relative;
+  padding: 5px 0 5px 18px;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink-70);
+}
+.br-list li:last-child{ border-bottom: 1px solid var(--rule-soft); }
+.br-list li::before{
+  content: '';
+  position: absolute; left: 1px; top: 10px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--brand);
+}
+
+/* The offer sits on a forest panel inside the page, as the back of the
+   booklet. */
+.br-close{
+  position: relative;
+  flex: 0 0 auto;
+  margin-top: auto;
+  margin-bottom: 18px;
+  padding: 26px 26px 22px;
+}
+.br-quote{ position: relative; margin: 0; padding-left: 26px; }
+.br-quote::before{
+  content: '\201C';
+  position: absolute; left: -2px; top: -8px;
+  font-size: 48px; font-weight: 700; line-height: 1;
+  color: var(--brand);
+}
+.br-sheet .br-quote p{
+  font-size: 18px;
+  font-weight: 500;
+  font-stretch: 104%;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.br-quote footer{ margin-top: 10px; }
+.br-cta{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 22px;
+  align-items: end;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+.br-cta-k{ display: block; margin-bottom: 6px; color: var(--brand); }
+.br-sheet .br-cta-text{
+  max-width: 30ch;
+  font-size: 17px;
+  font-weight: 600;
+  font-stretch: 105%;
+  line-height: 1.28;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.br-contact{ display: flex; flex-direction: column; align-items: flex-end; gap: 3px; text-align: right; }
+.br-contact a{ font-size: 12px; font-weight: 600; }
+/* A QR code needs dark modules on light, so on the panel it gets a tile. */
+.br-qr{ display: block; padding: 5px; background: #fff; border-radius: 3px; }
+.br-qr img{ display: block; width: 66px; height: 66px; }
+
+
+/* ── Print: the sheets alone, one per A4 page ─────────────
+   Scoped to this view, so its rules never reach another page's print. */
+@page{ size: A4; margin: 0; }
+@media print{
+  body:has(.br-doc){ margin: 0; padding: 0; background: #fff; display: block; }
+  body:has(.br-doc) .br-toolbar{ display: none; }
+  .br-root{ padding: 0; min-height: 0; background: none; }
+  .br-doc{ display: block; }
+  .br-sheet{
+    box-shadow: none;
+    break-after: page;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .br-sheet:last-child{ break-after: auto; }
+}
