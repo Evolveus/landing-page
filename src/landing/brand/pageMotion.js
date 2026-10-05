@@ -159,11 +159,20 @@ export function useTheme() {
    target, stopping below the fixed nav. */
 export function useSmoothScroll() {
   useEffect(() => {
-    const lenis = new Lenis({
-      autoRaf: true,
-      lerp: 0.075,
-      anchors: { offset: -64 },
-    });
+    if (!motionOK()) return undefined;
+
+    let lenis;
+    try {
+      lenis = new Lenis({
+        autoRaf: true,
+        lerp: 0.075,
+        anchors: { offset: -64 },
+      });
+    } catch {
+      // Native scrolling remains fully functional when smooth scrolling is unsupported.
+      return undefined;
+    }
+
     return () => lenis.destroy();
   }, []);
 }
