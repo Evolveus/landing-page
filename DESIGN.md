@@ -159,9 +159,9 @@ The web rules carry over with these changes.
   more than the bubble.
 - **Light for paper, dark for screens.** The light version is the one to
   print. A dark version (the site's dark tokens with solid lines) is for
-  sending as a PDF or showing on a screen; the page has a Light/Dark
-  switch. Either way the sheet sets its own tokens, so the reader's system
-  theme never decides which one comes out. On dark, single-colour partner
+  sending as a PDF or showing on a screen. On screen the sheets follow
+  the site's theme; Save as PDF asks which one to save, so the saved
+  file is always a choice. The sheet sets its own tokens either way. On dark, single-colour partner
   logos are drawn white and the QR code keeps a white tile.
 - **Solid lines.** Office printers drop 7% and 14% alpha lines. On paper use
   solid colours: rule `#c4ccc7`, soft rule `#dfe4e0`, empty bubble
@@ -183,13 +183,17 @@ The web rules carry over with these changes.
   `--paper-2` stays for insets.
 - **Export through the browser's print to PDF** (`window.print()` with
   `@page { size: A4; margin: 0 }` and a print rule that shows only the
-  sheet; see `src/flyer/flyer.css`). That gives a vector PDF with real
+  sheet; see `src/print/viewer.css`). That gives a vector PDF with real
   text and working links, drawn exactly as on screen. Don't go back to
   html2canvas (the old brochure's export, removed 2026-10-05): it drops
   negative letter-spacing, `font-stretch`, SVG transforms and some SVG
   images, so headlines widen, doodles vanish and the QR code turns into a
-  black block. Scope a piece's print rules to its own view
-  (`body:has(.fl-sheet)`): every stylesheet loads on every route.
+  black block. Every print piece is shown in the shared viewer
+  (`src/print/Viewer.jsx`): the site's nav on top, then a document bar
+  with the name, the page count and Save as PDF, then the sheets on a
+  desk, scaled to fit narrow screens. On screen the sheets follow the
+  site's Light/Dark; Save as PDF asks which of the two to save. Its print rules apply only to its sheets; every
+  stylesheet loads on every route, so never hide `body *` for print.
 - **Check the PDF itself, not the screen,** including once with the system
   in dark mode. Draw animated things (pencil strokes) in their final
   state.

@@ -13,35 +13,6 @@
 /* The handwriting at the weight the pencil notes use (see flyer.css). */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap');
 
-.br-root{
-  min-height: 100vh;
-  background: #e6e9e6;
-  padding: 40px 24px 64px;
-  box-sizing: border-box;
-}
-.br-doc{ display: flex; flex-direction: column; align-items: center; gap: 32px; }
-
-/* ── Toolbar (screen only, outside the sheets) ────────── */
-.br-toolbar{ position: fixed; top: 18px; right: 18px; z-index: 50; display: flex; gap: 10px; }
-.br-btn{
-  display: inline-flex; align-items: center; gap: 8px;
-  border: 1px solid #0f6b45;
-  border-radius: 3px;
-  padding: 11px 18px;
-  background: #0f6b45;
-  color: #fff;
-  font: 600 13px 'Archivo', system-ui, sans-serif;
-  cursor: pointer;
-}
-.br-btn:hover{ background: #0a5236; border-color: #0a5236; }
-.br-btn--ghost{ background: #fff; color: #0d1f17; border-color: #c4ccc7; }
-.br-btn--ghost:hover{ background: #f4f6f2; border-color: #a3b3aa; }
-.br-themes{ display: flex; }
-.br-themes .br-btn{ border-radius: 0; }
-.br-themes .br-btn:first-child{ border-radius: 3px 0 0 3px; }
-.br-themes .br-btn:last-child{ border-radius: 0 3px 3px 0; margin-left: -1px; }
-.br-themes .br-btn[aria-pressed="true"]{ background: #0d1f17; color: #fff; border-color: #0d1f17; }
-
 /* ── The sheet ────────────────────────────────────────── */
 .br-sheet{
   /* Light values, set here so the system theme can't reach the pages;
@@ -86,7 +57,6 @@
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
   flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(13, 31, 23, 0.12);
 }
 .br-sheet *, .br-sheet *::before, .br-sheet *::after{ box-sizing: border-box; }
 .br-sheet p, .br-sheet h1, .br-sheet h2, .br-sheet h3,
@@ -765,21 +735,3 @@
 /* A QR code needs dark modules on light, so on the panel it gets a tile. */
 .br-qr{ display: block; padding: 5px; background: #fff; border-radius: 3px; }
 .br-qr img{ display: block; width: 66px; height: 66px; }
-
-
-/* ── Print: the sheets alone, one per A4 page ─────────────
-   Scoped to this view, so its rules never reach another page's print. */
-@page{ size: A4; margin: 0; }
-@media print{
-  body:has(.br-doc){ margin: 0; padding: 0; background: #fff; display: block; }
-  body:has(.br-doc) .br-toolbar{ display: none; }
-  .br-root{ padding: 0; min-height: 0; background: none; }
-  .br-doc{ display: block; }
-  .br-sheet{
-    box-shadow: none;
-    break-after: page;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  .br-sheet:last-child{ break-after: auto; }
-}

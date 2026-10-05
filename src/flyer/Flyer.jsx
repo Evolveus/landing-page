@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Icon } from "../landing/_shared/Icon";
+import Viewer from "../print/Viewer";
 import { BRAND, BRAND_LOGO, TRUST } from "../landing/content";
 import { FLYER } from "./content";
 import "./flyer.css";
@@ -9,127 +8,85 @@ import "./flyer.css";
    saying what each part of it is. See DESIGN.md §8 for the print rules.
 
    Two themes: light for paper, dark for screens (email, chat, a
-   projector). The choice is remembered in this browser.
+   projector). On screen it follows the site's theme; Save as PDF asks
+   which to save.
 
-   It saves through the browser's own print to PDF (flyer.css sets the
-   page), not html2canvas: that keeps the text as text, the links
-   clickable, and the type and pencil exactly as drawn on screen. */
-const THEME_KEY = "evolveus-flyer-theme";
+   It is shown in the shared print viewer (src/print/Viewer.jsx), which
+   saves through the browser's own print to PDF: the text stays text,
+   the links work, and the type and pencil come out as drawn. */
+const DOC_TITLE = { light: FLYER.title, dark: FLYER.titleDark };
 
-function savedTheme() {
-  try {
-    return localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light";
-  } catch {
-    return "light";
-  }
-}
-
-export default function Flyer({ onHome }) {
-  const [theme, setTheme] = useState(savedTheme);
-  const dark = theme === "dark";
-  useEffect(() => {
-    try { localStorage.setItem(THEME_KEY, theme); } catch { /* private mode: not remembered */ }
-  }, [theme]);
-
-  // Print to PDF names the file after the page title.
-  useEffect(() => {
-    const was = document.title;
-    document.title = dark ? FLYER.titleDark : FLYER.title;
-    return () => { document.title = was; };
-  }, [dark]);
+export default function Flyer() {
   const site = `https://${BRAND.domain}`;
 
   return (
-    <div className="fl-root">
-      <div className="fl-toolbar">
-        {onHome && (
-          <button className="fl-btn fl-btn--ghost" onClick={onHome}>
-            Home
-          </button>
-        )}
-        <div className="fl-themes" role="group" aria-label="Theme">
-          {["light", "dark"].map((t) => (
-            <button
-              key={t}
-              className="fl-btn fl-btn--ghost"
-              aria-pressed={theme === t}
-              onClick={() => setTheme(t)}
-            >
-              <Icon name={t === "dark" ? "moon" : "sun"} size={14} strokeWidth={2} />
-              {t === "dark" ? "Dark" : "Light"}
-            </button>
-          ))}
-        </div>
-        <button className="fl-btn" onClick={() => window.print()}>
-          <Icon name="download" size={14} strokeWidth={2} />
-          Save as PDF
-        </button>
-      </div>
+    <Viewer title="Flyer" docTitle={DOC_TITLE}>
+      {(dark) => (
+        <article className={`fl-sheet${dark ? " fl-sheet--dark" : ""}`}>
+          <Doodle at="aplus" />
 
-      <article className={`fl-sheet${dark ? " fl-sheet--dark" : ""}`}>
-        <Doodle at="aplus" />
+          <header className="fl-mast">
+            <span className="fl-brand">
+              <img src={dark ? BRAND_LOGO.markDark : BRAND_LOGO.mark} alt="" />
+              {BRAND.name}
+            </span>
+            <a className="fl-mono" href={site}>{BRAND.domain}</a>
+          </header>
 
-        <header className="fl-mast">
-          <span className="fl-brand">
-            <img src={dark ? BRAND_LOGO.markDark : BRAND_LOGO.mark} alt="" />
-            {BRAND.name}
-          </span>
-          <a className="fl-mono" href={site}>{BRAND.domain}</a>
-        </header>
+          <section className="fl-hero">
+            <h1 className="fl-h1">
+              {FLYER.headline.map((line) => <span key={line}>{line}</span>)}
+            </h1>
+          </section>
 
-        <section className="fl-hero">
-          <h1 className="fl-h1">
-            {FLYER.headline.map((line) => <span key={line}>{line}</span>)}
-          </h1>
-        </section>
+          <MarkedAnswer />
 
-        <MarkedAnswer />
-
-        <section className="fl-ai">
-          <Doodle at="bulb" />
-          <span className="fl-mono">{FLYER.aiLabel}</span>
-          <div className="fl-ai-grid">
-            {FLYER.ai.map((a) => (
-              <div className="fl-ai-item" key={a.n}>
-                <span className="fl-ai-n">{a.n}</span>
-                <h3 className="fl-h3">{a.title}</h3>
-                <p>{a.body}</p>
+          <section className="fl-ai">
+            <Doodle at="bulb" />
+            <span className="fl-mono">{FLYER.aiLabel}</span>
+            <div className="fl-ai-grid">
+              {FLYER.ai.map((a) => (
+                <div className="fl-ai-item" key={a.n}>
+                  <span className="fl-ai-n">{a.n}</span>
+                  <h3 className="fl-h3">{a.title}</h3>
+                  <p>{a.body}</p>
+                </div>
+              ))}
+              <div className="fl-replay">
+                <span className="fl-mono">{FLYER.replay.label}</span>
+                <p>{FLYER.replay.body}</p>
               </div>
-            ))}
-            <div className="fl-replay">
-              <span className="fl-mono">{FLYER.replay.label}</span>
-              <p>{FLYER.replay.body}</p>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <p className="fl-also">
-          <span className="fl-mono">{FLYER.alsoLabel}</span>
-          {FLYER.also.map((a) => <span key={a}>{a}</span>)}
-        </p>
+          <p className="fl-also">
+            <span className="fl-mono">{FLYER.alsoLabel}</span>
+            {FLYER.also.map((a) => <span key={a}>{a}</span>)}
+          </p>
 
-        <section className="fl-proof">
-          <span className="fl-org">
-            {FLYER.inUse}
-            <img src={TRUST.logo} alt={TRUST.org} />
-          </span>
-          <span className="fl-proof-n">{FLYER.proof}</span>
-        </section>
-        <p className="fl-hosting">{FLYER.hosting}</p>
+          <section className="fl-proof">
+            <span className="fl-org">
+              {FLYER.inUse}
+              <img src={TRUST.logo} alt={TRUST.org} />
+            </span>
+            <span className="fl-proof-n">{FLYER.proof}</span>
+          </section>
+          <p className="fl-hosting">{FLYER.hosting}</p>
 
-        <footer className="fl-cta">
-          <div className="fl-cta-text">
-            <span className="fl-mono fl-cta-k">{FLYER.cta.kicker}</span>
-            <p>{FLYER.cta.text}</p>
-          </div>
-          <div className="fl-contact">
-            <a href={`mailto:${BRAND.email}`}>{BRAND.email}</a>
-            <a href={site}>{BRAND.domain}</a>
-          </div>
-          <a className="fl-qr" href={site}><img src={FLYER.qr} alt={`QR code for ${BRAND.domain}`} /></a>
-        </footer>
-      </article>
-    </div>
+          <footer className="fl-cta">
+            <div className="fl-cta-text">
+              <span className="fl-mono fl-cta-k">{FLYER.cta.kicker}</span>
+              <p>{FLYER.cta.text}</p>
+            </div>
+            <div className="fl-contact">
+              <a href={`mailto:${BRAND.email}`}>{BRAND.email}</a>
+              <a href={site}>{BRAND.domain}</a>
+            </div>
+            <a className="fl-qr" href={site}><img src={FLYER.qr} alt={`QR code for ${BRAND.domain}`} /></a>
+          </footer>
+        </article>
+      )}
+    </Viewer>
   );
 }
 
