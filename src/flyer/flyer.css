@@ -141,10 +141,10 @@
 .fl-brand img{ height: 24px; width: auto; display: block; }
 
 /* ── Headline ─────────────────────────────────────────── */
-.fl-hero{ padding: 40px 0 38px; }
+.fl-hero{ padding: 34px 0 32px; }
 
 /* ── The marked answer, as a card, annotated in pencil ── */
-.fl-ans{ padding-bottom: 40px; }
+.fl-ans{ padding-bottom: 34px; }
 .fl-card{
   position: relative;
   width: 460px;
@@ -274,13 +274,27 @@
 .fl-replay .fl-mono{ color: var(--brand); }
 .fl-replay p{ margin-top: 6px; font-size: 13px; font-weight: 600; line-height: 1.35; }
 
+/* ── One line of range ────────────────────────────────── */
+.fl-sheet .fl-also{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 0;
+  margin-top: 24px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-70);
+}
+.fl-also .fl-mono{ margin-right: 12px; color: var(--brand); }
+.fl-also span + span:not(:nth-child(2))::before{ content: '·'; margin: 0 9px; color: var(--ink-45); }
+
 /* ── In use at, and where it runs ─────────────────────── */
 .fl-proof{
   display: flex;
   align-items: center;
   gap: 22px;
-  margin-top: 36px;
-  padding-top: 16px;
+  margin-top: 16px;
+  padding-top: 14px;
   border-top: 1px solid var(--rule-soft);
   font-size: 12px;
   color: var(--ink-45);

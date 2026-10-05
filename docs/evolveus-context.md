@@ -270,6 +270,10 @@ don't.
 | Brochure (4 pages A4) | Dean takes it away, passes to HoDs and IT; ten minutes | The case: what it replaces, AI at each stage, safeguards, a page for IT | Offer |
 | Deck | A room, presented in person; half an hour | The story told live: problem, demo flow, AI, trust, deployment | "Send us a paper" |
 
+Flyer range line (added 2026-10-05): one mono line teasing high-value
+features the flyer doesn't cover, "Plus: Class insights after each exam ·
+Topic mastery by section · Locked lab exams · Bloom's and CO tags".
+
 Brochure pages: (1) cover and the case, (2) AI and marking, (3) reports and
 exam security, (4) for IT (hosting, data, own AI models) and the offer.
 
@@ -315,6 +319,8 @@ existing steps, layout unchanged), then brochure, then deck.
 - Human content is welcome, but not cheesy. A team backstory section was
   tried twice and dropped. The origin gets one plain line at most, worded
   per §1 (the old line "Developed at the School of AI..." was wrong).
+- Don't label students as weak or struggling (decided 2026-10-05). Talk
+  about insights, follow-ups or topics that need work instead.
 - Print pieces use copy of their own, not lines lifted from the home
   page.
 - Print headlines may be catchy (decided 2026-10-05): short, bold, true
