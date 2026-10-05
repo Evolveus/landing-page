@@ -10,37 +10,6 @@
    a face of its own that the subset cannot stand in for. */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap');
 
-.fl-root{
-  min-height: 100vh;
-  background: #e6e9e6;
-  display: flex;
-  justify-content: center;
-  padding: 40px 24px 64px;
-  box-sizing: border-box;
-}
-
-/* ── Toolbar (screen only, outside the sheet) ─────────── */
-.fl-toolbar{ position: fixed; top: 18px; right: 18px; z-index: 50; display: flex; gap: 10px; }
-.fl-btn{
-  display: inline-flex; align-items: center; gap: 8px;
-  border: 1px solid #0f6b45;
-  border-radius: 3px;
-  padding: 11px 18px;
-  background: #0f6b45;
-  color: #fff;
-  font: 600 13px 'Archivo', system-ui, sans-serif;
-  cursor: pointer;
-}
-.fl-btn:hover{ background: #0a5236; border-color: #0a5236; }
-.fl-btn:disabled{ opacity: 0.6; cursor: progress; }
-.fl-btn--ghost{ background: #fff; color: #0d1f17; border-color: #c4ccc7; }
-.fl-btn--ghost:hover{ background: #f4f6f2; border-color: #a3b3aa; }
-.fl-themes{ display: flex; }
-.fl-themes .fl-btn{ border-radius: 0; }
-.fl-themes .fl-btn:first-child{ border-radius: 3px 0 0 3px; }
-.fl-themes .fl-btn:last-child{ border-radius: 0 3px 3px 0; margin-left: -1px; }
-.fl-themes .fl-btn[aria-pressed="true"]{ background: #0d1f17; color: #fff; border-color: #0d1f17; }
-
 /* ── The sheet ────────────────────────────────────────── */
 .fl-sheet{
   /* Light values, set here so the system theme can't reach the page;
@@ -339,19 +308,3 @@
 }
 .fl-dd--bulb{ top: 18px; left: 150px; width: 40px; height: 40px; transform: rotate(8deg); }
 .fl-dd--aplus{ bottom: 150px; right: 70px; width: 40px; height: 40px; transform: rotate(-5deg); }
-
-/* ── Print: the sheet alone, one A4 page, colours as drawn ──
-   Scoped to this view: the stylesheet loads on every route, and an
-   unscoped rule would blank out other pages' prints. */
-@page{ size: A4; margin: 0; }
-@media print{
-  html:has(.fl-sheet), body:has(.fl-sheet){ margin: 0; padding: 0; background: #fff; }
-  body:has(.fl-sheet) *{ visibility: hidden; }
-  .fl-sheet, .fl-sheet *{ visibility: visible; }
-  .fl-root{ padding: 0; min-height: 0; background: none; display: block; }
-  .fl-sheet{
-    position: fixed; left: 0; top: 0;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-}

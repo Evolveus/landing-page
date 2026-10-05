@@ -1,0 +1,153 @@
+/* ─────────────────────────────────────────────────────────────
+   The screen around a print piece (Viewer.jsx): the site's nav, a bar
+   for the document under it, and the sheets on a plain desk below. The
+   nav and bar wear the site's tokens (.rg, register.css), so they follow
+   the site's theme like every other page; the desk follows it too. The
+   sheets set their own tokens and are untouched by it. Print shows the
+   sheets alone; see the end of the file.
+   ───────────────────────────────────────────────────────────── */
+
+/* index.css makes <body> a padded, centred column for other views. */
+body.is-viewer{
+  display: block !important;
+  margin: 0;
+  padding: 0 !important;
+  gap: 0 !important;
+  background: #e8ece9;
+}
+.rg.pv{
+  --pv-desk: #e8ece9;
+  min-height: 100vh;
+  padding-top: 68px; /* the fixed nav's room */
+  background: var(--pv-desk);
+}
+
+/* The site's dark theme: from the system unless the nav's toggle picked
+   one (html[data-theme]), as in register.css. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) body.is-viewer{ background: #060c0a; }
+  :root:not([data-theme="light"]) .rg.pv{ --pv-desk: #060c0a; }
+}
+:root[data-theme="dark"] body.is-viewer{ background: #060c0a; }
+:root[data-theme="dark"] .rg.pv{ --pv-desk: #060c0a; }
+
+/* ── The nav and the document bar ─────────────────────── */
+/* The nav is fixed (68px, 58px once scrolled); the document bar sticks
+   just under it. */
+.pv-bar{
+  position: sticky;
+  top: 58px;
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 52px;
+  padding: 0 var(--gutter);
+  background: var(--nav-bg);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.pv-bar-l, .pv-bar-r{ display: flex; align-items: center; gap: 16px; min-width: 0; }
+.pv-title{
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 600;
+  font-stretch: 105%;
+  letter-spacing: -0.01em;
+}
+.pv-count{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-45);
+}
+
+/* ── The desk, and the sheets on it ───────────────────── */
+.pv-pages{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 40px 0 72px;
+}
+/* A sheet lies on the desk: a short contact shadow (DESIGN.md §2). */
+.pv-pages > *{ box-shadow: 0 1px 2px rgba(5, 10, 8, 0.12), 0 6px 18px -8px rgba(5, 10, 8, 0.25); }
+:root[data-theme="dark"] .pv-pages > *{ box-shadow: 0 0 0 1px #1d2924; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .pv-pages > *{ box-shadow: 0 0 0 1px #1d2924; }
+}
+
+/* Save as PDF is the site's own small button (register.css); it opens a
+   small choice of the theme to save in. */
+.pv-save-wrap{ position: relative; }
+.pv-save{ cursor: pointer; }
+.pv-ask{
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 248px;
+  padding: 10px 8px 8px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  box-shadow: 0 10px 28px -12px rgba(5, 10, 8, 0.35);
+}
+.pv-ask-k{
+  padding: 0 8px 6px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+.pv-ask-opt{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 9px 8px;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.pv-ask-opt:hover, .pv-ask-opt:focus-visible{ background: var(--paper-2); outline: none; }
+.pv-ask-opt svg{ flex-shrink: 0; color: var(--brand); }
+.pv-ask-opt b{ display: block; font-size: 14px; font-weight: 600; }
+.pv-ask-opt small{ display: block; font-size: 12.5px; color: var(--ink-45); }
+
+@media (max-width: 640px){
+  .pv-bar{ height: 48px; gap: 8px; }
+  .pv-save{ padding-left: 10px; padding-right: 10px; }
+  .pv-bar-l, .pv-bar-r{ gap: 8px; }
+  .pv-btn-text{ display: none; }
+  .pv-pages{ gap: 16px; padding: 16px 0 40px; }
+}
+
+/* ── Print: the sheets alone, one per A4 page, at full size ── */
+@page{ size: A4; margin: 0; }
+@media print{
+  body.is-viewer{ background: #fff !important; }
+  .rg.pv{ min-height: 0; padding: 0; background: none; }
+  .pv .rg-nav, .pv-bar{ display: none; }
+  .pv-pages{ display: block; padding: 0; zoom: 1 !important; }
+  .pv-pages > *{
+    box-shadow: none !important;
+    break-after: page;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .pv-pages > *:last-child{ break-after: auto; }
+}
