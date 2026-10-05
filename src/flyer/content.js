@@ -42,6 +42,10 @@ export const FLYER = {
     body: "Replay any student's exam afterwards, answer by answer.",
   },
 
+  // One quiet line of range, so the flyer hints at what it leaves out.
+  alsoLabel: 'Plus',
+  also: ['Class insights after each exam', 'Topic mastery by section', 'Locked lab exams', "Bloom's and CO tags"],
+
   inUse: 'In use at',
   proof: '2,000+ exams · 200,000+ answers marked',
   hosting: 'Runs on our cloud or your campus, with your own AI models if you prefer.',

@@ -103,6 +103,11 @@ export default function Flyer({ onHome }) {
           </div>
         </section>
 
+        <p className="fl-also">
+          <span className="fl-mono">{FLYER.alsoLabel}</span>
+          {FLYER.also.map((a) => <span key={a}>{a}</span>)}
+        </p>
+
         <section className="fl-proof">
           <span className="fl-org">
             {FLYER.inUse}
