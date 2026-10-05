@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useScrollProgress, useStuck, useTheme } from './pageMotion';
+import { useNavScroll, useTheme } from './pageMotion';
 import { Icon } from '../_shared/Icon';
+import { ContactForm } from '../_shared/ContactForm';
 import { FootMural, GraphiteDefs } from './footMural';
 import { BRAND, BRAND_LOGO, SITE_NAV, SIGNIN_LINK, BRAND_FOOTER } from '../content';
 
@@ -43,6 +44,15 @@ export function Lockup({ light = false }) {
   );
 }
 
+/* The small marker above a page or section headline: a filled bubble and
+   a mono label. */
+export const Eyebrow = ({ children }) => (
+  <Rv className="rg-eyebrow">
+    <span className="rg-bub rg-bub--fill" />
+    <span className="rg-mono">{children}</span>
+  </Rv>
+);
+
 /* A link as seen from a page with the given base: an in-page link
    ('#…') is taken to that base; a path is left as it is. */
 const onPage = (base, href) => (href.startsWith('#') ? `${base}${href}` : href);
@@ -76,17 +86,44 @@ export function SectionHead({ code, kicker, title, lede, walk }) {
   );
 }
 
+/* The dark contact band at the foot of a page: the pitch on the left,
+   the form on the right. `cta` is the page's { eyebrow, headline, sub };
+   `sub` and `contact` override the plain sub line and the email link. */
+export function ContactSection({ cta, sub = cta.sub, contact, submitLabel = 'Request a walkthrough' }) {
+  return (
+    <section className="rg-sec rg-sec--dark" id="contact">
+      <div className="rg-wrap">
+        <div className="rg-cta-grid">
+          <div>
+            <Eyebrow>{cta.eyebrow}</Eyebrow>
+            <Rv as="h2" className="rg-h2 rg-cta-h rg-rv--mask" delay={60}>{cta.headline}</Rv>
+            <Rv as="p" className="rg-lede" delay={120} style={{ marginTop: 22 }}>{sub}</Rv>
+            <Rv className="rg-cta-contact" delay={180}>
+              {contact ?? (
+                <a href={`mailto:${BRAND.email}`}>
+                  <Icon name="mail" size={14} />
+                  {BRAND.email}
+                </a>
+              )}
+            </Rv>
+          </div>
+          <Rv delay={160}>
+            <ContactForm submitLabel={submitLabel} />
+          </Rv>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* The nav.
 
-   `base` prefixes the section anchors. On the home page the sections are
-   on this document, so it is empty. On any other page it is "/", which
-   turns each link into a real navigation back to the home page's anchor.
-   `home` is where the logo goes; a page that is not the home page but
-   keeps its own anchors (base empty) passes "/". `links` replaces the
-   standard section links for a page with sections of its own. */
-export function Nav({ base = '', home, links: own, extra = [] }) {
-  const stuck = useStuck();
-  const progress = useScrollProgress();
+   `base` prefixes the "#contact" button. A page with its own contact
+   section leaves it empty; any other page passes "/", which sends the
+   button to the home page's form. `home` is where the logo goes; a page
+   that is not the home page but has its own contact section passes "/". */
+export function Nav({ base = '', home }) {
+  const [stuck, progress] = useNavScroll();
   const [theme, toggleTheme] = useTheme();
   const [menu, setMenu] = useState(false);
 
@@ -98,11 +135,6 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
     return () => mq.removeEventListener('change', sync);
   }, []);
 
-  const links = [
-    ...(own ?? SITE_NAV).map((l) => ({ ...l, href: onPage(base, l.href) })),
-    ...extra,
-  ];
-
   return (
     <nav className={`rg-nav ${stuck ? 'is-stuck' : ''}`}>
       <div className="rg-wrap rg-nav-in">
@@ -110,7 +142,7 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
           <Lockup />
         </a>
         <div className="rg-nav-links">
-          {links.map((l) => (
+          {SITE_NAV.map((l) => (
             <a key={l.href} href={l.href} aria-current={isHere(l.href) ? 'page' : undefined}>
               {l.label}
             </a>
@@ -151,7 +183,7 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
 
       <div className="rg-menu" id="rg-menu" hidden={!menu}>
         <div className="rg-wrap">
-          {[...links, SIGNIN_LINK].map((l) => (
+          {[...SITE_NAV, SIGNIN_LINK].map((l) => (
             <a key={l.href} href={l.href} onClick={() => setMenu(false)}>
               <span className="rg-bub" />
               {l.label}
@@ -164,14 +196,11 @@ export function Nav({ base = '', home, links: own, extra = [] }) {
 }
 
 /* The footer. `base` behaves as it does in the nav. */
-export function Footer({ base = '', extra = [] }) {
+export function Footer({ base = '' }) {
   const columns = BRAND_FOOTER.columns.map((col) => ({
     ...col,
     links: col.links.map((l) => ({ ...l, href: onPage(base, l.href) })),
   }));
-  if (extra.length) {
-    columns[0] = { ...columns[0], links: [...columns[0].links, ...extra] };
-  }
 
   return (
     <footer className="rg-foot">

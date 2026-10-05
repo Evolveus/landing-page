@@ -75,35 +75,28 @@ export function useReveal() {
   return root;
 }
 
-/* True once the page has scrolled past the nav's resting height. */
-export function useStuck(offset = 24) {
-  const [stuck, setStuck] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setStuck(window.scrollY > offset);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [offset]);
-  return stuck;
-}
-
 /* True when the visitor has not asked for reduced motion. */
 export function motionOK() {
   return typeof window !== 'undefined'
     && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-/* Drives the hairline progress bar in the nav — how far down the page you are.
+/* The nav's scroll state: whether the page has scrolled past the nav's
+   resting height, and a ref for the hairline progress bar — how far down
+   the page you are.
 
-   Writes straight from the scroll handler rather than batching through
-   requestAnimationFrame: this is one transform write with no layout read,
-   and rAF is throttled to a standstill in some embedded/background views. */
-export function useScrollProgress() {
+   Writes the bar straight from the scroll handler rather than batching
+   through requestAnimationFrame: this is one transform write with no
+   layout read, and rAF is throttled to a standstill in some
+   embedded/background views. */
+export function useNavScroll() {
+  const [stuck, setStuck] = useState(false);
   const bar = useRef(null);
   useEffect(() => {
     const el = bar.current;
-    if (!el) return;
     const update = () => {
+      setStuck(window.scrollY > 24);
+      if (!el) return;
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
       el.style.transform = `scaleX(${p.toFixed(4)})`;
@@ -116,7 +109,7 @@ export function useScrollProgress() {
       window.removeEventListener('resize', update);
     };
   }, []);
-  return bar;
+  return [stuck, bar];
 }
 
 

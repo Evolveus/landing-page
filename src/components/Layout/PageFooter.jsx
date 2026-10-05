@@ -1,6 +1,6 @@
-export default function PageFooter({ chapter, light = false }) {
+export default function PageFooter({ chapter }) {
   return (
-    <div className={`colophon${light ? " colophon--light" : ""}`}>
+    <div className="colophon">
       <div className="rule" />
       <span>EVOLVEUS · 2026</span>
       <span>{chapter}</span>

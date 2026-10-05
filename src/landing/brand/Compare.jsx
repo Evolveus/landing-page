@@ -1,8 +1,7 @@
 import './register.css';
 import './compare.css';
 import { Icon } from '../_shared/Icon';
-import { ContactForm } from '../_shared/ContactForm';
-import { Nav, Footer, Rv, SectionHead } from './chrome';
+import { Nav, Footer, Rv, SectionHead, Eyebrow, ContactSection } from './chrome';
 import { useReveal } from './pageMotion';
 import {
   BRAND, COMPARE_HERO, COMPARE_ALTERNATIVES, COMPARE_COLUMNS, COMPARE_ROWS,
@@ -17,8 +16,6 @@ import {
    that is filled, half filled, or empty. Nothing new is invented for
    this page; the facts come from ../content.js.
    ═══════════════════════════════════════════════════════════════ */
-
-const FOOTER_EXTRA = [{ href: '/compare', label: 'Compare' }];
 
 const MARK = {
   full: { label: 'Built for this', icon: 'check' },
@@ -50,10 +47,7 @@ export default function Compare() {
       {/* ── HERO ────────────────────────────────────────── */}
       <header className="rg-hero cm-hero" id="top">
         <div className="rg-wrap rg-hero-in">
-          <Rv className="rg-eyebrow">
-            <span className="rg-bub rg-bub--fill" />
-            <span className="rg-mono">{COMPARE_HERO.eyebrow}</span>
-          </Rv>
+          <Eyebrow>{COMPARE_HERO.eyebrow}</Eyebrow>
 
           <Rv as="h1" className="rg-display rg-rv--mask" delay={80}>
             {(() => {
@@ -219,32 +213,18 @@ export default function Compare() {
       </section>
 
       {/* ── CONTACT ─────────────────────────────────────── */}
-      <section className="rg-sec rg-sec--dark" id="contact">
-        <div className="rg-wrap">
-          <div className="rg-cta-grid">
-            <div>
-              <Rv className="rg-eyebrow">
-                <span className="rg-bub rg-bub--fill" />
-                <span className="rg-mono">{COMPARE_CTA.eyebrow}</span>
-              </Rv>
-              <Rv as="h2" className="rg-h2 rg-cta-h rg-rv--mask" delay={60}>{COMPARE_CTA.headline}</Rv>
-              <Rv as="p" className="rg-lede" delay={120} style={{ marginTop: 22 }}>{COMPARE_CTA.sub}</Rv>
-              <Rv className="rg-cta-contact" delay={180}>
-                <a href={`https://${BRAND.domain}`} target="_blank" rel="noreferrer">
-                  <Icon name="globe" size={14} />
-                  {BRAND.domain}
-                </a>
-              </Rv>
-            </div>
+      <ContactSection
+        cta={COMPARE_CTA}
+        contact={
+          <a href={`https://${BRAND.domain}`} target="_blank" rel="noreferrer">
+            <Icon name="globe" size={14} />
+            {BRAND.domain}
+          </a>
+        }
+        submitLabel="Send us last semester's paper"
+      />
 
-            <Rv delay={160}>
-              <ContactForm submitLabel="Send us last semester's paper" />
-            </Rv>
-          </div>
-        </div>
-      </section>
-
-      <Footer base="/" extra={FOOTER_EXTRA} />
+      <Footer base="/" />
     </div>
   );
 }

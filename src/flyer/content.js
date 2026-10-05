@@ -1,6 +1,4 @@
-import { useRef, useState } from "react";
-
-// ─── Shared flyer content (single source of truth for all versions) ───
+// ─── Flyer copy ───
 export const FLYER = {
   brand: "Evolveus",
   brandSub: "Assessment Platform",
@@ -86,33 +84,3 @@ export const FLYER = {
   ],
   contact: { site: "evolveus.in", email: "aksay@evolveus.in" },
 };
-
-// ─── Shared A4 → PDF export hook ───
-export function useA4Export(filename, backgroundColor) {
-  const ref = useRef(null);
-  const [exporting, setExporting] = useState(false);
-
-  const exportPDF = async () => {
-    setExporting(true);
-    try {
-      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
-      const canvas = await html2canvas(ref.current, {
-        scale: 3,
-        useCORS: true,
-        logging: false,
-        backgroundColor: backgroundColor ?? null,
-      });
-      const imgData = canvas.toDataURL("image/jpeg", 0.98);
-      const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
-      pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
-      pdf.save(filename);
-    } finally {
-      setExporting(false);
-    }
-  };
-
-  return { ref, exporting, exportPDF };
-}

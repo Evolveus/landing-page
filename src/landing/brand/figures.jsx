@@ -1,5 +1,5 @@
 import { Rv } from './chrome';
-import { TRUST } from '../content';
+import { BRAND, TRUST } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
    FIGURES — the answer-sheet exhibits shared by the brand pages:
@@ -36,9 +36,18 @@ export function Exhibit({ fig, label, children }) {
   );
 }
 
-export function Shot({ src, alt, caption, fig, label, className = '', delay = 0 }) {
+/* The browser-chrome strip over a product screenshot: the address and
+   three window dots. */
+export const ShotBar = ({ path }) => (
+  <div className="rg-shot-bar">
+    <span className="rg-mono">{BRAND.domain} / {path}</span>
+    <span className="rg-shot-dots"><i /><i /><i /></span>
+  </div>
+);
+
+export function Shot({ src, alt, caption, fig, label, delay = 0 }) {
   return (
-    <Rv as="figure" className={`rg-shot-fig ${className}`} delay={delay}>
+    <Rv as="figure" className="rg-shot-fig" delay={delay}>
       <Exhibit fig={fig} label={label}>
         <ThemedImg src={src} alt={alt} />
       </Exhibit>
@@ -52,7 +61,7 @@ export function Shot({ src, alt, caption, fig, label, className = '', delay = 0 
    bubbles under it with the matching one shaded. The shading runs left
    to right when the strip scrolls into view (see .rg-omr in the CSS).
    Commas become a narrow gap; a trailing "+" is written after the boxes. */
-export function OmrNumber({ text }) {
+function OmrNumber({ text }) {
   const plus = text.endsWith('+');
   const groups = text.replace('+', '').split(',');
   let col = 0;

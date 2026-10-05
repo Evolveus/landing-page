@@ -8,6 +8,19 @@ const REQUIRED_FIELDS = [
   "contactNumber",
 ];
 
+// How each submitted field is labelled in the emails, in display order.
+const FIELD_LABELS = [
+  ["Name", "name"],
+  ["Email", "email"],
+  ["Organisation", "organisationName"],
+  ["Number of students", "numberOfStudents"],
+  ["Contact number", "contactNumber"],
+];
+
+const fieldRows = (contact, labels = FIELD_LABELS) =>
+  labels.map(([label, key]) => [label, contact[key]]);
+
+
 class ContactError extends Error {
   constructor(message, statusCode = 500, details = null) {
     super(message);
@@ -25,17 +38,14 @@ const escapeHtml = (value) =>
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 
-const splitRecipients = (value = "") =>
+const splitList = (value = "") =>
   value
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
 
-const splitOrigins = (value = "") =>
-  value
-    .split(",")
-    .map((item) => item.trim().replace(/\/$/, ""))
-    .filter(Boolean);
+const splitOrigins = (value) =>
+  splitList(value).map((origin) => origin.replace(/\/$/, ""));
 
 const defaultAllowedOrigins = (env) => [
   "http://localhost:5173",
@@ -88,13 +98,10 @@ const applyCorsHeaders = (req, res, env = process.env) => {
   return isAllowed;
 };
 
-const normalizeContactPayload = (body = {}) => ({
-  email: String(body.email ?? "").trim(),
-  name: String(body.name ?? "").trim(),
-  organisationName: String(body.organisationName ?? "").trim(),
-  numberOfStudents: String(body.numberOfStudents ?? "").trim(),
-  contactNumber: String(body.contactNumber ?? "").trim(),
-});
+const normalizeContactPayload = (body = {}) =>
+  Object.fromEntries(
+    REQUIRED_FIELDS.map((field) => [field, String(body[field] ?? "").trim()]),
+  );
 
 const validateContactPayload = (body) => {
   const contact = normalizeContactPayload(body);
@@ -145,7 +152,7 @@ const getMailConfig = (env) => {
     );
   }
 
-  const recipients = splitRecipients(env.SEND_TO);
+  const recipients = splitList(env.SEND_TO);
   if (recipients.length === 0) {
     throw new ContactError("Contact form email recipients are not configured.", 500);
   }
@@ -181,6 +188,17 @@ const emailFieldRows = (fields) =>
       `,
     )
     .join("");
+
+const fieldsTable = (rows, padding) => `
+      <tr>
+        <td style="padding: ${padding};">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse; background: #faf6ec; border: 1px solid #c4b89e;">
+            <tbody>
+              ${emailFieldRows(rows)}
+            </tbody>
+          </table>
+        </td>
+      </tr>`;
 
 const emailShell = ({ eyebrow, title, intro, body, footer }) => `
   <!doctype html>
@@ -253,23 +271,7 @@ const leadEmailHtml = (contact) => `
     title: "New demo request",
     intro:
       "A new institution has submitted the Evolveus demonstration form. The submitted details are listed below.",
-    body: `
-      <tr>
-        <td style="padding: 8px 30px 28px;">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse; background: #faf6ec; border: 1px solid #c4b89e;">
-            <tbody>
-              ${emailFieldRows([
-                ["Name", contact.name],
-                ["Email", contact.email],
-                ["Organisation", contact.organisationName],
-                ["Number of students", contact.numberOfStudents],
-                ["Contact number", contact.contactNumber],
-              ])}
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    `,
+    body: fieldsTable(fieldRows(contact), "8px 30px 28px"),
     footer:
       "Replying to this email will respond directly to the contact email submitted in the form.",
   })}
@@ -297,25 +299,13 @@ const acknowledgementHtml = (contact) => `
           </table>
         </td>
       </tr>
-      <tr>
-        <td style="padding: 12px 30px 26px;">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse; background: #faf6ec; border: 1px solid #c4b89e;">
-            <tbody>
-              ${emailFieldRows([
-                ["Organisation", contact.organisationName],
-                ["Number of students", contact.numberOfStudents],
-                ["Contact number", contact.contactNumber],
-              ])}
-            </tbody>
-          </table>
-        </td>
-      </tr>
+      ${fieldsTable(fieldRows(contact, FIELD_LABELS.slice(2)), "12px 30px 26px")}
     `,
     footer: "Regards,<br />The Evolveus team",
   })}
 `;
 
-export const sendContactEmails = async (body, env = process.env) => {
+const sendContactEmails = async (body, env = process.env) => {
   const contact = validateContactPayload(body);
   const config = getMailConfig(env);
   const from = `"${config.fromName.replaceAll('"', "'")}" <${config.user}>`;
@@ -339,11 +329,7 @@ export const sendContactEmails = async (body, env = process.env) => {
       text: [
         "New Evolveus demo request",
         "",
-        `Name: ${contact.name}`,
-        `Email: ${contact.email}`,
-        `Organisation: ${contact.organisationName}`,
-        `Number of students: ${contact.numberOfStudents}`,
-        `Contact number: ${contact.contactNumber}`,
+        ...fieldRows(contact).map(([label, value]) => `${label}: ${value}`),
       ].join("\n"),
       html: leadEmailHtml(contact),
     }),

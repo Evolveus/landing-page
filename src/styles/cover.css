@@ -30,19 +30,6 @@
   padding-top: 8mm;
 }
 
-.p1-issue {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 0.5px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 36px;
-}
-.p1-issue-vol { color: var(--ink); font-weight: 600; }
-.p1-issue-dot { color: var(--text-soft); }
-
 .p1-display {
   font-family: var(--serif);
   font-weight: 400;
@@ -101,14 +88,6 @@
   flex-direction: column;
   gap: 12px;
 }
-.p1-partner {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 13px;
-  color: var(--ink);
-  letter-spacing: -0.2px;
-}
-
 .p1-partner-logo {
   height: 36px;
   width: auto;

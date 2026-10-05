@@ -1,6 +1,6 @@
 import './register.css';
 import { Icon } from '../_shared/Icon';
-import { Rv, SectionHead, Nav, Footer } from './chrome';
+import { Rv, SectionHead, Nav, Footer, Eyebrow } from './chrome';
 import { UsageFigures } from './figures';
 import { useReveal, useSmoothScroll } from './pageMotion';
 import { ABOUT_PAGE, BRAND } from '../content';
@@ -10,8 +10,6 @@ import { ABOUT_PAGE, BRAND } from '../content';
    docs/evolveus-context.md: where it started, what it covers, where it
    runs today, the founding notes' reasons, and where it is going.
    ═══════════════════════════════════════════════════════════════ */
-
-const FOOTER_EXTRA = [{ href: '/compare', label: 'Compare' }];
 
 export default function About() {
   const root = useReveal();
@@ -24,10 +22,7 @@ export default function About() {
 
       <header className="rg-pagehead" id="top">
         <div className="rg-wrap">
-          <Rv className="rg-eyebrow">
-            <span className="rg-bub rg-bub--fill" />
-            <span className="rg-mono">{ABOUT_PAGE.eyebrow}</span>
-          </Rv>
+          <Eyebrow>{ABOUT_PAGE.eyebrow}</Eyebrow>
           <Rv as="h1" className="rg-display rg-pagehead-h rg-rv--mask" delay={60}>{ABOUT_PAGE.title}</Rv>
           <Rv as="p" className="rg-lede" delay={120}>{ABOUT_PAGE.lede}</Rv>
         </div>
@@ -103,7 +98,7 @@ export default function About() {
         </div>
       </section>
 
-      <Footer extra={FOOTER_EXTRA} />
+      <Footer />
     </div>
   );
 }

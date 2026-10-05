@@ -1,9 +1,15 @@
+import { useRef } from "react";
 import { Icon } from "../landing/_shared/Icon";
-import { FLYER, useA4Export } from "./content";
+import { FLYER } from "./content";
+import { useA4Export } from "../exportA4";
 import "./FlyerV1.css";
 
 export default function FlyerV1({ onHome }) {
-  const { ref, exporting, exportPDF } = useA4Export("evolveus-flyer-v1.pdf", "#080c0b");
+  const ref = useRef(null);
+  const [exporting, exportPDF] = useA4Export(() => [ref.current], "evolveus-flyer-v1.pdf", {
+    scale: 3,
+    backgroundColor: "#080c0b",
+  });
   const c = FLYER;
 
   return (

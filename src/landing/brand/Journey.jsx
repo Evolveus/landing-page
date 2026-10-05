@@ -2,12 +2,11 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import './register.css';
 import './journey.css';
 import { Icon } from '../_shared/Icon';
-import { ContactForm } from '../_shared/ContactForm';
-import { Rv, Nav, Footer } from './chrome';
+import { Rv, Nav, Footer, ContactSection } from './chrome';
 import { motionOK, useReveal, useSmoothScroll } from './pageMotion';
-import { UsageFigures, ThemedImg } from './figures';
+import { UsageFigures, ThemedImg, ShotBar } from './figures';
 import {
-  TRUST, MASTERY_SAMPLE, BRAND,
+  TRUST, MASTERY_SAMPLE,
   JOURNEY_OPEN, JOURNEY_TOUR, BRAND_ROLES, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
 } from '../content';
 
@@ -42,17 +41,19 @@ const CAMERA = [
 ];
 
 const ease = (x) => x * x * (3 - 2 * x);
+const lerp = (a, b, f) => a + (b - a) * f;
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
 function cameraAt(t) {
   const k = Math.min(CAMERA.length - 2, Math.floor(t));
-  const f = ease(Math.min(1, Math.max(0, t - k)));
+  const f = ease(clamp01(t - k));
   const a = CAMERA[k];
   const b = CAMERA[k + 1];
   return {
-    rx: a.rx + (b.rx - a.rx) * f,
-    rz: a.rz + (b.rz - a.rz) * f,
-    s: a.s + (b.s - a.s) * f,
-    x: a.x + (b.x - a.x) * f,
+    rx: lerp(a.rx, b.rx, f),
+    rz: lerp(a.rz, b.rz, f),
+    s: lerp(a.s, b.s, f),
+    x: lerp(a.x, b.x, f),
   };
 }
 
@@ -76,11 +77,14 @@ const PLAY = 0.8;
 const UNIT_LENGTH = { 2: 2 };
 const unitLength = (k) => UNIT_LENGTH[k] ?? 1;
 // Where each unit starts on the track, in --per shares.
-const unitStarts = (units) => Array.from({ length: units + 1 }, (_, k) => {
+const unitStarts = (units) => {
   let at = 0;
-  for (let i = 0; i < k; i++) at += unitLength(i);
-  return at;
-});
+  return Array.from({ length: units + 1 }, (_, k) => {
+    const start = at;
+    at += unitLength(k);
+    return start;
+  });
+};
 // The share of the gate after which step 1's text takes over.
 const GATE_DONE = 0.82;
 // How the stage follows the scroll: the most units (steps) it moves in a
@@ -192,7 +196,7 @@ function useJourney(stepCount) {
 
     // Where the scroll position says the story should be.
     const target = () => {
-      const u = Math.min(1, Math.max(0, (window.scrollY + pinTop - top) / span)) * starts[units];
+      const u = clamp01((window.scrollY + pinTop - top) / span) * starts[units];
       let idx = 0;
       while (idx < units - 1 && u >= starts[idx + 1]) idx++;
       const f = (u - starts[idx]) / unitLength(idx);
@@ -202,7 +206,7 @@ function useJourney(stepCount) {
     let last = -2;
     const render = (t) => {
       for (let k = 0; k <= stepCount; k++) {
-        host.style.setProperty(`--p${k}`, Math.min(1, Math.max(0, t - k)).toFixed(3));
+        host.style.setProperty(`--p${k}`, clamp01(t - k).toFixed(3));
       }
       // Which unit is playing: unit k covers t in (k, k + 1]. The gate
       // (unit 0) hands over to step 1 once its tin is open and the
@@ -225,7 +229,7 @@ function useJourney(stepCount) {
       // Turned over (flip 1), the eraser end touches the paper where the
       // point would have. Position is set by the point, so step it back
       // along the pencil's axis by the pencil's length.
-      const fe = flip * flip * (3 - 2 * flip);
+      const fe = ease(flip);
       const angle = contact.a + 180 * fe;
       const rad = (angle * Math.PI) / 180;
       const reach = PEN_LENGTH * fe;
@@ -494,8 +498,6 @@ const ROW_WINDOWS = [
 ];
 const TRAVEL = 0.055;
 
-const lerp = (a, b, f) => a + (b - a) * f;
-const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
 /* The pencil's state for a given story position. `marks` holds, per row,
    the point to shade, or for the descriptive row a line ([x0, y, x1]),
@@ -643,6 +645,18 @@ const LOG = [
 const BARS = [14, 30, 62, 104, 150, 118, 60, 22];
 const OWN_BAND = 6;
 
+/* The five faces of one 3D bar, shared by the histogram and the mastery
+   grid. `top` is what sits on the top face (the mastery value). */
+const BarFaces = ({ top }) => (
+  <>
+    <i className="jy-bar-back" />
+    <i className="jy-bar-left" />
+    <i className="jy-bar-front" />
+    <i className="jy-bar-side" />
+    <i className="jy-bar-top">{top}</i>
+  </>
+);
+
 const FOLLOW_UP = [
   ['Student 041', 'Left 3 blank'],
   ['Student 087', 'Finished in 9 min'],
@@ -681,11 +695,7 @@ function Desk() {
       <div className="jy-chart">
         {BARS.map((h, i) => (
           <div className={`jy-bar ${i === OWN_BAND ? 'is-own' : ''}`} key={i} style={{ '--i': i, '--h': h }}>
-            <i className="jy-bar-back" />
-            <i className="jy-bar-left" />
-            <i className="jy-bar-front" />
-            <i className="jy-bar-side" />
-            <i className="jy-bar-top" />
+            <BarFaces />
             {i === OWN_BAND && (
               <span className="jy-own-tag">
                 <span className="rg-mono">This paper</span>
@@ -725,11 +735,7 @@ function Desk() {
                 key={c}
                 style={{ '--r': r, '--c': c, '--i': r * 3 + c, '--h': Math.round(v * 1.05) }}
               >
-                <i className="jy-bar-back" />
-                <i className="jy-bar-left" />
-                <i className="jy-bar-front" />
-                <i className="jy-bar-side" />
-                <i className="jy-bar-top"><span>{v}</span></i>
+                <BarFaces top={<span>{v}</span>} />
               </div>
             ))}
           </Fragment>
@@ -873,10 +879,7 @@ function Tour() {
         <p className="jy-tour-sum" key={role.id}>{role.summary}</p>
       </div>
       <div className="rg-shot jy-tour-shot">
-        <div className="rg-shot-bar">
-          <span className="rg-mono">{BRAND.domain} / {role.id}</span>
-          <span className="rg-shot-dots"><i /><i /><i /></span>
-        </div>
+        <ShotBar path={role.id} />
         <div className="jy-tour-stack">
           {TOUR_ROLES.map((r, k) => (
             <div key={r.id} className={`jy-tour-img ${k === at ? 'is-on' : ''}`} aria-hidden={k !== at}>
@@ -886,16 +889,20 @@ function Tour() {
         </div>
       </div>
       <div className="jy-tour-foot">
-        <a className="jy-more" href="/product#roles">
-          {JOURNEY_TOUR.more}
-          <Icon name="arrowRight" size={14} />
-        </a>
+        <MoreLink href="/product#roles">{JOURNEY_TOUR.more}</MoreLink>
       </div>
     </div>
   );
 }
 
-const FOOTER_EXTRA = [{ href: '/compare', label: 'Compare' }];
+/* "More on this" style link: a label and a right arrow. */
+const MoreLink = ({ size = 14, children, ...rest }) => (
+  <a className="jy-more" {...rest}>
+    {children}
+    <Icon name="arrowRight" size={size} />
+  </a>
+);
+
 /* Text with one phrase in it underlined in pencil, drawn once the text
    has come in. */
 function Underlined({ text, phrase }) {
@@ -1023,10 +1030,7 @@ export default function Journey() {
                       <li key={f}><span className="rg-bub rg-bub--fill" />{f}</li>
                     ))}
                   </ul>
-                  <a className="jy-more" href={s.more} tabIndex={i === active ? 0 : -1}>
-                    More on this
-                    <Icon name="arrowRight" size={13} />
-                  </a>
+                  <MoreLink href={s.more} size={13} tabIndex={i === active ? 0 : -1}>More on this</MoreLink>
                 </article>
               ))}
             </div>
@@ -1043,10 +1047,7 @@ export default function Journey() {
             <Rv as="p" className="jy-handoff-line">{JOURNEY_PROOF.line}</Rv>
             <Rv as="p" className="jy-handoff-sub" delay={60}>{JOURNEY_PROOF.sub}</Rv>
             <Rv delay={120}>
-              <a className="jy-more" href="/product">
-                {JOURNEY_PROOF.link}
-                <Icon name="arrowRight" size={14} />
-              </a>
+              <MoreLink href="/product">{JOURNEY_PROOF.link}</MoreLink>
             </Rv>
           </div>
           <div className="jy-handoff-figs">
@@ -1062,10 +1063,7 @@ export default function Journey() {
           <div>
             <Rv as="h2" className="rg-h2 jy-brief-h">{JOURNEY_BRIEF.deploy.title}</Rv>
             <Rv delay={60}>
-              <a className="jy-more" href="/product#deployment">
-                {JOURNEY_BRIEF.deploy.more}
-                <Icon name="arrowRight" size={14} />
-              </a>
+              <MoreLink href="/product#deployment">{JOURNEY_BRIEF.deploy.more}</MoreLink>
             </Rv>
           </div>
           <ul className="jy-brief-list">
@@ -1080,33 +1078,12 @@ export default function Journey() {
       </section>
 
       {/* ── CONTACT ─────────────────────────────────────── */}
-      <section className="rg-sec rg-sec--dark" id="contact">
-        <div className="rg-wrap">
-          <div className="rg-cta-grid">
-            <div>
-              <Rv className="rg-eyebrow">
-                <span className="rg-bub rg-bub--fill" />
-                <span className="rg-mono">{JOURNEY_CTA.eyebrow}</span>
-              </Rv>
-              <Rv as="h2" className="rg-h2 rg-cta-h rg-rv--mask" delay={60}>{JOURNEY_CTA.headline}</Rv>
-              <Rv as="p" className="rg-lede" delay={120} style={{ marginTop: 22 }}>
-                <Underlined text={JOURNEY_CTA.sub} phrase={JOURNEY_CTA.underline} />
-              </Rv>
-              <Rv className="rg-cta-contact" delay={180}>
-                <a href={`mailto:${BRAND.email}`}>
-                  <Icon name="mail" size={14} />
-                  {BRAND.email}
-                </a>
-              </Rv>
-            </div>
-            <Rv delay={160}>
-              <ContactForm submitLabel="Request a walkthrough" />
-            </Rv>
-          </div>
-        </div>
-      </section>
+      <ContactSection
+        cta={JOURNEY_CTA}
+        sub={<Underlined text={JOURNEY_CTA.sub} phrase={JOURNEY_CTA.underline} />}
+      />
 
-      <Footer extra={FOOTER_EXTRA} />
+      <Footer />
     </div>
   );
 }

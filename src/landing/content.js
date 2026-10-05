@@ -1,12 +1,9 @@
 // ─────────────────────────────────────────────────────────────
-// Canonical copy for the EvolveUs landing page. Every design variant
-// (Design 1 through 6) states the same facts, sourced from FEATURES.md.
-// Nothing here is invented. Do not add testimonials, customer names,
-// or numbers that aren't backed by FEATURES.md.
+// Canonical copy for the Evolveus site pages (src/landing/brand). The
+// facts are sourced from FEATURES.md. Nothing here is invented. Do not
+// add testimonials, customer names, or numbers that aren't backed by
+// FEATURES.md.
 // ─────────────────────────────────────────────────────────────
-
-export const SUMMARY =
-  'EvolveUs gives institutions a complete assessment management system, from academic setup to secure exam delivery and result analysis. It reduces manual work for administrators and faculty, improves exam control, supports diverse question formats, and gives students a clear, organised assessment experience.';
 
 export const BRAND = {
   name: 'Evolveus',
@@ -14,382 +11,12 @@ export const BRAND = {
   email: 'aksay@evolveus.in',
 };
 
-export const NAV_LINKS = [
-  { href: '#platform', label: 'Platform' },
-  { href: '#question-types', label: 'Question Types' },
-  { href: '#roles', label: 'Roles' },
-  { href: '#security', label: 'Security' },
-  { href: '#ai-evaluation', label: 'AI Evaluation' },
-  { href: '#deployment', label: 'Deployment' },
-];
-
-export const HERO = {
-  eyebrow: 'Digital assessment platform',
-  headline: 'Run exams your institution can stand behind.',
-  sub: 'EvolveUs is a complete digital assessment platform for educational institutions: course planning, question banks, secure online exams, evaluation, and student performance review in one system.',
-  primaryCta: 'Request a demo',
-  secondaryCta: 'See the platform',
-};
-
-export const STATS = [
-  { n: '2,000+', l: 'Quizzes conducted' },
-  { n: '200,000+', l: 'Student responses processed' },
-  { n: '8', l: 'Question types supported' },
-  { n: '7', l: 'Programming languages for coding questions' },
-  { n: '12', l: 'Exam violation signals tracked' },
-];
-
-export const PILLARS = [
-  {
-    n: '01',
-    title: 'Coding assessment',
-    icon: 'code',
-    body: 'Sandboxed execution against visible and hidden test cases, with partial marking, time and memory limits, and support for seven languages.',
-    bullets: [
-      'In-browser code editor',
-      'Boilerplate and driver code',
-      'Reference solutions for setup',
-      'Language selectable per question',
-    ],
-  },
-  {
-    n: '02',
-    title: 'Question bank',
-    icon: 'database',
-    body: "Reusable question banks organised by topic and tagged with Bloom’s taxonomy and course outcomes. Bulk upload runs through spreadsheet templates.",
-    bullets: [
-      'Topic-based organisation',
-      "Bloom’s taxonomy: remember through create",
-      'CO1 to CO8 mapping',
-      'Bulk upload with row validation',
-    ],
-  },
-  {
-    n: '03',
-    title: 'Secure examination',
-    icon: 'shieldCheck',
-    body: 'Twelve violation signals tracked in real time, fullscreen enforcement, kiosk mode, and IP or subnet restriction by lab.',
-    bullets: [
-      'Tab-switch detection',
-      'Copy, paste, and right-click blocking',
-      'Kiosk validation gate',
-      'Password-protected access',
-    ],
-  },
-  {
-    n: '04',
-    title: 'AI evaluation',
-    icon: 'brain',
-    body: 'LLM-assisted grading for descriptive and fill-in-the-blank answers, using a provider you connect. Faculty reviews every score before it counts.',
-    bullets: [
-      'Bring your own API key',
-      'Any OpenAI-compatible provider',
-      'Rubric-based scoring',
-      'Manual override always available',
-    ],
-  },
-  {
-    n: '05',
-    title: 'Analytics and reporting',
-    icon: 'chart',
-    body: 'Per-student, per-question, and class-wide breakdowns, with course outcome attainment tracking exportable for accreditation.',
-    bullets: [
-      'Difficulty trend analysis',
-      'CO attainment reports',
-      'Submission and violation tracking',
-      'Accreditation-ready exports',
-    ],
-  },
-  {
-    n: '06',
-    title: 'Institution management',
-    icon: 'building',
-    body: 'Departments, semesters, batches, courses, and labs live in one place, with role-based access for every user type.',
-    bullets: [
-      'Department, batch, and semester setup',
-      'Course assignment at scale',
-      'Lab IP-subnet configuration',
-      'User and profile management',
-    ],
-  },
-];
-
-export const QUESTION_TYPES = [
-  {
-    num: '01',
-    label: 'Single-choice MCQ',
-    icon: 'radio',
-    desc: 'One correct answer from several options, with shuffle and negative marking.',
-    grading: 'Fully automated.',
-  },
-  {
-    num: '02',
-    label: 'Multiple-choice MCQ',
-    icon: 'checkSquare',
-    desc: 'Two or more correct answers, with full-only or partial marking.',
-    grading: 'Automated, partial marking configurable.',
-  },
-  {
-    num: '03',
-    label: 'True or false',
-    icon: 'toggle',
-    desc: 'Binary choice for quick concept checks, with negative marking support.',
-    grading: 'Fully automated.',
-  },
-  {
-    num: '04',
-    label: 'Descriptive',
-    icon: 'edit',
-    desc: 'Long-form written answers graded against a faculty-set rubric.',
-    grading: 'AI-assisted, faculty can override.',
-  },
-  {
-    num: '05',
-    label: 'Fill-in-the-blank',
-    icon: 'iBeam',
-    desc: 'Exact match or, where enabled, semantic match via LLM for equivalent phrasing.',
-    grading: 'Automated or AI-assisted.',
-  },
-  {
-    num: '06',
-    label: 'Match-the-following',
-    icon: 'link',
-    desc: 'Students pair items across two columns, with proportional credit per pair.',
-    grading: 'Fully automated.',
-  },
-  {
-    num: '07',
-    label: 'File upload',
-    icon: 'upload',
-    desc: 'Documents, images, or project archives, submitted through secure signed links.',
-    grading: 'Manual, faculty enters score and remarks.',
-  },
-  {
-    num: '08',
-    label: 'Coding',
-    icon: 'code',
-    desc: 'In-browser editor with sandboxed execution against visible and hidden test cases.',
-    grading: 'Automated, partial marks by test cases passed.',
-  },
-];
-
-export const ROLES = [
-  {
-    id: 'admin',
-    label: 'Administrator',
-    icon: 'building',
-    src: '/staffDashboard.png',
-    summary: 'Manages the academic structure, configures users, and monitors platform health across the institution.',
-    features: [
-      'Manage departments, batches, semesters, and courses',
-      'Create users and assign roles across admin, manager, faculty, and student',
-      'Configure lab IP subnets for restricted exam access',
-      'View platform-wide usage metrics and quiz summaries',
-      'Audit logs for faculty actions, exam edits, and score overrides',
-      'Bulk-create courses and users through spreadsheet upload',
-    ],
-  },
-  {
-    id: 'faculty',
-    label: 'Faculty',
-    icon: 'edit',
-    src: '/bankQuestions.png',
-    summary: 'Builds question banks, designs exams, configures evaluation, and reviews results.',
-    features: [
-      'Create reusable question banks organised by topic',
-      "Tag questions with Bloom’s taxonomy and CO1 to CO8 mapping",
-      'Configure coding test cases, boilerplate, and reference solutions',
-      'Schedule quizzes to courses, batches, or individual students',
-      'Review AI-generated grades and override any score before publishing',
-      'Export class-wide results for accreditation and academic records',
-    ],
-  },
-  {
-    id: 'student',
-    label: 'Student',
-    icon: 'graduation',
-    src: '/studentDashboard.png',
-    summary: 'Sees assigned quizzes, attempts them securely, and tracks results.',
-    features: [
-      'View active, upcoming, completed, and missed quizzes',
-      'Timer-based exam interface with a question navigation panel',
-      'Answers save continuously during the exam',
-      'Write and run code in an in-browser editor with language selection',
-      'Upload files for file-based questions',
-      'View published results once released',
-    ],
-  },
-];
-
-export const SECURITY_SIGNALS = [
-  'Tab switching, detected and logged in real time',
-  'Window focus loss',
-  'Fullscreen exit, flagged with a return-to-fullscreen prompt',
-  'Suspicious window resizing',
-  'Copy, paste, and cut attempts',
-  'Right-click and context-menu attempts',
-  'Developer tool shortcuts',
-  'Print and save shortcuts',
-  'Screenshot shortcut attempts',
-  'Restricted keyboard shortcuts',
-];
-
-export const SECURITY_FEATURES = [
-  {
-    icon: 'monitor',
-    title: 'Fullscreen enforcement',
-    desc: 'Students stay in fullscreen for the duration of the exam. Exits are recorded as violations with a prompt to return.',
-  },
-  {
-    icon: 'lock',
-    title: 'Kiosk mode',
-    desc: 'Restricts the exam to an approved kiosk environment and blocks access without the required validation.',
-  },
-  {
-    icon: 'network',
-    title: 'Lab and network restriction',
-    desc: 'Locks a quiz to configured lab IP subnets, so it can only be attempted from approved campus locations.',
-  },
-  {
-    icon: 'key',
-    title: 'Password protection',
-    desc: 'Quizzes can require a password before a student can begin.',
-  },
-];
-
-export const AI_STEPS = [
-  {
-    num: '01',
-    icon: 'edit',
-    title: 'Faculty defines the rubric',
-    desc: 'Marking criteria and expected concepts set what full, partial, and zero marks look like.',
-  },
-  {
-    num: '02',
-    icon: 'globe',
-    title: 'Student submits an answer',
-    desc: 'Descriptive paragraphs, fill-in-the-blank phrases, or long-form responses.',
-  },
-  {
-    num: '03',
-    icon: 'brain',
-    title: 'The model evaluates against the rubric',
-    desc: 'Your configured model receives the rubric and the response, then returns a score with reasoning, on your key and your chosen provider.',
-  },
-  {
-    num: '04',
-    icon: 'checkCircle',
-    title: 'Faculty reviews and confirms',
-    desc: 'Scores appear with the model\'s reasoning. Faculty can accept, adjust, or override any score before results publish.',
-  },
-];
-
-export const AI_MODELS = [
-  { name: 'OpenAI', sub: 'GPT-4o, GPT-4' },
-  { name: 'Anthropic', sub: 'Claude 3.5 Sonnet' },
-  { name: 'Google', sub: 'Gemini 1.5 Pro' },
-  { name: 'Azure', sub: 'Azure OpenAI Service' },
-  { name: 'Custom endpoint', sub: 'Any OpenAI-compatible API' },
-];
-
-export const AI_HIGHLIGHTS = [
-  {
-    icon: 'flag',
-    title: 'Semantic fill-in-blank matching',
-    desc: 'Accepts synonyms and semantically equivalent phrasing, not only exact text.',
-  },
-  {
-    icon: 'lock',
-    title: 'Your keys, your data',
-    desc: 'API keys stay on your infrastructure. Responses are not stored beyond the evaluation call.',
-  },
-  {
-    icon: 'refresh',
-    title: 'Manual override, always',
-    desc: 'Faculty can review, annotate, and override any AI score before results release.',
-  },
-];
-
-export const DEPLOY_MODES = [
-  {
-    id: 'managed',
-    label: 'Managed cloud',
-    icon: 'globe',
-    tagline: 'We host, operate, and maintain everything.',
-    sub: 'No infrastructure team required. Updates, backups, and monitoring are handled for you.',
-    features: [
-      'Running within days, no server provisioning',
-      'Platform updates deployed with no downtime on your side',
-      'Daily backups with point-in-time recovery',
-      'Uptime monitoring and incident response',
-      "Tenant isolation at the database layer",
-      'SLA-backed support',
-    ],
-  },
-  {
-    id: 'self',
-    label: 'Self-hosted',
-    icon: 'building',
-    tagline: 'Your servers, your data.',
-    sub: 'Deploy on-premise or on a private cloud. We maintain the platform on your infrastructure.',
-    features: [
-      'Student data stays on your network',
-      'We handle updates, patches, and deployments on your servers',
-      'Runs on existing servers, private cloud, or air-gapped environments',
-      'SSO integration with your identity provider',
-      'Meets institutional data residency requirements',
-      'Can operate without external internet dependencies',
-    ],
-  },
-];
-
-export const CONTENT_TOOLS = [
-  { icon: 'edit', title: 'Rich text editor', desc: 'Bold, italic, lists, block quotes, code, and horizontal rules for question content.' },
-  { icon: 'upload', title: 'Image embedding', desc: 'Upload and embed images directly inside question content.' },
-  { icon: 'fileText', title: 'LaTeX support', desc: 'For mathematical and scientific notation, with a live preview.' },
-  { icon: 'shareNodes', title: 'Bank sharing', desc: 'Share question banks with other faculty and revoke access at any time.' },
-];
-
 export const CONTACT_FIELDS_INITIAL = {
   name: '',
   email: '',
   organisationName: '',
   numberOfStudents: '',
   contactNumber: '',
-};
-
-export const CTA = {
-  eyebrow: 'Schedule a demonstration',
-  headline: 'Ready to bring rigour to your assessments?',
-  sub: "We’ll walk through the platform: question banks, secure exam delivery, AI evaluation, analytics, and deployment options, matched to your institution’s workflows.",
-};
-
-export const FOOTER = {
-  tagline: 'Complete digital assessment for higher education institutions.',
-  columns: [
-    {
-      title: 'Platform',
-      links: [
-        { href: '#platform', label: 'Pillars' },
-        { href: '#ai-evaluation', label: 'AI evaluation' },
-        { href: '#question-types', label: 'Question types' },
-      ],
-    },
-    {
-      title: 'Deployment',
-      links: [
-        { href: '#deployment', label: 'Managed cloud' },
-        { href: '#deployment', label: 'Self-hosted' },
-      ],
-    },
-    {
-      title: 'Company',
-      links: [
-        { href: '#contact', label: 'Schedule a demo' },
-        { href: '#contact', label: 'Contact' },
-      ],
-    },
-  ],
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -831,6 +458,7 @@ export const BRAND_FOOTER = {
         { href: '/product#security', label: 'Exam security' },
         { href: '/product#marking', label: 'Marking' },
         { href: '/product#reports', label: 'Reports' },
+        { href: '/compare', label: 'Compare' },
       ],
     },
     {
@@ -838,6 +466,14 @@ export const BRAND_FOOTER = {
       links: [
         { href: '/product#deployment', label: 'Hosted by us' },
         { href: '/product#deployment', label: 'On your campus' },
+      ],
+    },
+    {
+      title: 'Resources',
+      links: [
+        { href: '/brochure', label: 'Brochure' },
+        { href: '/flyer', label: 'Flyer' },
+        { href: '/ppt', label: 'Presentation' },
       ],
     },
     {

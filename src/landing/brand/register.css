@@ -11,22 +11,6 @@
    1px rules, the way a printed booklet is.
    ═══════════════════════════════════════════════════════════════ */
 
-/* Body reset — the landing renders full-bleed, but index.css
-   centres a padded column for the A4 brochure view. */
-body.is-landing,
-body:has(.rg){
-  padding: 0 !important;
-  margin: 0;
-  gap: 0 !important;
-  display: block !important;
-  align-items: stretch !important;
-  background: #fcfcfa !important;
-  width: 100%;
-  overflow-x: hidden;
-}
-body.is-landing > #root,
-#root:has(.rg){ width: 100%; }
-
 .rg{
   /* ── Ink & paper ─────────────────────────────────── */
   --paper: #fcfcfa;
@@ -176,7 +160,6 @@ body.is-landing > #root,
 .rg-anim .rg-rv--mask.is-in{ clip-path: inset(0 0 -20% 0); transform: none; }
 
 /* A rule that draws itself from the left. */
-.rg-anim .rg-rule{ opacity: 1; transform: none; }
 .rg-anim .rg-rule::after{ transform: scaleX(0); }
 .rg-anim .rg-rule.is-in::after{ transform: scaleX(1); }
 
@@ -343,8 +326,12 @@ body.is-landing > #root,
    ═══════════════════════════════════════════════════════ */
 .rg-hero{ position: relative; padding: clamp(112px, 13vw, 168px) 0 0; overflow: hidden; }
 
-/* Faint OMR matrix wash behind the hero */
-.rg-hero::before{
+/* Faint OMR matrix wash behind the hero, and behind the other pages'
+   openings (/product, /signin, and the home page's in journey.css). */
+.rg-hero::before,
+.rg-pagehead::before,
+.rg-signin::before,
+.jy-open::before{
   content: '';
   position: absolute;
   inset: 0;
@@ -365,11 +352,6 @@ body.is-landing > #root,
   margin-bottom: clamp(24px, 3vw, 34px);
 }
 
-.rg-hero h1{
-  font-size: clamp(40px, 4.6vw, 72px);
-  margin: 0 0 clamp(22px, 2.4vw, 32px);
-  max-width: 15ch;
-}
 .rg-hero h1 em{
   font-style: normal;
   color: var(--brand);
@@ -380,16 +362,6 @@ body.is-landing > #root,
    impression. What the page is, the way back to the walkthrough, and an
    index of its sections over the faint dot grid. */
 .rg-pagehead{ position: relative; padding: clamp(120px, 12vw, 160px) 0 clamp(48px, 6vw, 72px); overflow: hidden; }
-.rg-pagehead::before{
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(15, 107, 69, 0.16) 1.4px, transparent 1.5px);
-  background-size: 34px 34px;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
-  mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
-  pointer-events: none;
-}
 .rg-pagehead > .rg-wrap{ position: relative; }
 .rg-pagehead-h{ font-size: clamp(40px, 5vw, 76px); margin: 0 0 20px; }
 .rg-pagehead-walk{ color: var(--brand); border-bottom: 1px solid currentColor; }
@@ -439,7 +411,6 @@ body.is-landing > #root,
 .rg-about-covers b{ font-size: 17px; font-weight: 600; color: var(--ink); }
 .rg-about-covers span{ font-size: 15.5px; line-height: 1.6; color: var(--ink-70); }
 .rg-about-why{ max-width: 640px; margin-top: clamp(28px, 3vw, 40px) !important; }
-.rg-about-why li{ font-size: clamp(19px, 1.7vw, 23px); }
 .rg-about-contact{
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -452,16 +423,6 @@ body.is-landing > #root,
 
 /* ── /signin ──────────────────────────────────────────── */
 .rg-signin{ position: relative; padding: clamp(120px, 14vw, 180px) 0 clamp(72px, 9vw, 120px); overflow: hidden; }
-.rg-signin::before{
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(15, 107, 69, 0.16) 1.4px, transparent 1.5px);
-  background-size: 34px 34px;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
-  mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
-  pointer-events: none;
-}
 .rg-signin-in{ position: relative; max-width: 760px; }
 .rg-signin-h{ font-size: clamp(38px, 4.6vw, 64px); margin: 0 0 18px; }
 /* One row per institution, read like a line on an answer sheet. */
@@ -537,7 +498,7 @@ body.is-landing > #root,
 /* The margin marker rides along beside its section. */
 .rg-secmark{ position: sticky; top: 96px; padding-top: 9px; }
 .rg-secmark-code{ display: flex; align-items: center; gap: 9px; color: var(--brand); }
-.rg-secmark-code .rg-mono{ font-size: 11.5px; color: var(--brand); }
+.rg-secmark-code .rg-mono{ font-size: 11.5px; }
 /* Back to the matching step of the home page's walkthrough. */
 .rg-secmark-walk{
   display: inline-flex;
@@ -569,11 +530,10 @@ body.is-landing > #root,
    ═══════════════════════════════════════════════════════ */
 .rg-pillars{
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   border-top: 1px solid var(--rule);
   border-left: 1px solid var(--rule);
 }
-.rg-pillars--two{ grid-template-columns: repeat(2, 1fr); }
 .rg-pillar{
   position: relative;
   padding: clamp(28px, 2.8vw, 40px);
@@ -611,7 +571,7 @@ body.is-landing > #root,
 .rg-pillar-ico{ color: var(--brand); }
 
 .rg-pillar h3{ margin-bottom: 12px; }
-.rg-pillar-body{ color: var(--ink-70); font-size: 14.8px; line-height: 1.6; margin-bottom: 22px; }
+.rg-pillar-body{ color: var(--ink-70); font-size: 14.8px; line-height: 1.6; }
 
 /* ═══════════════════════════════════════════════════════
    §03 ROLES
@@ -648,17 +608,23 @@ body.is-landing > #root,
   gap: clamp(32px, 5vw, 72px);
   align-items: start;
 }
-.rg-role-list{ border-top: 1px solid var(--rule); }
-.rg-role-list li{
+/* The ruled lists: one row per item, a rule between rows. Roles (§03)
+   and security signals (§04) set a little looser than the rest. */
+.rg-role-list, .rg-sig-list, .rg-mode-list, .rg-mast-list, .rg-eval-list{ border-top: 1px solid var(--rule); }
+.rg-role-list li, .rg-sig-list li, .rg-mode-list li, .rg-mast-list li, .rg-eval-list li{
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: baseline;
-  padding: 14px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--rule);
-  font-size: 15px;
+  font-size: 14.8px;
   color: var(--ink-70);
 }
-.rg-role-list li:last-child{ border-bottom: 0; }
+.rg-role-list li, .rg-sig-list li{ gap: 16px; font-size: 15px; }
+.rg-role-list li{ padding: 14px 0; }
+.rg-sig-list li{ padding: 13px 0; }
+.rg-role-list li:last-child, .rg-sig-list li:last-child, .rg-mode-list li:last-child,
+.rg-mast-list li:last-child, .rg-eval-list li:last-child{ border-bottom: 0; }
 .rg-role-list li span{
   font-family: var(--mono);
   font-size: 11px;
@@ -699,17 +665,6 @@ body.is-landing > #root,
 }
 
 /* §04 Security */
-.rg-sig-list{ border-top: 1px solid var(--rule); }
-.rg-sig-list li{
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--rule);
-  font-size: 15px;
-  color: var(--ink-70);
-}
-.rg-sig-list li:last-child{ border-bottom: 0; }
 .rg-sig-list li b{
   font-family: var(--mono);
   font-size: 11px;
@@ -739,7 +694,6 @@ body.is-landing > #root,
 .rg-mode + .rg-mode{ border-left: 1px solid var(--rule); }
 .rg-mode--alt{ background: var(--brand-wash); }
 .rg-mode-top{ display: flex; align-items: center; gap: 12px; margin-bottom: 24px; color: var(--brand); }
-.rg-mode-top .rg-mono{ color: var(--brand); }
 .rg-mode-h{
   font-size: clamp(21px, 2vw, 28px);
   font-weight: 700;
@@ -748,18 +702,7 @@ body.is-landing > #root,
   letter-spacing: -0.024em;
   margin: 0 0 12px;
 }
-.rg-mode-sub{ color: var(--ink-70); font-size: 15px; line-height: 1.6; margin-bottom: 26px; }
-.rg-mode-list{ border-top: 1px solid var(--rule); }
-.rg-mode-list li{
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--rule);
-  font-size: 14.8px;
-  color: var(--ink-70);
-}
-.rg-mode-list li:last-child{ border-bottom: 0; }
+.rg-mode-sub{ color: var(--ink-70); font-size: 15px; line-height: 1.6; }
 .rg-mode-list li svg{ color: var(--brand); flex-shrink: 0; transform: translateY(2px); }
 
 .rg-sub{
@@ -767,7 +710,6 @@ body.is-landing > #root,
   padding-top: clamp(36px, 3.8vw, 52px);
   border-top: 1px solid var(--rule);
 }
-.rg-sub-lede:last-child{ margin-bottom: 0; }
 .rg-sub-h{
   font-size: clamp(21px, 2vw, 27px);
   font-weight: 700;
@@ -776,25 +718,13 @@ body.is-landing > #root,
   line-height: 1.15;
   margin: 0 0 10px;
 }
-.rg-sub-lede{ color: var(--ink-70); font-size: 15.5px; line-height: 1.6; max-width: 62ch; margin-bottom: 28px; }
+.rg-sub-lede{ color: var(--ink-70); font-size: 15.5px; line-height: 1.6; max-width: 62ch; }
 
 /* ═══════════════════════════════════════════════════════
    §07 ANALYTICS — mastery panels
    ═══════════════════════════════════════════════════════ */
 .rg-mast-top{ display: flex; align-items: center; gap: 12px; margin-bottom: 22px; color: var(--brand); }
-.rg-mast-top .rg-mono{ color: var(--brand); }
-.rg-mast-sum{ color: var(--ink-70); font-size: 15px; line-height: 1.6; margin-bottom: 24px; }
-.rg-mast-list{ border-top: 1px solid var(--rule); }
-.rg-mast-list li{
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--rule);
-  font-size: 14.8px;
-  color: var(--ink-70);
-}
-.rg-mast-list li:last-child{ border-bottom: 0; }
+.rg-mast-sum{ color: var(--ink-70); font-size: 15px; line-height: 1.6; }
 .rg-mast-list li .rg-bub{ transform: translateY(-1px); }
 
 
@@ -840,7 +770,6 @@ body.is-landing > #root,
 .rg-eval{ padding: clamp(28px, 3.2vw, 44px); }
 .rg-eval + .rg-eval{ border-left: 1px solid var(--rule); background: var(--brand-wash); }
 .rg-eval-top{ display: flex; align-items: center; gap: 12px; margin-bottom: 22px; color: var(--brand); }
-.rg-eval-top .rg-mono{ color: var(--brand); }
 .rg-eval-h{
   font-size: clamp(22px, 2.1vw, 29px);
   font-weight: 700;
@@ -849,27 +778,15 @@ body.is-landing > #root,
   line-height: 1.14;
   margin: 0 0 14px;
 }
-.rg-eval-body{ color: var(--ink-70); font-size: 15.2px; line-height: 1.62; margin-bottom: 24px; }
-.rg-eval-list{ border-top: 1px solid var(--rule); }
-.rg-eval-list li{
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--rule);
-  font-size: 14.8px;
-  color: var(--ink-70);
-}
-.rg-eval-list li:last-child{ border-bottom: 0; }
+.rg-eval-body{ color: var(--ink-70); font-size: 15.2px; line-height: 1.62; }
 .rg-eval-list li svg{ color: var(--brand); flex-shrink: 0; transform: translateY(2px); }
 
 /* Assurance / helper rows */
 .rg-assure{
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: clamp(28px, 3.4vw, 56px);
 }
-.rg-assure--two{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .rg-assure .rg-hi{ border-top: 1px solid var(--rule); }
 
 /* ═══════════════════════════════════════════════════════
@@ -1107,9 +1024,9 @@ body.is-landing > #root,
 
 .rg-foot{ background: var(--brand-deep); color: #a9c4b6; border-top: 1px solid rgba(214, 230, 221, 0.16); }
 .rg-foot-in{ padding-top: clamp(48px, 5vw, 72px); padding-bottom: 34px; }
-.rg-foot-grid{ display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 40px; }
+.rg-foot-grid{ display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr)); gap: 40px; }
 .rg-foot .rg-brand-name{ color: #eef5f0; }
-.rg-foot-tag{ font-size: 14.5px; line-height: 1.6; margin-top: 18px; max-width: 34ch; }
+.rg-foot-tag{ font-size: 14.5px; line-height: 1.6; max-width: 34ch; }
 .rg-foot h4{
   font-family: var(--mono);
   font-size: 10.5px;
@@ -1299,7 +1216,6 @@ body.is-landing > #root,
 
 @media (max-width: 1080px){
   .rg{ --rail: 108px; }
-  .rg-pillars{ grid-template-columns: repeat(2, 1fr); }
   .rg-nav-links{ display: none; }
   .rg-burger{ display: flex; }
   .rg-foot-grid{ grid-template-columns: repeat(2, 1fr); gap: 36px; }
@@ -1309,7 +1225,7 @@ body.is-landing > #root,
   .rg-role{ grid-template-columns: 1fr; }
   .rg-evals{ grid-template-columns: 1fr; }
   .rg-eval + .rg-eval{ border-left: 0; border-top: 1px solid var(--rule); }
-  .rg-assure, .rg-assure--two{ grid-template-columns: 1fr; }
+  .rg-assure{ grid-template-columns: 1fr; }
   .rg-assure .rg-hi:nth-child(n+2){ border-top: 0; }
   .rg-mrow{ grid-template-columns: minmax(0, 1fr); gap: 30px; }
   .rg-mrow--flip .rg-mrow-text{ order: 1; }
@@ -1324,7 +1240,7 @@ body.is-landing > #root,
 
 @media (max-width: 720px){
   .rg{ font-size: 16px; }
-  .rg-pillars, .rg-pillars--two{ grid-template-columns: 1fr; }
+  .rg-pillars{ grid-template-columns: 1fr; }
   .rg-mastery table{ font-size: 12px; }
   .rg-mastery thead th:first-child{ width: 34%; }
   .rg-feat-grid{ grid-template-columns: 1fr; }

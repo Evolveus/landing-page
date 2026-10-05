@@ -54,7 +54,6 @@
   margin: 0 0 clamp(26px, 3vw, 38px);
   max-width: 16ch;
 }
-.cm-hero h1 em{ font-style: normal; color: var(--brand); }
 
 .cm-hero-grid{
   display: grid;
