@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { motionOK } from './pageMotion';
 
 /* ═══════════════════════════════════════════════════════════════
    FOOTER MURAL — the pencil drawings at the foot of every brand page:
@@ -134,18 +133,13 @@ export function FootMural() {
     if (!el || !dd) return;
     shareStrokes(Array.from(el.querySelectorAll('.rg-mural-line')));
     shareStrokes(Array.from(dd.querySelectorAll('.rg-mural-line')));
-    if (!motionOK()) {
-      el.style.setProperty('--d', '1');
-      dd.style.setProperty('--d', '1');
-      return;
-    }
     let frame = 0;
-    // On a page short enough that the footer is on screen from the start,
-    // scrolling alone would leave the drawing half done. There it draws
-    // itself in once, over time (intro, 0 to 1: the mural, then the
-    // doodles), and then stays drawn.
+    // Once visible, the footer writes itself in one pass: mural first,
+    // then the loose doodles. This remains separate from scroll scrubbing
+    // so it also works after the page has already loaded.
     let intro = 0;
     let introFrame = 0;
+    let introStarted = false;
     const update = () => {
       frame = 0;
       const vh = window.innerHeight;
@@ -169,7 +163,13 @@ export function FootMural() {
       el.style.setProperty('--d', d.toFixed(3));
       dd.style.setProperty('--d', dDoodle.toFixed(3));
     };
-    if (el.getBoundingClientRect().top < window.innerHeight) {
+    const isVisible = () => {
+      const box = el.getBoundingClientRect();
+      return box.top < window.innerHeight && box.bottom > 0;
+    };
+    const startIntro = () => {
+      if (introStarted) return;
+      introStarted = true;
       const t0 = performance.now();
       const play = (now) => {
         intro = Math.min(1, (now - t0) / 3200);
@@ -177,12 +177,25 @@ export function FootMural() {
         introFrame = intro < 1 ? requestAnimationFrame(play) : 0;
       };
       introFrame = requestAnimationFrame(play);
-    }
-    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+    };
+    const observer = typeof IntersectionObserver === 'undefined'
+      ? null
+      : new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        startIntro();
+        observer.disconnect();
+      }, { threshold: 0.12 });
+    observer?.observe(el);
+    if (!observer && isVisible()) startIntro();
+    const onScroll = () => {
+      if (isVisible()) startIntro();
+      if (!frame) frame = requestAnimationFrame(update);
+    };
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
     return () => {
+      observer?.disconnect();
       cancelAnimationFrame(frame);
       cancelAnimationFrame(introFrame);
       window.removeEventListener('scroll', onScroll);
