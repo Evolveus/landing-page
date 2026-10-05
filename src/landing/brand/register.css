@@ -1177,11 +1177,14 @@
 }
 
 /* Primary buttons: the bright dark-theme green is too light for white
-   text, so buttons keep a deeper green of their own. */
+   text, so buttons keep a deeper green of their own, and go deeper
+   still on hover as they do in the light theme. */
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]) .rg-btn:not(.rg-btn--soft){ background: #15784f; border-color: #15784f; }
+  :root:not([data-theme="light"]) .rg-btn:not(.rg-btn--soft):hover{ background: #0e5a3a; border-color: #0e5a3a; }
 }
 :root[data-theme="dark"] .rg-btn:not(.rg-btn--soft){ background: #15784f; border-color: #15784f; }
+:root[data-theme="dark"] .rg-btn:not(.rg-btn--soft):hover{ background: #0e5a3a; border-color: #0e5a3a; }
 
 /* One element per theme: the header mark and every product screenshot
    ship a light and a dark version, and CSS shows the matching one. The

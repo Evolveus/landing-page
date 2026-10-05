@@ -3,10 +3,9 @@ import { Icon } from './Icon';
 import { CONTACT_FIELDS_INITIAL } from '../content';
 
 // Shared demo-request form, wired to /api/contact (see server/contact.js).
-// Every design imports this instead of re-implementing submission logic.
-// Style it from the design's own CSS via descendant selectors on the
-// stable "ef-*" class names below (e.g. `.p3 .ef-field input`).
-export function ContactForm({ id = 'contact', submitLabel = 'Send request' }) {
+// Styled from brand/register.css by its stable "ef-*" class names. The
+// page's contact section carries id="contact", so the form has no id.
+export function ContactForm({ submitLabel = 'Send request' }) {
   const [values, setValues] = useState(CONTACT_FIELDS_INITIAL);
   const [status, setStatus] = useState({ state: 'idle', message: '' });
 
@@ -45,7 +44,7 @@ export function ContactForm({ id = 'contact', submitLabel = 'Send request' }) {
   };
 
   return (
-    <form className="ef-form" onSubmit={submit} id={id}>
+    <form className="ef-form" onSubmit={submit}>
       <div className="ef-grid">
         <label className="ef-field">
           <span>Name</span>
