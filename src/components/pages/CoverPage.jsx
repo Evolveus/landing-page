@@ -1,6 +1,14 @@
 import PageHeader from "../Layout/PageHeader";
 import PageFooter from "../Layout/PageFooter";
+import { Rubric } from "../Layout/Spread";
 import "../../styles/cover.css";
+
+const RUBRIC = [
+  { state: "ok", label: "Defines deadlock correctly", score: "2 / 2" },
+  { state: "ok", label: "Lists 4 Coffman conditions", score: "2 / 2" },
+  { state: "ok", label: "Concrete worked example", score: "2 / 2" },
+  { state: "warn", label: "Discusses prevention", score: "1 / 4" },
+];
 
 export default function CoverPage() {
   return (
@@ -82,36 +90,7 @@ function CoverWidget() {
             Explain how a deadlock can occur in a multi-threaded system.
           </p>
 
-          <div className="p1-scr-rubric">
-            <div className="p1-rub-row">
-              <span className="p1-rub-tick" data-state="ok">
-                ✓
-              </span>
-              <span className="p1-rub-label">Defines deadlock correctly</span>
-              <span className="p1-rub-score">2 / 2</span>
-            </div>
-            <div className="p1-rub-row">
-              <span className="p1-rub-tick" data-state="ok">
-                ✓
-              </span>
-              <span className="p1-rub-label">Lists 4 Coffman conditions</span>
-              <span className="p1-rub-score">2 / 2</span>
-            </div>
-            <div className="p1-rub-row">
-              <span className="p1-rub-tick" data-state="ok">
-                ✓
-              </span>
-              <span className="p1-rub-label">Concrete worked example</span>
-              <span className="p1-rub-score">2 / 2</span>
-            </div>
-            <div className="p1-rub-row">
-              <span className="p1-rub-tick" data-state="warn">
-                ~
-              </span>
-              <span className="p1-rub-label">Discusses prevention</span>
-              <span className="p1-rub-score">1 / 4</span>
-            </div>
-          </div>
+          <Rubric className="p1-scr-rubric" row="p1-rub" items={RUBRIC} />
 
           <div className="p1-scr-foot">
             <div className="p1-scr-time">graded · 0.74s</div>

@@ -134,10 +134,9 @@ place to write exams.
 
 - Work is on branch `landing-exam-day-rewrite` (not pushed). Pushing
   `staging` auto-deploys to evolveus-staging.vercel.app.
-- The pre-existing lint error in `src/landing/_shared/DesignSwitcher.jsx`
-  (react-refresh) is untouched.
-- Decide what to do with the old routes `/1` to `/7`, `/flyer*`, `/ppt`
-  (currently public).
+- The old design variants `/1` to `/7` and flyers v2 to v4 are deleted.
+  `/brochure`, `/flyer` (the v1 flyer) and `/ppt` stay, linked from the
+  footer's Resources column.
 - /compare still says "colleges"; the home page says "universities".
 - Multi-tenancy, CI/CD, pricing and a knowledge base were listed as gaps in
   the founding notes; the codebase now shows organisation and row-level

@@ -193,16 +193,6 @@
   gap: 6px;
 }
 
-.p7-btn-text {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: rgba(255,255,255,0.7);
-  text-decoration: none;
-  font-weight: 500;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding-bottom: 1px;
-}
-
 .p7-close-r {
   display: flex;
   flex-direction: column;

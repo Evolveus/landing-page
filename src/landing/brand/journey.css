@@ -41,10 +41,6 @@
   height: auto;
   overflow: visible;
 }
-.rg-anim .is-in .jy-uline .jy-scribble{ stroke-dashoffset: 0; }
-@media (prefers-reduced-motion: reduce){
-  .rg-anim .jy-uline .jy-scribble{ stroke-dashoffset: 0; transition: none; }
-}
 
 /* Not the ticks: at their size the grain breaks the stroke apart. */
 .jy-uline, .jy-ring, .jy-hand{ filter: url(#rg-graphite); }
@@ -187,19 +183,9 @@
   padding: 96px var(--gutter) 40px;
   text-align: center;
 }
-.jy-open::before{
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background-image: radial-gradient(circle, rgba(15, 107, 69, 0.16) 1.4px, transparent 1.5px);
-  background-size: 34px 34px;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
-  mask-image: linear-gradient(180deg, #000 0%, transparent 82%);
-  pointer-events: none;
-}
+/* The dot grid itself is in register.css, with the other pages'. */
+.jy-open::before{ z-index: -2; }
 .jy-open-k{
-  margin: 0;
   font-size: clamp(18px, 1.8vw, 26px);
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -218,7 +204,6 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin: clamp(8px, 1.6vh, 18px) 0 0;
   font-size: 14px;
   color: var(--ink-45);
 }
@@ -265,7 +250,6 @@
 .jy-tour-in.is-still .jy-tour-bar{ animation: none; }
 @keyframes jy-tour-fill{ from{ transform: scaleX(0); } to{ transform: scaleX(1); } }
 .jy-tour-sum{
-  margin: 0 0 14px;
   max-width: 52ch;
   font-size: 15.5px;
   line-height: 1.55;
@@ -786,7 +770,7 @@
   box-shadow: 0 1px 0 var(--rule), 0 calc(var(--n) * 22px) calc(var(--n) * 30px) calc(var(--n) * -16px) var(--shadow-ink);
 }
 .jy-note .rg-mono{ font-size: 8.5px; color: var(--brand); }
-.jy-note p{ margin-top: 5px !important; font-size: 11.5px; line-height: 1.4; color: var(--ink); }
+.jy-note p{ margin-top: 5px; font-size: 11.5px; line-height: 1.4; color: var(--ink); }
 /* The faculty member's word, written under the printed remark once it
    has landed and before the stamp: revealed left to right like a pen
    moving across. */
@@ -1097,7 +1081,6 @@
 /* ── Handoff to /product, where the story was a sample. ───── */
 .jy-handoff{ border-top: 1px solid var(--rule); padding-block: clamp(56px, 7vw, 96px); }
 .jy-handoff-line{
-  margin: 0;
   font-size: clamp(26px, 2.6vw, 36px);
   font-weight: 700;
   font-stretch: 110%;
@@ -1105,7 +1088,7 @@
   letter-spacing: -0.02em;
   color: var(--ink);
 }
-.jy-handoff-sub{ margin: 10px 0 0; font-size: 16px; color: var(--ink-70); }
+.jy-handoff-sub{ font-size: 16px; color: var(--ink-70); }
 .jy-handoff .jy-more{ margin-top: 18px; }
 /* The line on the left, the real count on the right. */
 .jy-handoff-grid{
@@ -1123,7 +1106,6 @@
 
 /* ── Contact: the time underlined in pencil once the line has come in.
    The section is always dark, so the graphite is the light one. ──── */
-.jy-cta-uline .jy-uline{ filter: url(#rg-graphite); }
 .jy-cta-uline .jy-scribble{ stroke: #c4ccc7; stroke-width: 2; opacity: 0.8; }
 .rg-anim .jy-cta-uline .jy-scribble{
   stroke-dashoffset: 1;
@@ -1145,7 +1127,6 @@
 }
 .jy-brief .jy-more{ margin-top: 14px; }
 .jy-brief-h{ font-size: clamp(26px, 2.6vw, 36px); }
-.jy-brief-list{ margin-top: 0 !important; }
 .jy-brief-list li{
   display: grid;
   grid-template-columns: 150px minmax(0, 1fr);

@@ -1,5 +1,6 @@
 import PageHeader from "../Layout/PageHeader";
 import PageFooter from "../Layout/PageFooter";
+import { Rubric, ScoreFoot, SideNotes, StatStrip } from "../Layout/Spread";
 import "../../styles/student.css";
 
 const TOPICS = [
@@ -23,6 +24,25 @@ const STATS = [
   { num: "+22", cap: "Avg. score gain across term" },
   { num: "100%", cap: "Questions with rationale" },
 ];
+
+const SIDE = {
+  steps: {
+    caption: "What students see",
+    items: [
+      ["Score in under a second", "Objective questions grade instantly on submit — no waiting for a faculty batch run."],
+      ["Topic gaps, not just totals", "Every result breaks down by syllabus topic, so students know where understanding fell short."],
+      ["Progress across the term", "Scores from every quiz in the course accumulate into a visible improvement trend."],
+    ],
+  },
+  bullets: {
+    caption: "Why it matters",
+    items: [
+      "Feedback within the learning window — not after the next topic has already started.",
+      "Rubric rationale on descriptive answers — students see exactly which criteria they missed and why.",
+      "Weak-topic signals are private and actionable, not just a number on a leaderboard.",
+    ],
+  },
+};
 
 export default function StudentPage() {
   return (
@@ -98,85 +118,16 @@ export default function StudentPage() {
                   Space complexity analysis (O(n) auxiliary) was not addressed
                   — this criterion carries 4 marks.
                 </blockquote>
-                <div className="pstu-feedback-rubric">
-                  {FEEDBACK_RUBRIC.map(({ state, label, score }) => (
-                    <div key={label} className="pstu-fb-row">
-                      <span className="pstu-fb-tick" data-state={state}>
-                        {state === "ok" ? "✓" : "~"}
-                      </span>
-                      <span className="pstu-fb-label">{label}</span>
-                      <span className="pstu-fb-score">{score}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="pstu-feedback-foot">
-                  <span className="pstu-feedback-foot-l">graded · 0.74s</span>
-                  <span className="pstu-feedback-foot-r">
-                    <span>Score</span>
-                    <strong>7 / 10</strong>
-                  </span>
-                </div>
+                <Rubric className="pstu-feedback-rubric" row="pstu-fb" items={FEEDBACK_RUBRIC} />
+                <ScoreFoot base="pstu-feedback" note="graded · 0.74s" score="7 / 10" />
               </div>
             </div>
           </div>
 
-          <aside className="pstu-side">
-            <div className="pstu-side-block">
-              <div className="caption">What students see</div>
-              <ol className="pstu-steps">
-                <li>
-                  <strong>Score in under a second</strong>
-                  <span>
-                    Objective questions grade instantly on submit — no waiting
-                    for a faculty batch run.
-                  </span>
-                </li>
-                <li>
-                  <strong>Topic gaps, not just totals</strong>
-                  <span>
-                    Every result breaks down by syllabus topic, so students
-                    know where understanding fell short.
-                  </span>
-                </li>
-                <li>
-                  <strong>Progress across the term</strong>
-                  <span>
-                    Scores from every quiz in the course accumulate into a
-                    visible improvement trend.
-                  </span>
-                </li>
-              </ol>
-            </div>
-
-            <div className="pstu-side-block">
-              <div className="caption">Why it matters</div>
-              <ul className="pstu-bullets">
-                <li>
-                  Feedback within the learning window — not after the next
-                  topic has already started.
-                </li>
-                <li>
-                  Rubric rationale on descriptive answers — students see
-                  exactly which criteria they missed and why.
-                </li>
-                <li>
-                  Weak-topic signals are private and actionable, not just a
-                  number on a leaderboard.
-                </li>
-              </ul>
-            </div>
-          </aside>
+          <SideNotes p="pstu" {...SIDE} />
         </div>
 
-        <div className="pstu-stats">
-          {STATS.map(({ num, cap }, i) => (
-            <div key={cap} className="pstu-stat">
-              <div className="pstu-stat-num">{num}</div>
-              <div className="pstu-stat-cap">{cap}</div>
-              {i < STATS.length - 1 && <div className="pstu-stat-div" />}
-            </div>
-          ))}
-        </div>
+        <StatStrip p="pstu" stats={STATS} />
       </div>
 
       <PageFooter chapter="Feedback Loop" />

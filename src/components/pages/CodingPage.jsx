@@ -1,5 +1,6 @@
 import PageHeader from "../Layout/PageHeader";
 import PageFooter from "../Layout/PageFooter";
+import { ScoreFoot, SideNotes, StatStrip } from "../Layout/Spread";
 import "../../styles/coding.css";
 
 const TEST_CASES = [
@@ -14,11 +15,30 @@ const TEST_CASES = [
 ];
 
 const STATS = [
-  { num: "8+", sub: null, cap: "Languages supported" },
-  { num: "0.4s", sub: null, cap: "Avg. test-case runtime" },
-  { num: "100%", sub: null, cap: "Auto-graded, no manual" },
-  { num: "6 / 8", sub: null, cap: "Test cases passed" },
+  { num: "8+", cap: "Languages supported" },
+  { num: "0.4s", cap: "Avg. test-case runtime" },
+  { num: "100%", cap: "Auto-graded, no manual" },
+  { num: "6 / 8", cap: "Test cases passed" },
 ];
+
+const SIDE = {
+  steps: {
+    caption: "How it works",
+    items: [
+      ["Faculty configures test cases", "Define inputs, expected outputs, and time limits once per question — reusable across cohorts."],
+      ["Submissions run in sandbox", "Each submission executes in an isolated environment against every configured test case."],
+      ["Results surface instantly", "Pass/fail per case, runtime, and a score appear before the exam window closes."],
+    ],
+  },
+  bullets: {
+    caption: "What it covers",
+    items: [
+      "Multiple languages — Python, Java, C++, JavaScript, and more, without extra setup per course.",
+      "Partial credit — scoring on test-case weight, not all-or-nothing binary outcomes.",
+      "Full audit trail — same rubric evidence as descriptive answers. Defensible at appeal.",
+    ],
+  },
+};
 
 function kw(s) { return <span className="tok-kw">{s}</span>; }
 function fn(s) { return <span className="tok-fn">{s}</span>; }
@@ -97,73 +117,14 @@ export default function CodingPage() {
                 ))}
               </div>
 
-              <div className="pcod-mock-foot">
-                <span className="pcod-mock-foot-l">runtime · 0.38s</span>
-                <span className="pcod-mock-foot-r">
-                  <span>Score</span>
-                  <strong>6 / 8</strong>
-                </span>
-              </div>
+              <ScoreFoot base="pcod-mock" note="runtime · 0.38s" score="6 / 8" />
             </div>
           </div>
 
-          <aside className="pcod-side">
-            <div className="pcod-side-block">
-              <div className="caption">How it works</div>
-              <ol className="pcod-steps">
-                <li>
-                  <strong>Faculty configures test cases</strong>
-                  <span>
-                    Define inputs, expected outputs, and time limits once per
-                    question — reusable across cohorts.
-                  </span>
-                </li>
-                <li>
-                  <strong>Submissions run in sandbox</strong>
-                  <span>
-                    Each submission executes in an isolated environment against
-                    every configured test case.
-                  </span>
-                </li>
-                <li>
-                  <strong>Results surface instantly</strong>
-                  <span>
-                    Pass/fail per case, runtime, and a score appear before
-                    the exam window closes.
-                  </span>
-                </li>
-              </ol>
-            </div>
-
-            <div className="pcod-side-block">
-              <div className="caption">What it covers</div>
-              <ul className="pcod-bullets">
-                <li>
-                  Multiple languages — Python, Java, C++, JavaScript, and more,
-                  without extra setup per course.
-                </li>
-                <li>
-                  Partial credit — scoring on test-case weight, not all-or-nothing
-                  binary outcomes.
-                </li>
-                <li>
-                  Full audit trail — same rubric evidence as descriptive answers.
-                  Defensible at appeal.
-                </li>
-              </ul>
-            </div>
-          </aside>
+          <SideNotes p="pcod" {...SIDE} />
         </div>
 
-        <div className="pcod-stats">
-          {STATS.map(({ num, cap }, i) => (
-            <div key={cap} className="pcod-stat">
-              <div className="pcod-stat-num">{num}</div>
-              <div className="pcod-stat-cap">{cap}</div>
-              {i < STATS.length - 1 && <div className="pcod-stat-div" />}
-            </div>
-          ))}
-        </div>
+        <StatStrip p="pcod" stats={STATS} />
       </div>
 
       <PageFooter chapter="Code & Compile" />

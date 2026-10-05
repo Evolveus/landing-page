@@ -17,9 +17,7 @@
   --indigo: #4338ca;
   --indigo-soft: #eef0ff;
   --crimson: #c4302b;
-  --crimson-soft: #fdf2f1;
   --emerald: #047857;
-  --emerald-soft: #ecfdf5;
   --amber: #b45309;
   --violet: #6d28d9;
 
@@ -27,25 +25,6 @@
   --serif: 'Fraunces', 'Times New Roman', serif;
   --sans: 'Inter', system-ui, sans-serif;
   --mono: 'JetBrains Mono', monospace;
-
-  /* Legacy aliases — keep so old refs don't break */
-  --bg-page: var(--paper);
-  --bg-card: #ffffff;
-  --text-main: var(--text);
-  --text-light: var(--text-soft);
-  --indigo-50: var(--indigo-soft);
-  --indigo-100: #e0e3f9;
-  --indigo-500: var(--indigo);
-  --indigo-600: var(--indigo);
-  --indigo-900: #2a2380;
-  --navy-dark: var(--ink);
-  --navy-light: var(--ink-2);
-  --success: var(--emerald);
-  --danger: var(--crimson);
-  --warning: var(--amber);
-  --font-sans: var(--sans);
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
-  --shadow-soft: 0 12px 40px -12px rgba(11,11,16,0.08);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -76,14 +55,11 @@ em { font-style: italic; }
 
 .export-button {
   border: 0;
-  font-family: var(--font-sans);
+  font-family: var(--sans);
   font-size: 12px;
   font-weight: 750;
   cursor: pointer;
   white-space: nowrap;
-}
-
-.export-button {
   background: #183b35;
   color: #fff;
   padding: 14px 20px;
@@ -111,4 +87,29 @@ em { font-style: italic; }
   body { background: none; padding: 0; gap: 0; }
   .export-controls { display: none !important; }
   .brochure-view { gap: 0; padding-top: 0; }
+}
+
+/* The site pages render full-bleed, out of the brochure's centred,
+   padded, gapped column above. `body.is-landing` is set from App.jsx;
+   the :has() selectors are a no-JS fallback. (Dark theme's background is
+   in brand/register.css.) */
+body.is-landing,
+body:has(.landing-shell) {
+  padding: 0 !important;
+  margin: 0;
+  gap: 0 !important;
+  align-items: stretch !important;
+  display: block !important;
+  background: #ffffff !important;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body.is-landing > #root,
+#root:has(.landing-shell) { width: 100%; }
+
+.landing-shell {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
 }

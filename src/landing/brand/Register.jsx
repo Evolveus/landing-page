@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import './register.css';
 import { Icon } from '../_shared/Icon';
-import { ContactForm } from '../_shared/ContactForm';
-import { Rv, SectionHead, Nav, Footer } from './chrome';
-import { ThemedImg, Exhibit, Shot } from './figures';
+import { Rv, SectionHead, Nav, Footer, Eyebrow, ContactSection } from './chrome';
+import { ThemedImg, Exhibit, Shot, ShotBar } from './figures';
 import { useReveal } from './pageMotion';
 import {
-  BRAND, BRAND_NAV, PRODUCT_PAGE, PRODUCT_WALK, BEFORE,
+  BRAND_NAV, PRODUCT_PAGE, PRODUCT_WALK, BEFORE,
   SECURITY_PILLARS, WATCHED, EVALUATION, MARKING_SHOTS, AI_ASSURANCE, AI_HELP,
   REPORTS, MASTERY_SAMPLE, BRAND_ROLES, BRAND_DEPLOY, BRAND_CTA,
 } from '../content';
@@ -67,7 +66,7 @@ function MasteryTable() {
 /* ── Roles, with a screenshot of the real product ─────────────── */
 function Roles() {
   const [active, setActive] = useState(BRAND_ROLES[0].id);
-  const role = BRAND_ROLES.find((r) => r.id === active) ?? BRAND_ROLES[0];
+  const role = BRAND_ROLES.find((r) => r.id === active);
 
   return (
     <>
@@ -99,10 +98,7 @@ function Roles() {
         </div>
 
         <Rv className="rg-shot" delay={140}>
-          <div className="rg-shot-bar">
-            <span className="rg-mono">{BRAND.domain} / {role.id}</span>
-            <span className="rg-shot-dots"><i /><i /><i /></span>
-          </div>
+          <ShotBar path={role.id} />
           <ThemedImg src={role.src} alt={`${role.label} view in Evolveus`} />
         </Rv>
       </div>
@@ -111,10 +107,6 @@ function Roles() {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-
-/* The comparison page is the only link the shared chrome does not carry
-   by default, so each page that wants it passes it in. */
-const COMPARE_LINK = [{ href: '/compare', label: 'Compare' }];
 
 export default function Register() {
   const root = useReveal();
@@ -128,10 +120,7 @@ export default function Register() {
           first impression; this is the detail. ─────────────────── */}
       <header className="rg-pagehead" id="top">
         <div className="rg-wrap">
-          <Rv className="rg-eyebrow">
-            <span className="rg-bub rg-bub--fill" />
-            <span className="rg-mono">{PRODUCT_PAGE.eyebrow}</span>
-          </Rv>
+          <Eyebrow>{PRODUCT_PAGE.eyebrow}</Eyebrow>
           <Rv as="h1" className="rg-display rg-pagehead-h rg-rv--mask" delay={60}>{PRODUCT_PAGE.title}</Rv>
           <Rv as="p" className="rg-lede" delay={120}>
             {PRODUCT_PAGE.sub}{' '}
@@ -162,7 +151,7 @@ export default function Register() {
             lede="A good question written once can be used again next semester, by anyone in the department the bank is shared with."
           />
 
-          <div className="rg-pillars rg-pillars--two">
+          <div className="rg-pillars">
             {BEFORE.map((v, i) => (
               <Rv className="rg-pillar" key={v.n} delay={i * 60}>
                 <div className="rg-pillar-top">
@@ -277,7 +266,7 @@ export default function Register() {
 
           <div className="rg-sub">
             <Rv as="h3" className="rg-sub-h">Faculty sign off on every mark</Rv>
-            <Rv className="rg-assure rg-assure--two" delay={80}>
+            <Rv className="rg-assure" delay={80}>
               {AI_ASSURANCE.map((h) => (
                 <div className="rg-hi" key={h.title}>
                   <span className="rg-hi-ico"><Icon name={h.icon} size={20} /></span>
@@ -391,32 +380,9 @@ export default function Register() {
       </section>
 
       {/* ── CONTACT ─────────────────────────────────────── */}
-      <section className="rg-sec rg-sec--dark" id="contact">
-        <div className="rg-wrap">
-          <div className="rg-cta-grid">
-            <div>
-              <Rv className="rg-eyebrow">
-                <span className="rg-bub rg-bub--fill" />
-                <span className="rg-mono">{BRAND_CTA.eyebrow}</span>
-              </Rv>
-              <Rv as="h2" className="rg-h2 rg-cta-h rg-rv--mask" delay={60}>{BRAND_CTA.headline}</Rv>
-              <Rv as="p" className="rg-lede" delay={120} style={{ marginTop: 22 }}>{BRAND_CTA.sub}</Rv>
-              <Rv className="rg-cta-contact" delay={180}>
-                <a href={`mailto:${BRAND.email}`}>
-                  <Icon name="mail" size={14} />
-                  {BRAND.email}
-                </a>
-              </Rv>
-            </div>
+      <ContactSection cta={BRAND_CTA} />
 
-            <Rv delay={160}>
-              <ContactForm submitLabel="Request a walkthrough" />
-            </Rv>
-          </div>
-        </div>
-      </section>
-
-      <Footer extra={COMPARE_LINK} />
+      <Footer />
     </div>
   );
 }

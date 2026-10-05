@@ -1,4 +1,5 @@
 import PageHeader from "../Layout/PageHeader";
+import { StatStrip } from "../Layout/Spread";
 import "../../styles/impact.css";
 
 const STATS = [
@@ -33,15 +34,7 @@ export default function ImpactPage() {
           </p>
         </div>
 
-        <div className="p7-stats">
-          {STATS.map(({ num, cap }, i) => (
-            <div key={cap} className="p7-stat">
-              <div className="p7-stat-num">{num}</div>
-              <div className="p7-stat-cap">{cap}</div>
-              {i < STATS.length - 1 && <div className="p7-stat-rule" />}
-            </div>
-          ))}
-        </div>
+        <StatStrip p="p7" stats={STATS} sep="rule" />
 
         <blockquote className="p7-quote">
           <p>

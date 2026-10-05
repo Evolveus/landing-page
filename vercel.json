@@ -13,35 +13,7 @@
       "destination": "/"
     },
     {
-      "source": "/1",
-      "destination": "/"
-    },
-    {
-      "source": "/2",
-      "destination": "/"
-    },
-    {
-      "source": "/3",
-      "destination": "/"
-    },
-    {
-      "source": "/4",
-      "destination": "/"
-    },
-    {
-      "source": "/5",
-      "destination": "/"
-    },
-    {
-      "source": "/6",
-      "destination": "/"
-    },
-    {
       "source": "/compare",
-      "destination": "/"
-    },
-    {
-      "source": "/7",
       "destination": "/"
     },
     {
@@ -54,18 +26,6 @@
     },
     {
       "source": "/flyer/v1",
-      "destination": "/"
-    },
-    {
-      "source": "/flyer/v2",
-      "destination": "/"
-    },
-    {
-      "source": "/flyer/v3",
-      "destination": "/"
-    },
-    {
-      "source": "/flyer/v4",
       "destination": "/"
     }
   ],

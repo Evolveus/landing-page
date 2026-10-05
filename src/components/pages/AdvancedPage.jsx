@@ -1,5 +1,6 @@
 import PageHeader from "../Layout/PageHeader";
 import PageFooter from "../Layout/PageFooter";
+import { Rubric, ScoreFoot, SideNotes, StatStrip } from "../Layout/Spread";
 import "../../styles/advanced.css";
 
 const RUBRIC = [
@@ -11,10 +12,30 @@ const RUBRIC = [
 
 const STATS = [
   { num: "6 hr", sub: "6 min", cap: "Cycle turnaround" },
-  { num: "7", sub: "— ", cap: "Coding languages" },
-  { num: "8", sub: "— ", cap: "Question formats" },
-  { num: "100%", sub: "— ", cap: "Audit-ready, by default" },
+  { num: "7", cap: "Coding languages" },
+  { num: "8", cap: "Question formats" },
+  { num: "100%", cap: "Audit-ready, by default" },
 ];
+
+const SIDE = {
+  steps: {
+    caption: "How it works",
+    items: [
+      ["Faculty defines a rubric", "Criteria, weights, key points — set once, applied everywhere."],
+      ["LLM scores per criterion", "Each rubric line gets an independent score with rationale."],
+      ["Faculty reviews edge cases", "Borderline scores surface for review; clear ones land graded."],
+    ],
+  },
+  bullets: {
+    caption: "Why it scales",
+    items: [
+      "Semantic understanding — partial credit for partial reasoning, not keyword counting.",
+      "Coding support — boilerplate, driver code, reference solutions, visible and hidden test cases.",
+      "Rich question content — images, files, LaTeX, preview, and protected attachment access.",
+      "Full audit trail — rubric, score, and rationale on every response. Defensible at appeal.",
+    ],
+  },
+};
 
 export default function AdvancedPage() {
   return (
@@ -66,91 +87,16 @@ export default function AdvancedPage() {
               <div className="p5-mock-eyebrow p5-mock-eyebrow--gap">
                 RUBRIC — 3/4 met
               </div>
-              <div className="p5-rubric">
-                {RUBRIC.map(({ state, label, score }) => (
-                  <div key={label} className="p5-rub-row">
-                    <span className="p5-rub-tick" data-state={state}>
-                      {state === "ok" ? "✓" : "~"}
-                    </span>
-                    <span className="p5-rub-label">{label}</span>
-                    <span className="p5-rub-score">{score}</span>
-                  </div>
-                ))}
-              </div>
+              <Rubric className="p5-rubric" row="p5-rub" items={RUBRIC} />
 
-              <div className="p5-mock-foot">
-                <span className="p5-mock-foot-l">graded · 0.74s</span>
-                <span className="p5-mock-foot-r">
-                  <span>Score</span>
-                  <strong>7 / 10</strong>
-                </span>
-              </div>
+              <ScoreFoot base="p5-mock" note="graded · 0.74s" score="7 / 10" />
             </div>
           </div>
 
-          <aside className="p5-side">
-            <div className="p5-side-block">
-              <div className="caption">How it works</div>
-              <ol className="p5-steps">
-                <li>
-                  <strong>Faculty defines a rubric</strong>
-                  <span>
-                    Criteria, weights, key points — set once, applied
-                    everywhere.
-                  </span>
-                </li>
-                <li>
-                  <strong>LLM scores per criterion</strong>
-                  <span>
-                    Each rubric line gets an independent score with rationale.
-                  </span>
-                </li>
-                <li>
-                  <strong>Faculty reviews edge cases</strong>
-                  <span>
-                    Borderline scores surface for review; clear ones land
-                    graded.
-                  </span>
-                </li>
-              </ol>
-            </div>
-
-            <div className="p5-side-block">
-              <div className="caption">Why it scales</div>
-              <ul className="p5-bullets">
-                <li>
-                  Semantic understanding — partial credit for partial reasoning,
-                  not keyword counting.
-                </li>
-                <li>
-                  Coding support — boilerplate, driver code, reference
-                  solutions, visible and hidden test cases.
-                </li>
-                <li>
-                  Rich question content — images, files, LaTeX, preview, and
-                  protected attachment access.
-                </li>
-                <li>
-                  Full audit trail — rubric, score, and rationale on every
-                  response. Defensible at appeal.
-                </li>
-              </ul>
-            </div>
-          </aside>
+          <SideNotes p="p5" {...SIDE} />
         </div>
 
-        <div className="p5-stats">
-          {STATS.map(({ num, sub, cap }, i) => (
-            <div key={cap} className="p5-stat">
-              <div className="p5-stat-num">
-                {num}
-                {sub !== "— " && <span className="p5-stat-sub">→ {sub}</span>}
-              </div>
-              <div className="p5-stat-cap">{cap}</div>
-              {i < STATS.length - 1 && <div className="p5-stat-div" />}
-            </div>
-          ))}
-        </div>
+        <StatStrip p="p5" stats={STATS} />
       </div>
 
       <PageFooter chapter="The Hard Part" />

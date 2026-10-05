@@ -1,6 +1,6 @@
 import './register.css';
 import { Icon } from '../_shared/Icon';
-import { Rv, Nav, Footer } from './chrome';
+import { Rv, Nav, Footer, Eyebrow } from './chrome';
 import { useReveal } from './pageMotion';
 import { INSTITUTIONS, SIGNIN_PAGE } from '../content';
 
@@ -10,22 +10,17 @@ import { INSTITUTIONS, SIGNIN_PAGE } from '../content';
    there. The list is INSTITUTIONS in ../content.js.
    ═══════════════════════════════════════════════════════════════ */
 
-const FOOTER_EXTRA = [{ href: '/compare', label: 'Compare' }];
-
 export default function SignIn() {
   const root = useReveal();
 
   return (
     <div className="rg" ref={root}>
       {/* No form here: its '#contact' links go to the home page's. */}
-      <Nav base="/" home="/" />
+      <Nav base="/" />
 
       <main className="rg-signin" id="top">
         <div className="rg-wrap rg-signin-in">
-          <Rv className="rg-eyebrow">
-            <span className="rg-bub rg-bub--fill" />
-            <span className="rg-mono">{SIGNIN_PAGE.eyebrow}</span>
-          </Rv>
+          <Eyebrow>{SIGNIN_PAGE.eyebrow}</Eyebrow>
           <Rv as="h1" className="rg-display rg-signin-h rg-rv--mask" delay={60}>{SIGNIN_PAGE.title}</Rv>
           <Rv as="p" className="rg-lede" delay={120}>{SIGNIN_PAGE.lede}</Rv>
 
@@ -52,7 +47,7 @@ export default function SignIn() {
         </div>
       </main>
 
-      <Footer base="/" extra={FOOTER_EXTRA} />
+      <Footer base="/" />
     </div>
   );
 }

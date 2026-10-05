@@ -1,5 +1,4 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import "./index.css";
 import "./styles/shared.css";
 
 import CoverPage from "./components/pages/CoverPage";
@@ -16,70 +15,40 @@ import Compare from "./landing/brand/Compare";
 import Register from "./landing/brand/Register";
 import About from "./landing/brand/About";
 import SignIn from "./landing/brand/SignIn";
-import Design1 from "./landing/designs/Design1";
-import Design2 from "./landing/designs/Design2";
-import Design3 from "./landing/designs/Design3";
-import Design4 from "./landing/designs/Design4";
-import Design5 from "./landing/designs/Design5";
-import Design6 from "./landing/designs/Design6";
-import Design7 from "./landing/designs/Design7";
 import PresentationPage from "./presentation/PresentationPage";
-import FlyerPage from "./flyer/FlyerPage";
 import FlyerV1 from "./flyer/FlyerV1";
-import FlyerV2 from "./flyer/FlyerV2";
-import FlyerV3 from "./flyer/FlyerV3";
-import FlyerV4 from "./flyer/FlyerV4";
+import { useA4Export } from "./exportA4";
+// Last, as it styles the brochure over its own stylesheets; see the file.
+import "./styles/inherited.css";
+
+/* Every view: its address, the page it renders, and whether it is a
+   full-bleed site page (wrapped in .landing-shell; see the body class
+   below) or one with a way back home (`home`). The first path is the
+   one written back to the address bar. Unknown paths show "landing". */
+const ROUTES = [
+  { view: "landing", paths: ["/"], Page: LandingPage, shell: true },
+  { view: "brochure", paths: ["/brochure"] },
+  { view: "compare", paths: ["/compare"], Page: Compare, shell: true },
+  { view: "product", paths: ["/product"], Page: Register, shell: true },
+  { view: "about", paths: ["/about"], Page: About, shell: true },
+  { view: "signin", paths: ["/signin"], Page: SignIn, shell: true },
+  { view: "presentation", paths: ["/ppt", "/presentation"], Page: PresentationPage, home: true },
+  { view: "flyer", paths: ["/flyer", "/flyer/v1"], Page: FlyerV1, home: true },
+];
+
+const routeFor = (view) => ROUTES.find((r) => r.view === view) ?? ROUTES[0];
 
 export default function App() {
   const brochureRef = useRef(null);
-  const [exporting, setExporting] = useState(false);
   const [view, setView] = useState(() => {
     const path = window.location.pathname;
-    if (path === "/brochure") return "brochure";
-    if (path === "/compare") return "compare";
-    if (path === "/product") return "product";
-    if (path === "/about") return "about";
-    if (path === "/signin") return "signin";
-    if (path === "/1") return "design-1";
-    if (path === "/2") return "design-2";
-    if (path === "/3") return "design-3";
-    if (path === "/4") return "design-4";
-    if (path === "/5") return "design-5";
-    if (path === "/6") return "design-6";
-    if (path === "/7") return "design-7";
-    if (path === "/ppt" || path === "/presentation") return "presentation";
-    if (path === "/flyer/v1") return "flyer-v1";
-    if (path === "/flyer/v2") return "flyer-v2";
-    if (path === "/flyer/v3") return "flyer-v3";
-    if (path === "/flyer/v4") return "flyer-v4";
-    if (path === "/flyer") return "flyer";
-    return "landing";
+    return ROUTES.find((r) => r.paths.includes(path))?.view ?? "landing";
   });
+  const route = routeFor(view);
 
   useEffect(() => {
-    const paths = {
-      brochure: "/brochure",
-      compare: "/compare",
-      product: "/product",
-      about: "/about",
-      signin: "/signin",
-      "design-1": "/1",
-      "design-2": "/2",
-      "design-3": "/3",
-      "design-4": "/4",
-      "design-5": "/5",
-      "design-6": "/6",
-      "design-7": "/7",
-      landing: "/",
-      presentation: "/ppt",
-      flyer: "/flyer",
-      "flyer-v1": "/flyer/v1",
-      "flyer-v2": "/flyer/v2",
-      "flyer-v3": "/flyer/v3",
-      "flyer-v4": "/flyer/v4",
-    };
     const { hash } = window.location;
-    window.history.replaceState({}, "", (paths[view] ?? "/") + hash);
+    window.history.replaceState({}, "", route.paths[0] + hash);
     // The browser's own jump to #section happens before React has drawn
     // the section, so jump once it exists.
     if (hash) {
@@ -87,130 +56,27 @@ export default function App() {
         document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView();
       });
     }
-  }, [view]);
+  }, [route]);
 
   // index.css styles <body> as the brochure's centred, padded, gapped column.
   // The landing views render full-bleed, so they mark the body explicitly
   // rather than leaving the reset to a :has() selector.
   useLayoutEffect(() => {
-    const fullBleed = view === "landing" || view === "compare" || view === "product" || view === "about" || view === "signin" || view.startsWith("design-");
-    document.body.classList.toggle("is-landing", fullBleed);
+    document.body.classList.toggle("is-landing", !!route.shell);
     return () => document.body.classList.remove("is-landing");
-  }, [view]);
+  }, [route]);
 
-  const exportPDF = async () => {
-    setExporting(true);
-    try {
-      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
-      const pages = brochureRef.current.querySelectorAll(".page");
-      const pdf = new jsPDF({
-        unit: "mm",
-        format: "a4",
-        orientation: "portrait",
-      });
-      for (let i = 0; i < pages.length; i++) {
-        const page = pages[i];
-        const canvas = await html2canvas(page, {
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          backgroundColor: null,
-        });
-        const imgData = canvas.toDataURL("image/jpeg", 0.98);
-        if (i > 0) pdf.addPage();
-        pdf.addImage(imgData, "JPEG", 0, 0, 210, 297);
+  const [exporting, exportPDF] = useA4Export(
+    () => brochureRef.current.querySelectorAll(".page"),
+    "evolveus-brochure.pdf",
+  );
 
-        const pageRect = page.getBoundingClientRect();
-        page.querySelectorAll("[data-pdf-link]").forEach((el) => {
-          const elRect = el.getBoundingClientRect();
-          const x = ((elRect.left - pageRect.left) / pageRect.width) * 210;
-          const y = ((elRect.top - pageRect.top) / pageRect.height) * 297;
-          const w = (elRect.width / pageRect.width) * 210;
-          const h = (elRect.height / pageRect.height) * 297;
-          pdf.link(x, y, w, h, { url: el.dataset.pdfLink });
-        });
-      }
-      pdf.save("evolveus-brochure.pdf");
-    } finally {
-      setExporting(false);
-    }
-  };
-
-  if (view === "presentation") {
-    return <PresentationPage onHome={() => setView("landing")} />;
-  }
-
-  if (view === "flyer") {
-    return <FlyerPage onHome={() => setView("landing")} />;
-  }
-
-  if (view === "flyer-v1") {
-    return <FlyerV1 onHome={() => setView("landing")} />;
-  }
-
-  if (view === "flyer-v2") {
-    return <FlyerV2 onHome={() => setView("landing")} />;
-  }
-
-  if (view === "flyer-v3") {
-    return <FlyerV3 onHome={() => setView("landing")} />;
-  }
-
-  if (view === "flyer-v4") {
-    return <FlyerV4 onHome={() => setView("landing")} />;
-  }
-
-  if (view === "product") {
+  if (route.Page) {
+    const { Page } = route;
+    if (route.home) return <Page onHome={() => setView("landing")} />;
     return (
       <div className="landing-shell">
-        <Register />
-      </div>
-    );
-  }
-
-  if (view === "about") {
-    return (
-      <div className="landing-shell">
-        <About />
-      </div>
-    );
-  }
-
-  if (view === "signin") {
-    return (
-      <div className="landing-shell">
-        <SignIn />
-      </div>
-    );
-  }
-
-  if (view === "compare") {
-    return (
-      <div className="landing-shell">
-        <Compare />
-      </div>
-    );
-  }
-
-  if (view === "landing") {
-    return (
-      <div className="landing-shell">
-        <LandingPage onNavigate={(n) => setView(`design-${n}`)} />
-      </div>
-    );
-  }
-
-  if (view.startsWith("design-")) {
-    const n = Number(view.slice("design-".length));
-    const onNavigate = (k) => setView(`design-${k}`);
-    const designs = { 1: Design1, 2: Design2, 3: Design3, 4: Design4, 5: Design5, 6: Design6, 7: Design7 };
-    const Design = designs[n] ?? Design1;
-    return (
-      <div className="landing-shell">
-        <Design active={n} onNavigate={onNavigate} />
+        <Page />
       </div>
     );
   }
