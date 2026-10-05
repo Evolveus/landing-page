@@ -16,7 +16,7 @@ import Register from "./landing/brand/Register";
 import About from "./landing/brand/About";
 import SignIn from "./landing/brand/SignIn";
 import PresentationPage from "./presentation/PresentationPage";
-import FlyerV1 from "./flyer/FlyerV1";
+import Flyer from "./flyer/Flyer";
 import { useA4Export } from "./exportA4";
 // Last, as it styles the brochure over its own stylesheets; see the file.
 import "./styles/inherited.css";
@@ -33,7 +33,7 @@ const ROUTES = [
   { view: "about", paths: ["/about"], Page: About, shell: true },
   { view: "signin", paths: ["/signin"], Page: SignIn, shell: true },
   { view: "presentation", paths: ["/ppt", "/presentation"], Page: PresentationPage, home: true },
-  { view: "flyer", paths: ["/flyer", "/flyer/v1"], Page: FlyerV1, home: true },
+  { view: "flyer", paths: ["/flyer", "/flyer/v1"], Page: Flyer, home: true },
 ];
 
 const routeFor = (view) => ROUTES.find((r) => r.view === view) ?? ROUTES[0];
