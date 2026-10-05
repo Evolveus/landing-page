@@ -74,6 +74,19 @@ a place to write exams.
 | Question tags | Topic, difficulty, Bloom's level, course outcome CO1 to CO8, marks | Product docs |
 | Violation kinds logged | 10 (the site says "ten kinds") | Product; list in §4.3 |
 | Questions from one PDF | Up to 50 per run, PDF up to 25 MB | Product docs |
+| One mid-term's marking | 420 written papers: about 50 hours by hand, 14 minutes on Evolveus | Team, confirmed 2026-10-05. Used on the brochure cover |
+
+A faculty quote, confirmed by the team on 2026-10-05, may be used
+attributed to "Faculty member, School of AI, Amrita Vishwa Vidyapeetham":
+"Evolveus replaced our existing system overnight, and the difference is
+stark. What used to take three days now takes thirty minutes, and students
+can actually reflect on their performance while it still matters."
+Don't print its middle sentence next to the 50 hours to 14 minutes figure:
+two different times for the same job confuse the reader (the brochure
+drops it).
+
+Not confirmed, so not for use: 93% faculty agreement with AI grades, 0.8s
+per response (both from the old brochure).
 
 ## 4. What we can sell
 
@@ -237,7 +250,8 @@ objection):
 - NAAC or NBA export. The product exports generic Excel only.
   "Accreditation-ready" is out too.
 - Uptime figures (99.9%, failover) or speed figures beyond "about ten
-  minutes to mark".
+  minutes to mark". The one exception is the confirmed mid-term figure in
+  §3 (50 hours by hand, 14 minutes on Evolveus).
 - "Student data never leaves your servers" without the AI caveat.
 - AI that marks without faculty: always say faculty approve.
 - Pricing, credit costs or tiers (billing is on the roadmap).
@@ -267,15 +281,22 @@ don't.
 | /product | Someone already interested | Everything, in detail, with real screens | Walkthrough offer |
 | /compare | "Why not what we have?" | The alternatives, honestly | Walkthrough offer |
 | Flyer (1 page A4) | Handed over or emailed; a few seconds | The whole paper marked (MCQ, written, code), by AI, faculty approve | Offer + QR code |
-| Brochure (4 pages A4) | Dean takes it away, passes to HoDs and IT; ten minutes | The case: what it replaces, AI at each stage, safeguards, a page for IT | Offer |
+| Brochure (8-page A4 booklet) | Dean takes it away, passes to HoDs and IT; ten minutes | The case: what it replaces, AI at each stage, safeguards, a page for IT | Offer |
 | Deck | A room, presented in person; half an hour | The story told live: problem, demo flow, AI, trust, deployment | "Send us a paper" |
 
 Flyer range line (added 2026-10-05): one mono line teasing high-value
 features the flyer doesn't cover, "Plus: Class insights after each exam ·
 Topic mastery by section · Locked lab exams · Bloom's and CO tags".
 
-Brochure pages: (1) cover and the case, (2) AI and marking, (3) reports and
-exam security, (4) for IT (hosting, data, own AI models) and the offer.
+Brochure pages (8, decided 2026-10-05; the 4-page limit was dropped to
+give it room for character): (1) cover, (2) the case, with contents, what
+it replaces and the figures, (3) I Setting, (4) II Sitting, (5) III
+Marking, (6) for students, (7) IV Reading, (8) V Running (for
+IT), closing on the quote and the offer.
+
+Faculty control (approve, change, re-mark) is said once on the cover's
+case page and as one short row in chapter III. A whole page of it read as
+defensive (decided 2026-10-05).
 
 Placement. ● feature it, ○ one line, — leave out.
 
@@ -300,8 +321,9 @@ Placement. ● feature it, ○ one line, — leave out.
 | Origin: student-built, adopted by School of AI | — (/about) | — | ○ | ○ opening |
 | Scoring options, admin, editor | — (/product) | — | — | — |
 
-Order of work: flyer, then the home page's AI pass (one-line facts in the
-existing steps, layout unchanged), then brochure, then deck.
+Order of work: flyer, then brochure (moved ahead of the home page's AI
+pass on 2026-10-05), then the home page's AI pass (one-line facts in the
+existing steps, layout unchanged), then deck.
 
 ## 7. Copy decisions
 

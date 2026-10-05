@@ -170,16 +170,26 @@ The web rules carry over with these changes.
   captions and mono labels at least 7pt.
 - **Margins.** 14mm minimum on every side for office printing. Bleed
   (3mm) only if a print shop is involved.
+- **Dark pages and bleeds on paper.** Office printers leave an uneven
+  4 to 5mm unprinted strip, so a forest page is a panel inset 8mm with a
+  white frame that looks meant, with its text 18mm from the edge. A real
+  screen may run off one edge if only its outer margin is lost; text,
+  logos, folios and the QR code always stay 14mm inside.
+- **The booklet's own idea** (the brochure): pacing. Forest panel pages
+  between paper ones, chapter numerals (I to V) drawn huge in outline,
+  real screens printed large, and one pencil mark a page. The flyer's
+  idea is one annotated card; the booklet doesn't repeat it.
 - **Paper colour.** Use `#ffffff` for the page so the printer lays no tint;
   `--paper-2` stays for insets.
 - **Export through the browser's print to PDF** (`window.print()` with
   `@page { size: A4; margin: 0 }` and a print rule that shows only the
   sheet; see `src/flyer/flyer.css`). That gives a vector PDF with real
-  text and working links, drawn exactly as on screen. Don't use
-  html2canvas (`src/exportA4.js`, still used by the old brochure): it
-  drops negative letter-spacing, `font-stretch`, SVG transforms and some
-  SVG images, so headlines widen, doodles vanish and the QR code turns
-  into a black block.
+  text and working links, drawn exactly as on screen. Don't go back to
+  html2canvas (the old brochure's export, removed 2026-10-05): it drops
+  negative letter-spacing, `font-stretch`, SVG transforms and some SVG
+  images, so headlines widen, doodles vanish and the QR code turns into a
+  black block. Scope a piece's print rules to its own view
+  (`body:has(.fl-sheet)`): every stylesheet loads on every route.
 - **Check the PDF itself, not the screen,** including once with the system
   in dark mode. Draw animated things (pencil strokes) in their final
   state.

@@ -1,15 +1,5 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import "./styles/shared.css";
+import { useEffect, useLayoutEffect, useState } from "react";
 
-import CoverPage from "./components/pages/CoverPage";
-import ProblemSolutionPage from "./components/pages/ProblemSolutionPage";
-import SystemFlowPage from "./components/pages/SystemFlowPage";
-import CapabilitiesPage from "./components/pages/CapabilitiesPage";
-import AdvancedPage from "./components/pages/AdvancedPage";
-import CodingPage from "./components/pages/CodingPage";
-import StudentPage from "./components/pages/StudentPage";
-import RolesPage from "./components/pages/RolesPage";
-import ImpactPage from "./components/pages/ImpactPage";
 import LandingPage from "./landing/LandingPage";
 import Compare from "./landing/brand/Compare";
 import Register from "./landing/brand/Register";
@@ -17,9 +7,7 @@ import About from "./landing/brand/About";
 import SignIn from "./landing/brand/SignIn";
 import PresentationPage from "./presentation/PresentationPage";
 import Flyer from "./flyer/Flyer";
-import { useA4Export } from "./exportA4";
-// Last, as it styles the brochure over its own stylesheets; see the file.
-import "./styles/inherited.css";
+import Brochure from "./brochure/Brochure";
 
 /* Every view: its address, the page it renders, and whether it is a
    full-bleed site page (wrapped in .landing-shell; see the body class
@@ -27,7 +15,7 @@ import "./styles/inherited.css";
    one written back to the address bar. Unknown paths show "landing". */
 const ROUTES = [
   { view: "landing", paths: ["/"], Page: LandingPage, shell: true },
-  { view: "brochure", paths: ["/brochure"] },
+  { view: "brochure", paths: ["/brochure"], Page: Brochure, home: true },
   { view: "compare", paths: ["/compare"], Page: Compare, shell: true },
   { view: "product", paths: ["/product"], Page: Register, shell: true },
   { view: "about", paths: ["/about"], Page: About, shell: true },
@@ -39,7 +27,6 @@ const ROUTES = [
 const routeFor = (view) => ROUTES.find((r) => r.view === view) ?? ROUTES[0];
 
 export default function App() {
-  const brochureRef = useRef(null);
   const [view, setView] = useState(() => {
     const path = window.location.pathname;
     return ROUTES.find((r) => r.paths.includes(path))?.view ?? "landing";
@@ -58,7 +45,8 @@ export default function App() {
     }
   }, [route]);
 
-  // index.css styles <body> as the brochure's centred, padded, gapped column.
+  // index.css styles <body> as a centred, padded column for the print
+  // pieces and the deck.
   // The landing views render full-bleed, so they mark the body explicitly
   // rather than leaving the reset to a :has() selector.
   useLayoutEffect(() => {
@@ -66,68 +54,11 @@ export default function App() {
     return () => document.body.classList.remove("is-landing");
   }, [route]);
 
-  const [exporting, exportPDF] = useA4Export(
-    () => brochureRef.current.querySelectorAll(".page"),
-    "evolveus-brochure.pdf",
-  );
-
-  if (route.Page) {
-    const { Page } = route;
-    if (route.home) return <Page onHome={() => setView("landing")} />;
-    return (
-      <div className="landing-shell">
-        <Page />
-      </div>
-    );
-  }
-
+  const { Page } = route;
+  if (route.home) return <Page onHome={() => setView("landing")} />;
   return (
-    <>
-      <div className="export-controls">
-        <button
-          onClick={() => setView("landing")}
-          className="export-button"
-          style={{ marginRight: 8 }}
-        >
-          ← Home
-        </button>
-        <button
-          onClick={exportPDF}
-          disabled={exporting}
-          className="export-button"
-        >
-          {exporting ? (
-            "Exporting..."
-          ) : (
-            <>
-              <svg
-                viewBox="0 0 24 24"
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-              >
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              Export PDF
-            </>
-          )}
-        </button>
-      </div>
-      <div ref={brochureRef} className="brochure-view">
-        <CoverPage />
-        <ProblemSolutionPage />
-        <SystemFlowPage />
-        <CapabilitiesPage />
-        <AdvancedPage />
-        <CodingPage />
-        <StudentPage />
-        <RolesPage />
-        <ImpactPage />
-      </div>
-    </>
+    <div className="landing-shell">
+      <Page />
+    </div>
   );
 }
