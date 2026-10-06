@@ -73,8 +73,9 @@ function cameraAt(t) {
 const PLAY = 0.8;
 // The scroll length of each unit (the gate, then each step), in shares of
 // the track's --per, where it differs from one. Step 2, where the pencil
-// answers six questions, gets twice the room, and plays at half the speed.
-const UNIT_LENGTH = { 2: 2 };
+// answers six questions, and step 5, where the histogram sinks and the
+// eighteen mastery bars rise, get twice the room, and play at half the speed.
+const UNIT_LENGTH = { 2: 2, 5: 2 };
 const unitLength = (k) => UNIT_LENGTH[k] ?? 1;
 // Where each unit starts on the track, in --per shares.
 const unitStarts = (units) => {
@@ -87,9 +88,6 @@ const unitStarts = (units) => {
 };
 // The share of the gate after which step 1's text takes over.
 const GATE_DONE = 0.82;
-// How the stage follows the scroll: the most units (steps) it moves in a
-// second, and how quickly it eases toward the scroll position.
-const MAX_RATE = 1.4;
 // The share of the gate at which the gate's pencil hands over to the
 // desk's (the stage has faded in by then).
 const PEN_SWAP = 0.8;
@@ -104,6 +102,7 @@ const FLIP_RATE = 3.2;
 const ERASE_IN = 2.055;
 const ERASE_OUT = 2.035;
 const PEN_LENGTH = 199 * 0.8;
+// How quickly the stage eases toward the scroll position (per second).
 const EASE = 5;
 
 function useJourney(stepCount) {
@@ -287,18 +286,20 @@ function useJourney(stepCount) {
       }
     };
 
-    /* The stage follows the scroll position at a limited speed, the way
-       a scrubbed timeline with lag works: it eases toward the target and
-       never moves faster than MAX_RATE units a second. A quick flick
-       still plays every step, over a readable time, instead of all at
-       once; scrolling back rewinds the same way. With reduced motion it
-       jumps straight to the target. */
+    /* The stage follows the scroll position the way a scrubbed timeline
+       with lag works: it eases toward the target (EASE), trailing the
+       scroll by about 0.2s however fast the reader goes, and settling
+       over a second or two after a long jump; scrolling back rewinds the
+       same way. With reduced
+       motion it jumps straight to the target. */
     let shown = target();
     let goal = shown;
     let frame = 0;
     let prev = 0;
     const tick = (now) => {
-      const dt = Math.min(0.05, (now - prev) / 1000);
+      // update() stamps prev mid-frame, so the frame's own time can be
+      // a little earlier; a negative dt would push shown away from goal.
+      const dt = Math.max(0, Math.min(0.05, (now - prev) / 1000));
       prev = now;
       const gap = goal - shown;
       // Which way the story is moving: back up the page, the pencil
@@ -306,16 +307,15 @@ function useJourney(stepCount) {
       // zone keeps a hair's wobble from reading as a change of direction.
       if (gap < -0.01) rewinding = true;
       else if (gap > 0.01) rewinding = false;
-      const eased = gap * (1 - Math.exp(-dt * EASE));
-      // A longer unit plays slower by the same factor.
-      const cap = MAX_RATE * dt / unitLength(Math.min(units - 1, Math.floor(shown)));
-      shown += Math.max(-cap, Math.min(cap, eased));
+      shown += gap * (1 - Math.exp(-dt * EASE));
       if (Math.abs(goal - shown) < 0.0005) shown = goal;
       // The turn itself plays in time, a quick twirl, not with the scroll.
       // Hysteresis at the edge of step 2: the eraser comes in only once
       // clearly inside the step and goes only once clearly at its edge,
-      // so hovering on the boundary cannot set the pencil spinning.
-      if (!rewinding || shown <= ERASE_OUT || shown >= 3) erasing = false;
+      // so hovering on the boundary cannot set the pencil spinning. A
+      // rewind that ends below step 2 passes through without the eraser:
+      // it would only start to turn over and straight back.
+      if (!rewinding || shown <= ERASE_OUT || shown >= 3 || goal <= ERASE_OUT) erasing = false;
       else if (shown >= ERASE_IN) erasing = true;
       const want = erasing ? 1 : 0;
       flip += Math.max(-FLIP_RATE * dt, Math.min(FLIP_RATE * dt, want - flip));
