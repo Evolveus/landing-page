@@ -81,8 +81,9 @@ const MURAL_WORDS = [
 
 /* Loose doodles in the footer's empty space, as in the margins of a
    rough sheet: beside the content on wide screens, and under the short
-   columns. Each is drawn on a 60 x 60 board; `at` names its place (see
-   .rg-dd-* in journey.css). They are doodled last, as the page ends. */
+   columns, or beside the stacked links on phones and tablets. Each is
+   drawn on a 60 x 60 board; `at` names its place (see .rg-dd-* in
+   register.css). They are doodled last, as the page ends. */
 const FOOT_DOODLES = [
   { at: 'l1', strokes: ['M30 30 C 34 26, 40 30, 37 35 C 33 41, 23 38, 22 30 C 21 20, 34 15, 42 22 C 50 30, 46 44, 34 46 C 22 48, 12 40, 12 28'] },
   { at: 'l2', strokes: ['M30 10 L 35 23 L 49 23 L 38 31 L 42 45 L 30 37 L 18 45 L 22 31 L 11 23 L 25 23 Z'] },
@@ -133,7 +134,11 @@ export function FootMural() {
     const dd = doodles.current;
     if (!el || !dd) return;
     shareStrokes(Array.from(el.querySelectorAll('.rg-mural-line')));
-    shareStrokes(Array.from(dd.querySelectorAll('.rg-mural-line')));
+    // Each doodle shares out its own strokes and runs on its own --d: one
+    // after another on a wide screen, each as it scrolls up on a phone.
+    const marks = Array.from(dd.querySelectorAll('.rg-dd'));
+    marks.forEach((m) => shareStrokes(Array.from(m.querySelectorAll('.rg-mural-line'))));
+    const drawn = new WeakMap();
     let frame = 0;
     // Once visible, the footer writes itself in one pass: mural first,
     // then the loose doodles. This remains separate from scroll scrubbing
@@ -162,7 +167,23 @@ export function FootMural() {
         dDoodle = Math.min(1, Math.max(0, (intro - 0.65) / 0.35));
       }
       el.style.setProperty('--d', d.toFixed(3));
-      dd.style.setProperty('--d', dDoodle.toFixed(3));
+      // Only the doodles this screen width shows (see .rg-dd-* in the CSS).
+      const shown = marks.filter((m) => m.getClientRects().length > 0);
+      // On a phone or tablet the columns stack and the footer runs taller
+      // than the screen: the doodles sit beside the links, so each is drawn
+      // as it comes up, and stays drawn.
+      const tall = dd.getBoundingClientRect().height > vh;
+      shown.forEach((m, i) => {
+        let v;
+        if (tall) {
+          const box = m.getBoundingClientRect();
+          v = Math.max(drawn.get(m) || 0, Math.min(1, Math.max(0, (vh - 40 - box.top) / (box.height + 60))));
+          drawn.set(m, v);
+        } else {
+          v = Math.min(1, Math.max(0, dDoodle * shown.length - i));
+        }
+        m.style.setProperty('--d', v.toFixed(3));
+      });
     };
     const isVisible = () => {
       const box = el.getBoundingClientRect();

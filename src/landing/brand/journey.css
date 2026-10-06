@@ -1154,6 +1154,10 @@
 @media (max-width: 880px){
   .jy-handoff-grid{ grid-template-columns: minmax(0, 1fr); }
   .jy-handoff-figs{ grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  .jy-handoff-figs .rg-trust-fig{ text-align: center; }
+  /* Centred, the digits alone are centred: the "+" hangs off their right. */
+  .jy-handoff-figs .rg-omr{ position: relative; }
+  .jy-handoff-figs .rg-omr-plus{ position: absolute; top: 0; left: calc(100% + 7px); }
   .jy-story-in{ grid-template-columns: minmax(0, 1fr); gap: 0; }
   .jy-stage-col{ order: 0; position: sticky; top: 58px; z-index: 2; height: 56svh; }
   .jy-stage{
@@ -1192,6 +1196,10 @@
   /* One column: cap each figure so its crop is not enlarged past the
      capture's own size on a tablet. */
   .jy-brief-grid{ grid-template-columns: minmax(0, 1fr); }
+}
+/* Phones rule a line between the stacked counts; give it room below. */
+@media (max-width: 720px){
+  .jy-handoff-figs .rg-trust-fig:not(:first-child){ padding-top: 22px; }
 }
 @media (max-width: 520px){
   .jy-brief-list li{ grid-template-columns: minmax(0, 1fr); gap: 4px; }

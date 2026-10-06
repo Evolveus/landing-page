@@ -549,6 +549,11 @@
 
 @media (max-width: 720px){
   .rg-about-figs{ grid-template-columns: minmax(0, 1fr); }
+  .rg-about-figs .rg-trust-fig{ text-align: center; }
+  /* Centred, the digits alone are centred: the "+" hangs off their right. */
+  .rg-about-figs .rg-omr{ position: relative; }
+  .rg-about-figs .rg-omr-plus{ position: absolute; top: 0; left: calc(100% + 7px); }
+  .rg-about-figs .rg-trust-fig:not(:first-child){ padding-top: 22px; }
   .rg-about-covers{ grid-template-columns: minmax(0, 1fr); }
   .rg-about-contact{ grid-template-columns: minmax(0, 1fr); }
   .rg-inst a{ grid-template-columns: auto minmax(0, 1fr) auto; }
@@ -1112,7 +1117,28 @@
 .rg-dd[class*='rg-dd-l']{ left: calc((100% - 100vw) / 2 * var(--g)); translate: -50% 0; }
 .rg-dd[class*='rg-dd-r']{ right: calc((100% - 100vw) / 2 * var(--g)); translate: 50% 0; }
 @media (min-width: 1520px){ .rg-dd[class*='rg-dd-l'], .rg-dd[class*='rg-dd-r']{ display: block; } }
-@media (max-width: 1100px){ .rg-foot-doodles{ display: none; } }
+@media (min-width: 1081px) and (max-width: 1100px){ .rg-foot-doodles{ display: none; } }
+/* Two columns (tablet): the ones under the columns move into the gaps,
+   under the tagline, beside the platform links and under resources. */
+@media (max-width: 1080px){
+  .rg-dd[class*='rg-dd-b']{ bottom: auto; }
+  .rg-dd-b1{ left: 22%; top: 430px; }
+  .rg-dd-b2{ left: 36%; top: 505px; }
+  .rg-dd-b3{ left: auto; right: 8%; top: 380px; }
+  .rg-dd-b4{ left: auto; right: 30%; top: 780px; }
+  .rg-dd-b5{ left: auto; right: 9%; top: 865px; }
+  .rg-dd-b6{ left: 34%; top: 875px; }
+}
+/* One column (phone): down the empty right side of the stacked links. */
+@media (max-width: 720px){
+  .rg-dd[class*='rg-dd-b']{ left: auto; }
+  .rg-dd-b1{ right: 18%; top: 340px; }
+  .rg-dd-b2{ right: 3%; top: 480px; }
+  .rg-dd-b3{ right: 24%; top: 625px; }
+  .rg-dd-b4{ right: 5%; top: 765px; }
+  .rg-dd-b5{ right: 28%; top: 905px; }
+  .rg-dd-b6{ right: 6%; top: 1000px; }
+}
 
 /* Too narrow to read whole: the mural is drawn larger and pans along
    with the drawing, keeping the stroke being drawn on screen. */
