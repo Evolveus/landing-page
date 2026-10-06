@@ -11,7 +11,8 @@ import { useEffect, useRef } from 'react';
    (url(#rg-graphite)), which streaks the stroke and breaks its edge into
    grain, as graphite catches on the tooth of paper. It is applied to
    whole marks in CSS px, so the grain is the same size on every mark.
-   The footer renders it, so every page that shows pencil has it. */
+   The nav renders it, so every page that shows pencil has it, the
+   print viewer (nav, no footer) included. */
 export function GraphiteDefs() {
   return (
     <svg className="rg-defs" aria-hidden="true">

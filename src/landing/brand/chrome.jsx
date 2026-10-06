@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavScroll, useTheme } from './pageMotion';
 import { Icon } from '../_shared/Icon';
 import { ContactForm } from '../_shared/ContactForm';
 import { FootMural, GraphiteDefs } from './footMural';
-import { BRAND, BRAND_LOGO, SITE_NAV, SIGNIN_LINK, BRAND_FOOTER } from '../content';
+import { BRAND, BRAND_LOGO, SITE_NAV, SITE_RESOURCES, SIGNIN_LINK, BRAND_FOOTER } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
    CHROME — the parts every EvolveUs brand page shares: the reveal
@@ -116,6 +116,130 @@ export function ContactSection({ cta, sub = cta.sub, contact, submitLabel = 'Req
   );
 }
 
+/* Each print piece drawn in pencil, so the menu shows what you get: the
+   booklet lying open, the one sheet, the slide on its stand. Boards are
+   60 x 46; strokes are listed in drawing order. */
+const RESOURCE_SKETCHES = {
+  '/brochure': [
+    'M30 11 C 22 7, 12 7, 5 10 L 5 38 C 12 35, 22 35, 30 39',
+    'M30 11 C 38 7, 48 7, 55 10 L 55 38 C 48 35, 38 35, 30 39',
+    'M30 11 L 30 39',
+    'M10 17 L 25 16 M10 23 L 24 22 M10 29 L 21 28',
+    'M35 16 L 50 17 M35 22 L 49 23',
+  ],
+  '/flyer': [
+    'M18 41 L 18 5 L 36 4 L 43 11 L 43 41 Z',
+    'M36 4 L 36 11 L 43 11',
+    'M23 18 L 38 17 M23 24 L 38 24 M23 30 L 33 30',
+  ],
+  '/ppt': [
+    'M5 6 L 55 5 L 55 32 L 5 33 Z',
+    'M30 33 L 30 38 L 22 44 M30 38 L 38 44',
+    'M13 27 L 13 21 M19 27 L 19 15 M25 27 L 25 18',
+    'M33 14 L 47 14 M33 20 L 44 20',
+  ],
+};
+
+const Sketch = ({ strokes }) => (
+  <svg className="rg-drop-sketch" viewBox="0 0 60 46" aria-hidden="true">
+    {strokes.map((d, i) => (
+      <path key={d} d={d} pathLength="1" style={{ '--i': i }} />
+    ))}
+  </svg>
+);
+
+/* "Resources" in the nav: a button that opens a small menu of the print
+   pieces. Click, tap or Enter opens it; on a mouse, hovering opens it
+   too, and it waits a moment before closing so the pointer can travel
+   down into the menu. Escape, a click elsewhere, or focus leaving it
+   closes it. The chevron marks it as the one item that opens rather
+   than goes somewhere. */
+function ResourcesMenu() {
+  const [open, setOpen] = useState(false);
+  const root = useRef(null);
+  const btn = useRef(null);
+  const timer = useRef(0);
+  // Set while the menu is open only because the pointer is over it, so a
+  // click that follows the hover keeps it open rather than shutting it.
+  const byHover = useRef(false);
+  const here = SITE_RESOURCES.some((r) => isHere(r.href));
+
+  useEffect(() => {
+    if (!open) {
+      byHover.current = false;
+      return undefined;
+    }
+    const onDown = (e) => { if (!root.current?.contains(e.target)) setOpen(false); };
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      setOpen(false);
+      btn.current?.focus();
+    };
+    document.addEventListener('pointerdown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  // Hover only counts for a mouse; a tap fires pointerenter too, and the
+  // click that follows would close the menu again.
+  const hover = (next) => (e) => {
+    if (e.pointerType !== 'mouse') return;
+    clearTimeout(timer.current);
+    if (next) {
+      if (!open) byHover.current = true;
+      setOpen(true);
+    } else {
+      timer.current = setTimeout(() => setOpen(false), 150);
+    }
+  };
+
+  const toggle = () => {
+    if (byHover.current) byHover.current = false;
+    else setOpen((o) => !o);
+  };
+
+  return (
+    <div
+      className={`rg-drop ${open ? 'is-open' : ''}`}
+      ref={root}
+      onPointerEnter={hover(true)}
+      onPointerLeave={hover(false)}
+      onBlur={(e) => { if (!root.current?.contains(e.relatedTarget)) setOpen(false); }}
+    >
+      <button
+        type="button"
+        className="rg-drop-btn"
+        ref={btn}
+        aria-expanded={open}
+        aria-controls="rg-drop-resources"
+        aria-current={here ? 'page' : undefined}
+        onClick={toggle}
+      >
+        Resources
+        <Icon name="chevronDown" size={12} />
+      </button>
+      <div className="rg-drop-panel" id="rg-drop-resources" hidden={!open}>
+        {SITE_RESOURCES.map((r, i) => (
+          <a
+            key={r.href}
+            href={r.href}
+            aria-current={isHere(r.href) ? 'page' : undefined}
+            style={{ '--n': i }}
+          >
+            <Sketch strokes={RESOURCE_SKETCHES[r.href]} />
+            <span className="rg-drop-label">{r.label}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* The nav.
 
    `base` prefixes the "#contact" button. A page with its own contact
@@ -137,6 +261,7 @@ export function Nav({ base = '', home }) {
 
   return (
     <nav className={`rg-nav ${stuck ? 'is-stuck' : ''}`}>
+      <GraphiteDefs />
       <div className="rg-wrap rg-nav-in">
         <a className="rg-brand" href={home ?? (base || '#top')} aria-label={BRAND.name}>
           <Lockup />
@@ -147,6 +272,7 @@ export function Nav({ base = '', home }) {
               {l.label}
             </a>
           ))}
+          <ResourcesMenu />
         </div>
         <button
           className="rg-theme"
@@ -183,12 +309,22 @@ export function Nav({ base = '', home }) {
 
       <div className="rg-menu" id="rg-menu" hidden={!menu}>
         <div className="rg-wrap">
-          {[...SITE_NAV, SIGNIN_LINK].map((l) => (
+          {SITE_NAV.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setMenu(false)}>
               <span className="rg-bub" />
               {l.label}
             </a>
           ))}
+          <span className="rg-mono rg-menu-group">Resources</span>
+          {SITE_RESOURCES.map((l) => (
+            <a key={l.href} className="rg-menu-sub" href={l.href} onClick={() => setMenu(false)}>
+              {l.label}
+            </a>
+          ))}
+          <a href={SIGNIN_LINK.href} onClick={() => setMenu(false)}>
+            <span className="rg-bub" />
+            {SIGNIN_LINK.label}
+          </a>
         </div>
       </div>
     </nav>
@@ -204,7 +340,6 @@ export function Footer({ base = '' }) {
 
   return (
     <footer className="rg-foot">
-      <GraphiteDefs />
       <div className="rg-wrap rg-foot-in">
         <FootMural />
         <div className="rg-foot-grid">

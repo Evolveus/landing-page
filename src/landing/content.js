@@ -344,6 +344,15 @@ export const SITE_NAV = [
   { href: '/about', label: 'About' },
 ];
 
+/* The print pieces, smallest first, behind "Resources" in the header
+   and listed again in the footer. The header's menu draws each one (RESOURCE_SKETCHES in
+   chrome.jsx). */
+export const SITE_RESOURCES = [
+  { href: '/flyer', label: 'Flyer' },
+  { href: '/brochure', label: 'Brochure' },
+  { href: '/ppt', label: 'Presentation' },
+];
+
 /* Sign in sits apart from the links, as a button of its own. */
 export const SIGNIN_LINK = { href: '/signin', label: 'Sign in' };
 
@@ -470,11 +479,7 @@ export const BRAND_FOOTER = {
     },
     {
       title: 'Resources',
-      links: [
-        { href: '/brochure', label: 'Brochure' },
-        { href: '/flyer', label: 'Flyer' },
-        { href: '/ppt', label: 'Presentation' },
-      ],
+      links: SITE_RESOURCES,
     },
     {
       title: 'Talk to us',

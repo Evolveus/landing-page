@@ -223,8 +223,9 @@
   letter-spacing: -0.025em;
 }
 
-.rg-nav-links{ display: flex; gap: 26px; white-space: nowrap; }
-.rg-nav-links a{
+.rg-nav-links{ display: flex; align-items: center; gap: 26px; white-space: nowrap; }
+.rg-nav-links > a,
+.rg-drop-btn{
   font-size: 14px;
   font-weight: 500;
   color: var(--ink-70);
@@ -232,7 +233,7 @@
   padding: 4px 0;
   transition: color 0.2s ease;
 }
-.rg-nav-links a::after{
+.rg-nav-links > a::after{
   content: '';
   position: absolute;
   left: 0; bottom: 0;
@@ -242,8 +243,95 @@
   transform-origin: left;
   transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.25, 1);
 }
-.rg-nav-links a:hover{ color: var(--ink); }
-.rg-nav-links a:hover::after{ transform: scaleX(1); }
+.rg-nav-links > a:hover,
+.rg-drop-btn:hover,
+.rg-drop.is-open .rg-drop-btn{ color: var(--ink); }
+.rg-nav-links > a:hover::after{ transform: scaleX(1); }
+
+/* "Resources": the one nav item that opens a menu instead of a page. */
+.rg-drop{ position: relative; }
+.rg-drop-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 0;
+  font-family: var(--sans);
+  line-height: inherit;
+  cursor: pointer;
+}
+.rg-drop-btn svg{ transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.25, 1); }
+.rg-drop.is-open .rg-drop-btn svg{ transform: rotate(180deg); }
+.rg-drop-btn[aria-current="page"]{ color: var(--ink); }
+.rg-drop-btn:focus-visible{ outline: 2px solid var(--brand); outline-offset: 4px; }
+/* The panel starts flush with the button so the pointer never crosses a
+   gap on its way down; the padding is the visual gap. */
+.rg-drop-panel{
+  position: absolute;
+  top: 100%;
+  left: -16px;
+  padding-top: 12px;
+  width: max-content;
+  /* Over the scroll bar (.rg-nav-bar), which comes later in the nav. */
+  z-index: 1;
+}
+.rg-drop-panel[hidden]{ display: none; }
+.rg-drop-panel::before{
+  content: '';
+  position: absolute;
+  inset: 12px 0 0;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  box-shadow: 0 14px 34px -18px rgba(13, 31, 23, 0.35);
+}
+.rg-drop-panel a{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 28px 10px 14px;
+  border-top: 1px solid var(--rule-soft);
+  transition: background 0.2s ease;
+}
+.rg-drop-panel a:first-child{ border-top: 0; padding-top: 12px; }
+.rg-drop-panel a:last-child{ padding-bottom: 12px; }
+.rg-drop-panel a:hover,
+.rg-drop-panel a:focus-visible{ background: var(--brand-wash); outline: none; }
+.rg-drop-label{ font-size: 14px; font-weight: 600; color: var(--ink); }
+.rg-drop-panel a:hover .rg-drop-label,
+.rg-drop-panel a[aria-current="page"] .rg-drop-label{ color: var(--brand); }
+
+/* The pencil sketch beside each piece (RESOURCE_SKETCHES in chrome.jsx),
+   drawn in as the menu opens: one piece after another, each stroke after
+   the last. The menu is display:none while shut, so it redraws on every
+   open. */
+.rg-drop-sketch{
+  flex-shrink: 0;
+  width: 44px;
+  height: auto;
+  overflow: visible;
+  filter: url(#rg-graphite);
+}
+.rg-drop-sketch path{
+  fill: none;
+  stroke: var(--ink-70);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  opacity: 0.85;
+  transition: stroke 0.2s ease;
+  animation: rg-sketch 0.22s ease-out forwards;
+  animation-delay: calc(var(--n, 0) * 90ms + var(--i, 0) * 70ms);
+}
+.rg-drop-panel a:hover .rg-drop-sketch path,
+.rg-drop-panel a[aria-current="page"] .rg-drop-sketch path{ stroke: var(--brand); }
+@keyframes rg-sketch{ to{ stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce){
+  .rg-drop-sketch path{ animation: none; stroke-dashoffset: 0; }
+}
 
 /* ── Buttons ──────────────────────────────────────── */
 .rg-btn{
@@ -320,6 +408,17 @@
   font-weight: 500;
 }
 .rg-menu a:last-child{ border-bottom: 0; }
+/* The print pieces in the phone menu: a small label, then the three
+   links set in under it. */
+.rg-menu-group{
+  display: block;
+  padding: 18px 0 4px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+.rg-menu a.rg-menu-sub{ padding-left: 20px; }
 
 /* ═══════════════════════════════════════════════════════
    HERO
