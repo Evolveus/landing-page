@@ -39,6 +39,9 @@ So in copy:
   department asked for it.
 - Don't name the founders in public copy (decided 2026-10-05). Say "we",
   "the team", or that it was started and is developed by students.
+- Don't say in public copy that Amrita uses it free or does not pay for it
+  (decided 2026-10-06): we are selling the platform. The fact above is for
+  our own reference only.
 
 The long-term idea is a learning platform for students and staff, not just
 a place to write exams.
@@ -120,8 +123,8 @@ coding-test services, proctoring suites).
 6. **In daily use.** 2,000+ exams and 200,000+ answers at Amrita, about
    500 students most weekdays.
 7. **Adopted, not mandated.** It started as a small student project and the
-   whole School of AI took it up as demand grew, without paying for it.
-   The people who built it maintain it.
+   whole School of AI took it up as demand grew. The people who built it
+   maintain it. (Don't mention that Amrita doesn't pay; see §1.)
 
 ### 4.2 AI features
 
@@ -341,6 +344,8 @@ existing steps, layout unchanged), then deck.
 - Human content is welcome, but not cheesy. A team backstory section was
   tried twice and dropped. The origin gets one plain line at most, worded
   per §1 (the old line "Developed at the School of AI..." was wrong).
+  /about's "Where it started" section was removed on 2026-10-06; the
+  adoption by the School of AI is now one line in its "Today" section.
 - Don't label students as weak or struggling (decided 2026-10-05). Talk
   about insights, follow-ups or topics that need work instead.
 - Print pieces use copy of their own, not lines lifted from the home

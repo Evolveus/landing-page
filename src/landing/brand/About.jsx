@@ -7,14 +7,14 @@ import { ABOUT_PAGE, BRAND } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
    ABOUT — who makes Evolveus and why, at /about. Facts only, from
-   docs/evolveus-context.md: where it started, what it covers, where it
-   runs today, the founding notes' reasons, and where it is going.
+   docs/evolveus-context.md: what it covers, where it runs today, the
+   founding notes' reasons, and where it is going.
    ═══════════════════════════════════════════════════════════════ */
 
 export default function About() {
   const root = useReveal();
   useSmoothScroll();
-  const { origin, covers, today, why, next, contact } = ABOUT_PAGE;
+  const { covers, today, why, next, contact } = ABOUT_PAGE;
 
   return (
     <div className="rg" ref={root}>
@@ -28,16 +28,10 @@ export default function About() {
         </div>
       </header>
 
-      <section className="rg-sec">
-        <div className="rg-wrap">
-          <SectionHead code="§01" kicker={origin.kicker} title={origin.title} lede={origin.text} />
-        </div>
-      </section>
-
       {/* What it covers now, as a short list of what one exam needs. */}
       <section className="rg-sec">
         <div className="rg-wrap">
-          <SectionHead code="§02" kicker={covers.kicker} title={covers.title} lede={covers.text} />
+          <SectionHead code="§01"kicker={covers.kicker} title={covers.title} lede={covers.text} />
           <ul className="rg-about-covers">
             {covers.items.map((it, i) => (
               <Rv as="li" key={it.label} delay={i * 70}>
@@ -52,7 +46,7 @@ export default function About() {
       {/* Today: the words, then the count so far as answer-sheet figures. */}
       <section className="rg-sec">
         <div className="rg-wrap">
-          <SectionHead code="§03" kicker={today.kicker} title={today.title} lede={today.text} />
+          <SectionHead code="§02"kicker={today.kicker} title={today.title} lede={today.text} />
           <div className="rg-about-figs">
             <UsageFigures />
           </div>
@@ -61,7 +55,7 @@ export default function About() {
 
       <section className="rg-sec">
         <div className="rg-wrap">
-          <SectionHead code="§04" kicker={why.kicker} title={why.title} />
+          <SectionHead code="§03"kicker={why.kicker} title={why.title} />
           <Rv as="ol" className="rg-role-list rg-about-why">
             {why.lines.map((line, i) => (
               <li key={line}>
@@ -75,7 +69,7 @@ export default function About() {
 
       <section className="rg-sec">
         <div className="rg-wrap">
-          <SectionHead code="§05" kicker={next.kicker} title={next.title} lede={next.text} />
+          <SectionHead code="§04"kicker={next.kicker} title={next.title} lede={next.text} />
         </div>
       </section>
 

@@ -717,11 +717,6 @@ export const ABOUT_PAGE = {
   eyebrow: 'About',
   title: 'About Evolveus',
   lede: 'Evolveus is an exam platform for universities: setting the paper, running the exam, marking it and reporting on it, in one system. It is in use at the School of AI, Amrita Vishwa Vidyapeetham, Coimbatore.',
-  origin: {
-    kicker: 'Where it started',
-    title: 'It began as a student project',
-    text: 'Evolveus started as a small project by students. As more faculty asked to use it, the whole School of AI at Amrita took it up. Amrita does not pay for it, and our team maintains it.',
-  },
   covers: {
     kicker: 'What it covers',
     title: 'Everything one exam needs',
@@ -736,7 +731,7 @@ export const ABOUT_PAGE = {
   today: {
     kicker: 'Today',
     title: 'In use at Amrita',
-    text: 'Amrita uses Evolveus free of charge, and we maintain it. On most weekdays a few batches write exams on it, about 500 students a day.',
+    text: 'The whole School of AI at Amrita took Evolveus up as more of its faculty asked to use it. On most weekdays a few batches write exams on it, about 500 students a day.',
   },
   why: {
     kicker: 'Why we build it',
