@@ -245,8 +245,10 @@ function ResourcesMenu() {
    `base` prefixes the "#contact" button. A page with its own contact
    section leaves it empty; any other page passes "/", which sends the
    button to the home page's form. `home` is where the logo goes; a page
-   that is not the home page but has its own contact section passes "/". */
-export function Nav({ base = '', home }) {
+   that is not the home page but has its own contact section passes "/".
+   `clear` drops the nav's glass while the page is at the top; only the
+   home page sets it, for the bubbles down the sides of its opening. */
+export function Nav({ base = '', home, clear = false }) {
   const [stuck, progress] = useNavScroll();
   const [theme, toggleTheme] = useTheme();
   const [menu, setMenu] = useState(false);
@@ -260,7 +262,7 @@ export function Nav({ base = '', home }) {
   }, []);
 
   return (
-    <nav className={`rg-nav ${stuck ? 'is-stuck' : ''}`}>
+    <nav className={['rg-nav', clear && 'is-clear', stuck && 'is-stuck', menu && 'is-menu'].filter(Boolean).join(' ')}>
       <GraphiteDefs />
       <div className="rg-wrap rg-nav-in">
         <a className="rg-brand" href={home ?? (base || '#top')} aria-label={BRAND.name}>

@@ -185,6 +185,14 @@
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease, background 0.3s ease;
 }
+/* On the home page the nav is clear at the top, so the opening's bubbles
+   run under it instead of being cut by its edge. The glass comes back
+   once you scroll or open either menu. */
+.rg-nav.is-clear:not(.is-stuck):not(.is-menu):not(:has(.rg-drop.is-open)){
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
 .rg-nav.is-stuck{ border-bottom-color: var(--rule); }
 
 /* How far down the page you are, drawn as a filling rule. */

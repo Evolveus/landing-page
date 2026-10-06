@@ -933,7 +933,7 @@ export default function Journey() {
 
   return (
     <div className="rg jy" ref={root}>
-      <Nav />
+      <Nav clear />
 
       {/* ── THE STORY ───────────────────────────────────── */}
       {/* ── OPENING: what it is, a greeting, where it is in use. The

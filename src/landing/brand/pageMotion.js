@@ -90,7 +90,9 @@ export function motionOK() {
    layout read, and rAF is throttled to a standstill in some
    embedded/background views. */
 export function useNavScroll() {
-  const [stuck, setStuck] = useState(false);
+  // Read the real position up front, so a page opened part-way down
+  // doesn't paint the top-of-page nav first and then swap.
+  const [stuck, setStuck] = useState(() => window.scrollY > 24);
   const bar = useRef(null);
   useEffect(() => {
     const el = bar.current;
