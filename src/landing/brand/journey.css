@@ -230,8 +230,8 @@
 .jy-tour-tabs{ margin: 0; border-bottom: 0; }
 .jy-tour-tabs .rg-tab{ position: relative; padding-bottom: 14px; }
 /* The current tab's underline fills over the time it is shown; when it
-   is full the tour moves on. Paused off screen, under the pointer, or
-   with focus inside; with reduced motion it is simply full. */
+   is full the tour moves on. Paused off screen and while the tabs are
+   pointed at or keyboard-focused; with reduced motion it is simply full. */
 .jy-tour-tabs .rg-tab.is-on{ border-bottom-color: var(--rule); }
 .jy-tour-bar{
   position: absolute;
@@ -245,8 +245,14 @@
   animation-play-state: paused;
 }
 .jy-tour-in.is-playing .jy-tour-bar{ animation-play-state: running; }
-.jy-tour-in.is-playing:hover .jy-tour-bar,
-.jy-tour-in.is-playing:focus-within .jy-tour-bar{ animation-play-state: paused; }
+/* Only the tabs hold it: the screen fills most of the view, so a pause
+   on the whole tour kept it still whenever the mouse was on the page.
+   Hover counts only for a real mouse (a tap leaves :hover stuck), and
+   focus only from the keyboard (a clicked tab keeps focus). */
+@media (hover: hover) and (pointer: fine){
+  .jy-tour-in.is-playing .jy-tour-tabs:hover .jy-tour-bar{ animation-play-state: paused; }
+}
+.jy-tour-in.is-playing .jy-tour-tabs:has(:focus-visible) .jy-tour-bar{ animation-play-state: paused; }
 .jy-tour-in.is-still .jy-tour-bar{ animation: none; }
 @keyframes jy-tour-fill{ from{ transform: scaleX(0); } to{ transform: scaleX(1); } }
 .jy-tour-sum{

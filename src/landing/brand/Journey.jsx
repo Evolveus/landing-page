@@ -836,8 +836,8 @@ function Desk() {
 /* ── The product tour ─────────────────────────────────────────
    The real screens, one role at a time, in /product's browser frame.
    It moves on by itself every few seconds while it is on screen, a
-   line filling under the current tab to show when; pointing at it or
-   focusing it pauses it, and a tab jumps to that role. With reduced
+   line filling under the current tab to show when; pointing at the tabs
+   or tabbing to them pauses it, and a tab jumps to that role. With reduced
    motion it stays put. */
 const TOUR_ROLES = ['faculty', 'student', 'admin']
   .map((id) => BRAND_ROLES.find((r) => r.id === id))
@@ -853,7 +853,12 @@ function Tour() {
     if (!el || !auto || !('IntersectionObserver' in window)) return;
     // Play only once most of it is in view, so it starts on the first
     // role rather than cycling while it only peeks in below the opening.
-    const io = new IntersectionObserver(([e]) => setInView(e.intersectionRatio >= 0.6), { threshold: [0, 0.6] });
+    // "Most" is of what can fit: on a short screen the tour is taller
+    // than the view and its own ratio would never reach 0.6.
+    const io = new IntersectionObserver(([e]) => {
+      const fit = Math.min(e.boundingClientRect.height, window.innerHeight);
+      setInView(e.isIntersecting && e.intersectionRect.height >= fit * 0.6);
+    }, { threshold: Array.from({ length: 21 }, (_, i) => i / 20) });
     io.observe(el);
     return () => io.disconnect();
   }, [auto]);
