@@ -61,7 +61,7 @@ export function Shot({ src, alt, caption, fig, label, delay = 0 }) {
    bubbles under it with the matching one shaded. The shading runs left
    to right when the strip scrolls into view (see .rg-omr in the CSS).
    Commas become a narrow gap; a trailing "+" is written after the boxes. */
-function OmrNumber({ text }) {
+export function OmrNumber({ text }) {
   const plus = text.endsWith('+');
   const groups = text.replace('+', '').split(',');
   let col = 0;

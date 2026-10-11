@@ -204,6 +204,29 @@ The web rules carry over with these changes.
 
 ## 9. Slides (16:9 deck)
 
-To be written when the deck is redone. Starting points: one idea per slide,
-light theme by default, the exam steps as the spine of the deck, the
-specimen mat for every screenshot.
+The deck is `/ppt` (`src/presentation/`): copy in `content.js`, slides in
+`slides.jsx`, styles in `deck.css`. It is presented in a room, so it is
+told in order and leaves the detail to the speaker and the live demo.
+
+- **A fixed canvas.** Every slide is drawn at 1440×810 and scaled to the
+  window as a whole, so a layout reads the same on a laptop and a
+  projector. Sizes in `deck.css` are canvas pixels; no vw or clamp().
+  Body text at least 14px on the canvas, slide titles 38px, mono 11px+.
+- **Solid lines,** as on paper (§8): projectors wash out alpha lines.
+- **The exam is the spine.** Slides about a step carry the five steps in
+  the running head (01 Before, 02 During, 03 Marking, 04 Results, 05
+  Running it) as bubbles, the current one shaded. The deck's own control
+  bar is a row of answer bubbles too, one per slide.
+- **One idea per slide,** with a short plain sentence as its title. Only
+  the title slide's headline may be catchy (§7).
+- **Real screens on the specimen mat;** screens not captured yet are drawn
+  as cards and labelled "Sample data". Pencil notes beside them say what
+  each part is. Pencil strokes draw once on screen and are simply there
+  in the PDF.
+- **Pacing:** the forest panel for the faculty-control slide and the
+  close, paper for the rest.
+- **Light and dark** follow the site's theme (T toggles it). Save as PDF
+  prints every slide on a 16:9 page in the theme on screen; the page size
+  is set while the deck is open, since the print viewer's A4 `@page`
+  loads on every route.
+- **Speaker notes** (N) hold the demo cues; they never appear on a slide.

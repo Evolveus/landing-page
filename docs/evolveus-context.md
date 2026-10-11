@@ -362,7 +362,10 @@ existing steps, layout unchanged), then deck.
 - `/brochure`, `/flyer` and `/ppt` stay, linked from the footer's
   Resources column.
 - /compare says "colleges"; the home page says "universities".
-- Flyer redo in progress (see §6 for order of work).
+- Flyer and brochure redone. Deck redone on 2026-10-11 (`/ppt`, 13 slides,
+  copy in `src/presentation/content.js`). Its title headline, "Marked
+  before the class leaves the lab.", leans on "usually within about ten
+  minutes"; the owner should confirm it.
 
 ## 9. How the screenshots were made
 
