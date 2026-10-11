@@ -43,6 +43,9 @@ So in copy:
   (decided 2026-10-06): we are selling the platform. The fact above is for
   our own reference only.
 
+Evolveus is an independent startup (confirmed by the team, 2026-10-11).
+Fine to say in public copy, without naming the founders.
+
 The long-term idea is a learning platform for students and staff, not just
 a place to write exams.
 
@@ -258,6 +261,9 @@ objection):
 - "Student data never leaves your servers" without the AI caveat.
 - AI that marks without faculty: always say faculty approve.
 - Pricing, credit costs or tiers (billing is on the roadmap).
+- Handwritten papers. Answers are typed on screen; there is no OCR and
+  none is planned for now (decided 2026-10-11). Don't say "every kind of
+  answer" without that scope.
 
 **Phrase carefully**
 

@@ -217,12 +217,18 @@ told in order and leaves the detail to the speaker and the live demo.
   the running head (01 Before, 02 During, 03 Marking, 04 Results, 05
   Running it) as bubbles, the current one shaded. The deck's own control
   bar is a row of answer bubbles too, one per slide.
-- **One idea per slide,** with a short plain sentence as its title. Only
-  the title slide's headline may be catchy (§7).
-- **Real screens on the specimen mat;** screens not captured yet are drawn
-  as cards and labelled "Sample data". Pencil notes beside them say what
-  each part is. Pencil strokes draw once on screen and are simply there
-  in the PDF.
+- **One idea per slide,** with a short plain sentence as its title.
+- **Real screens on the specimen mat,** with a plain caption under them
+  ("Real screen."), no figure numbers. Screens not captured yet are drawn
+  as cards with "Sample data" under them. Crop a real screen rather than
+  show labels it cuts short.
+- **Fewer labels.** No spaced-out mono eyebrows above titles, no "AI"
+  badges scattered over cards: AI gets one slide that names each job it
+  does and who checks it. Mono stays for the step row, times and code.
+- **One pencil note in the deck,** where a person would mark the real
+  screen. Repeated notes read as a template.
+- **The cover has no slogan:** the logo and name, one plain line of what
+  it is, and "In use at" Amrita, over a faint field of answer-sheet rows.
 - **Pacing:** the forest panel for the faculty-control slide and the
   close, paper for the rest.
 - **Light and dark** follow the site's theme (T toggles it). Save as PDF

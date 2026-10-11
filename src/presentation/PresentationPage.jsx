@@ -4,7 +4,7 @@ import { useTheme } from "../landing/brand/pageMotion";
 import { BRAND, BRAND_LOGO } from "../landing/content";
 import { DECK } from "./content";
 import {
-  Assistant, Close, Control, Cover, Frame, Marking, Paper, Problem, Proof, Reading, Replay, Running, Setting, Sitting,
+  Ai, Close, Control, Cover, During, Frame, Marking, Paper, Proof, Results, Running, Setting, Students, Tools,
 } from "./slides";
 import "../landing/brand/register.css";
 import "./deck.css";
@@ -21,20 +21,20 @@ import "./deck.css";
    It follows the site's theme (the nav's Light/Dark). Save as PDF prints
    every slide, one per page, in the theme on screen. */
 /* The deck in order. `step` puts a slide in the exam's five steps;
-   `panel` draws it on the forest panel; `label` heads the rest. */
+   `panel` draws it on the forest panel; `bare` drops the running head. */
 const SLIDES = [
-  { id: "title", name: "Title", Slide: Cover, notes: DECK.cover.notes },
-  { id: "today", name: "Today", Slide: Problem, label: DECK.problem.label, notes: DECK.problem.notes },
-  { id: "paper", name: "The whole paper", Slide: Paper, label: DECK.paper.label, notes: DECK.paper.notes },
+  { id: "cover", name: "Cover", Slide: Cover, bare: true, notes: DECK.cover.notes },
+  { id: "tools", name: "Four tools, one system", Slide: Tools, notes: DECK.tools.notes },
+  { id: "paper", name: "The whole paper", Slide: Paper, notes: DECK.paper.notes },
+  { id: "ai", name: "Where AI does the work", Slide: Ai, notes: DECK.ai.notes },
   { id: "setting", name: "Questions from notes", Slide: Setting, step: "01", notes: DECK.setting.notes },
-  { id: "lab", name: "The lab", Slide: Sitting, step: "02", notes: DECK.sitting.notes },
-  { id: "replay", name: "Session replay", Slide: Replay, step: "02", notes: DECK.replay.notes },
+  { id: "during", name: "The lab and replay", Slide: During, step: "02", notes: DECK.during.notes },
   { id: "marking", name: "Marking", Slide: Marking, step: "03", notes: DECK.marking.notes },
   { id: "faculty", name: "Faculty decide", Slide: Control, step: "03", panel: true, notes: DECK.control.notes },
-  { id: "results", name: "Results", Slide: Reading, step: "04", notes: DECK.reading.notes },
-  { id: "assistant", name: "Assistant", Slide: Assistant, step: "04", notes: DECK.assistant.notes },
+  { id: "results", name: "Results", Slide: Results, step: "04", notes: DECK.results.notes },
+  { id: "students", name: "For students", Slide: Students, step: "04", notes: DECK.students.notes },
   { id: "running", name: "Running it", Slide: Running, step: "05", notes: DECK.running.notes },
-  { id: "proof", name: "In use", Slide: Proof, label: DECK.proof.label, notes: DECK.proof.notes },
+  { id: "proof", name: "In use", Slide: Proof, notes: DECK.proof.notes },
   { id: "close", name: "Send us a paper", Slide: Close, panel: true, notes: DECK.close.notes },
 ];
 
@@ -202,7 +202,7 @@ export default function PresentationPage({ onHome }) {
   const deckClass = `dk${dark ? " dk--dark" : ""}`;
 
   const slide = (x, i) => (
-    <Frame n={i + 1} total={total} dark={dark} step={x.step} label={x.label} panel={x.panel} className={`dk-slide--${x.id}`}>
+    <Frame n={i + 1} total={total} dark={dark} step={x.step} panel={x.panel} bare={x.bare} className={`dk-slide--${x.id}`}>
       <x.Slide dark={dark} />
     </Frame>
   );
@@ -210,7 +210,7 @@ export default function PresentationPage({ onHome }) {
   return (
     <>
       <div
-        className={`${deckClass} dk-screen${idle && !notes ? " is-idle" : ""}`}
+        className={`${deckClass} dk-screen${s.panel ? " is-panel" : ""}${idle && !notes ? " is-idle" : ""}`}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >

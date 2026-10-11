@@ -5,8 +5,14 @@
 // is from §3 and §4 there. The copy is the deck's own: it doesn't repeat
 // the home page's steps or the brochure's chapter titles.
 //
+// The pitch: one system instead of the four tools an exam runs across
+// today, with AI doing named jobs at each step and faculty checking it.
+// What that buys is marks with reasons, feedback while it still matters,
+// and a department that can see which topics need time. Time saved is
+// one proof among several, not the lead.
+//
 // Anything drawn as a card (a PDF's drafts, the violation log, a replay,
-// the assistant) is sample data, made up to show the feature, and says
+// topic mastery) is sample data, made up to show the feature, and says
 // so on the slide. The real screens are real, anonymised captures.
 
 // The exam, told in order. Each step slide shows where it sits.
@@ -22,41 +28,41 @@ export const DECK = {
   title: 'Evolveus deck',
   sample: 'Sample data',
 
+  // No slogan: the name, what it is, and where it is in use.
   cover: {
-    kicker: 'Exam software for universities',
-    // Catchy is allowed on the deck's title (DESIGN.md §7). True because
-    // marking usually finishes within about ten minutes of the exam
-    // closing (context doc §3); the sub-line says "usually".
-    headline: ['Marked before the class', 'leaves the lab.'],
-    sub: 'MCQs, written answers and code in one paper, usually all marked within ten minutes of the exam closing. Faculty check the marks before students see them.',
+    sub: 'One system for university exams, from the question paper to the results.',
     inUse: 'In use at',
-    // §1 of the context doc: adopted, never "developed at" or "built for".
-    origin: 'Students started it as a small project. Demand grew, and the whole School of AI adopted it.',
-    notes: 'Who we are in one line. The rest of the deck follows a single exam from the question paper to the report.',
+    notes: 'Introduce the product in one line. The deck follows a single exam from setting the paper to reading the results.',
   },
 
-  problem: {
-    label: 'Today',
-    title: 'What universities run exams on now.',
+  tools: {
+    title: 'Today an exam is spread across tools, and marked by hand.',
+    pain: 'One mid-term at Amrita produced 420 written papers. Marking them by hand takes about 50 hours.',
     // Categories, never a claim about a named product (see COMPARE in
-    // src/landing/content.js).
+    // src/landing/content.js). Each row says what the tool is used for.
     rows: [
-      { tool: 'Form tools', eg: 'Google Forms, Microsoft Forms', gap: 'Good for quick MCQs. Long answers still come back to faculty to mark by hand.' },
-      { tool: 'LMS quizzes', eg: 'Moodle, Google Classroom', gap: 'Made to run a course. Coding questions, lab rules and CO reports usually mean plugins or spreadsheets.' },
-      { tool: 'Coding-test services', eg: 'HackerRank, HackerEarth', gap: 'Made for hiring, and good at that job. A semester paper also has MCQs and written answers.' },
-      { tool: 'Pen and paper', eg: 'Scripts and mark sheets', gap: "Days of marking for each paper, and the reason behind a mark stays in the examiner's head." },
+      { tool: 'A form tool', eg: 'Google Forms, Microsoft Forms', job: 'the MCQs' },
+      { tool: 'The LMS', eg: 'Moodle, Google Classroom', job: 'the course and its quizzes' },
+      { tool: 'A coding-test service', eg: 'HackerRank, HackerEarth', job: 'the programming questions' },
+      { tool: 'Paper and spreadsheets', eg: 'Scripts and mark sheets', job: 'hand-marked written answers and the mark sheet' },
     ],
-    notes: 'Ask the room what they use now. It is often more than one of these.',
+    one: 'Evolveus',
+    gets: [
+      'One paper holds every question type',
+      'One lab setup and one log cover the exam',
+      'Each mark is stored with its reason',
+      'Results add up by topic and outcome, semester after semester',
+    ],
+    notes: 'Ask the room which of these they use now. The rest of the deck shows the one system, step by step.',
   },
 
   paper: {
-    label: 'The whole paper',
-    title: 'Every kind of answer comes back marked.',
-    sub: 'One paper can hold MCQs, written answers and code, and each part is marked in its own way.',
+    title: 'Objective, written and code answers, marked in one paper.',
+    sub: 'Students answer on screen in the lab, across eight question types. Three kinds are marked for you, each in its own way. File uploads go to faculty to mark.',
     parts: [
-      { part: 'Part A', kind: 'Objective', how: 'By the answer key, the moment the exam ends' },
-      { part: 'Part B', kind: 'Written', how: 'By AI, against the model answer and rubric you set', ai: true },
-      { part: 'Part C', kind: 'Code', how: 'By test cases, then an AI check that it used the method you named', ai: true },
+      { part: 'Part A', kind: 'Objective', how: 'MCQ, true or false, matching and fill in the blank, scored against the key when the exam ends' },
+      { part: 'Part B', kind: 'Written', how: "AI marks them against the faculty's model answer and rubric, and gives a reason for each mark" },
+      { part: 'Part C', kind: 'Code', how: 'Test cases run first, then AI checks the method the faculty asked for' },
     ],
     // The drawn answer sheet. Sample data.
     sheet: {
@@ -71,14 +77,30 @@ export const DECK = {
       },
       c: {
         n: 'Q12',
-        q: 'Sum the digits of n, using recursion.',
-        marks: '4 / 8',
+        q: 'Reverse a linked list in place.',
+        marks: '5 / 8',
         tests: '6 of 6 tests passed',
-        check: 'Uses a loop, though recursion was required.',
+        check: 'Builds a second list, though the question asks for in place.',
       },
-      total: '17 / 23',
+      total: '18 / 23',
     },
-    notes: 'This is the claim the rest of the deck backs up. No other kind of tool on the previous slide marks all three.',
+    notes: 'This is the claim the rest of the deck backs up. None of the tools on the last slide marks all three kinds. Answers are typed on screen; handwritten papers are out of scope.',
+  },
+
+  ai: {
+    title: 'Where AI does the work, and who checks it.',
+    head: ['Step', 'You give it', 'It gives back', 'Who checks'],
+    // Illustrative examples of each job (context doc §4.2).
+    rows: [
+      { step: 'Setting', in: 'Unit 4 lecture notes, as a PDF', out: 'Draft questions spread across the notes, up to 50 a run', check: 'Faculty keep, change or discard each draft' },
+      { step: 'Setting', in: 'A written question and its model answer', out: 'A rubric with the marks split 2 + 2 + 1', check: 'Faculty edit it before use' },
+      { step: 'Tagging', in: 'A bank of questions', out: 'Topics, with "DBMS" and "Database Management Systems" merged into one', check: 'Faculty confirm the tags' },
+      { step: 'Marking', in: 'A written answer', out: '4 of 5, with a short written reason', check: 'Faculty publish, change any mark, or re-grade a question' },
+      { step: 'Marking', in: 'Code that passes every test', out: 'Marks taken off for ignoring "must be recursive"', check: 'The check can only lower a mark' },
+      { step: 'Results', in: '"Which topics did CS-B find hardest?"', out: 'Deadlocks at 44%, paging at 52%', check: 'Faculty confirm before it changes anything' },
+    ],
+    models: "It runs on the models that come with Evolveus, or on your university's own.",
+    notes: "Each row is one of the next demos. The right-hand column answers 'who checks the AI?'",
   },
 
   setting: {
@@ -86,7 +108,7 @@ export const DECK = {
     title: 'Draft questions from the notes you teach from.',
     // Drawn as cards. Sample data: the file and questions are made up.
     pdf: {
-      label: 'Questions from a PDF',
+      label: 'Questions from a PDF · drafted by AI',
       file: 'unit-4-process-scheduling.pdf',
       size: '6.8 MB',
       ask: '12 MCQ · 3 descriptive · mixed difficulty',
@@ -97,10 +119,9 @@ export const DECK = {
       ],
       actions: ['Keep', 'Edit', 'Drop'],
       more: '+ 12 more drafts',
-      note: 'nothing goes in until faculty keep it',
     },
     rubric: {
-      label: 'Rubric, drafted',
+      label: 'Rubric · drafted by AI',
       lines: [
         { t: 'States one strength of each', m: 2 },
         { t: 'Explains response time for interactive users', m: 2 },
@@ -112,75 +133,62 @@ export const DECK = {
       { n: '50', l: 'drafts per run, from a PDF as large as 25 MB' },
       { n: '8', l: 'question types, mixed in one paper' },
     ],
-    tags: "Every question carries its topic, difficulty, Bloom's level, course outcome and marks. AI suggests the topics and faculty confirm them.",
+    tags: "Every question carries its topic, difficulty, Bloom's level, course outcome and marks. The results pages group marks by these tags.",
     notes: 'Demo: upload a PDF of lecture notes and keep two of the drafts. Then open the rubric for a written question.',
   },
 
-  sitting: {
+  during: {
     step: '02',
-    title: 'The exam can be locked to your lab.',
+    title: 'The exam stays in the lab, and any attempt can be replayed.',
     controls: [
-      { title: 'Lab network only', body: "Tie the paper to the lab's IP range. Add Safe Exam Browser to block copy and paste as well." },
-      { title: 'Full screen enforced', body: 'Step out of full screen and the exam pauses until the student returns. The exit goes in the log.' },
-      { title: 'Own order for each student', body: 'Everyone gets the questions, and the options inside them, in a different order.' },
-      { title: 'Nothing lost on a refresh', body: 'Answers save while the student works, a reload brings them back, and time-up hands the paper in.' },
+      { title: 'Lab network only', body: "Opens only on the lab's IP range. Safe Exam Browser can be required too." },
+      { title: 'Full screen enforced', body: 'Leaving it pauses the exam and goes in the log.' },
+      { title: 'Own order for each student', body: 'Questions and options shuffled per student.' },
+      { title: 'Nothing lost on a refresh', body: 'Answers save as they go; time-up hands the paper in.' },
     ],
     // Sample data, with students as numbers, never names.
     log: {
-      label: 'Violation log',
-      sub: "Ten kinds, logged against the attempt. Faculty see it, students don't.",
+      label: 'Violation log · ten kinds, faculty only',
       rows: [
         { t: '09:42:10', who: 'Student 07', kind: 'Tab switch' },
         { t: '09:48:33', who: 'Student 22', kind: 'Window resized' },
         { t: '09:51:02', who: 'Student 22', kind: 'Right-click' },
-        { t: '10:05:47', who: 'Student 40', kind: 'Print or save' },
       ],
-      note: 'a flag for faculty to check',
     },
-    notes: 'Present a violation as something to look into. Faculty decide what it means, and can record a reason against it.',
-  },
-
-  replay: {
-    step: '02',
-    title: 'Replay any attempt afterwards.',
-    body: 'Pick any student and play their attempt back on the same screen they wrote it on. You see every answer they typed, where they went between questions, what was flagged and when they ran their code.',
-    plain: 'It records what happened in the exam screen. There is no webcam and no screen recording.',
-    // A drawn timeline of one attempt. Sample data.
-    track: {
-      head: 'Student 22 · CS2203 Mid-term',
+    replay: {
+      head: 'Session replay · Student 22',
+      plain: 'Replays what the student did in the exam screen. There is no webcam and no screen recording.',
       steps: [
         { at: 0, t: '09:30', l: 'Started' },
-        { at: 13, t: '09:36', l: 'Q1 to Q4' },
-        { at: 27, t: '09:42', l: 'Q5' },
-        { at: 40, t: '09:48', l: 'Window resized', flag: true },
-        { at: 53, t: '09:51', l: 'Right-click', flag: true },
-        { at: 68, t: '09:58', l: 'Q12 · ran code 4 times' },
-        { at: 84, t: '10:14', l: 'Back to Q5' },
+        { at: 16, t: '09:36', l: 'Q1 to Q4' },
+        { at: 32, t: '09:42', l: 'Q5' },
+        { at: 46, t: '09:48', l: 'Window resized', flag: true },
+        { at: 58, t: '09:51', l: 'Right-click', flag: true },
+        { at: 72, t: '09:58', l: 'Q12, ran code 4 times' },
         { at: 100, t: '10:28', l: 'Submitted' },
       ],
       now: 3,
     },
-    notes: 'Demo: open the replay for one attempt and scrub to a flagged moment. It is reviewed after the exam, so never call it live monitoring.',
+    notes: 'A violation is something to look into, and faculty decide what it means. Demo: open a replay and scrub to the flagged moment. It is reviewed after the exam, so never call it live monitoring.',
   },
 
   marking: {
     step: '03',
-    title: 'Each written mark comes with its reason.',
+    title: 'Written answers and code, marked against your rules.',
     shot: {
-      fig: '1',
-      label: 'A written answer, marked by AI',
+      label: 'A written answer, marked by AI. Real screen.',
       src: '/product/grading-remark.webp',
       srcDark: '/product/grading-remark-dark.webp',
       alt: 'A marked descriptive answer: the question, the student response, 2 of 2 marks, and the remark explaining the mark',
-      notes: { mark: 'marked against your rubric', remark: 'why it got the mark, in plain words' },
+      note: 'the reason, in plain words',
     },
+    written: 'Each written answer is checked against the model answer, keywords and rubric, and the mark arrives with a short explanation. One quiz-wide instruction sets how strict the marking is.',
     code: {
       label: 'Code',
-      title: 'The tests set the mark, and AI checks the method.',
       body: 'Each answer runs against test cases, some hidden from students, in any of seven languages. Faculty can also name a method, such as "must be recursive". When a passing answer ignores it, AI takes marks off. It never adds any.',
       // Drawn as a card. Sample data.
       card: {
-        head: 'Q12 · Coding',
+        head: 'Q14 · Coding',
         lines: ['def digit_sum(n):', '    total = 0', '    while n:', '        total += n % 10', '        n //= 10', '    return total'],
         tests: '6 of 6 tests passed',
         mark: 4,
@@ -188,14 +196,22 @@ export const DECK = {
         check: 'Passes every test, but loops where a recursive answer was required.',
       },
     },
-    notes: 'Demo: mark a written question live and read out the reason. A quiz-wide instruction sets how strict the marking is.',
+    notes: 'Demo: mark a written question live and read out the reason.',
   },
 
   control: {
     step: '03',
-    label: 'Faculty control',
     title: 'Faculty decide when students see their marks.',
-    sub: 'Results are usually held until faculty publish them. A quiz can also release them on submission, if its owner prefers.',
+    sub: 'By default, marks stay hidden until faculty publish them. A quiz owner can release them on submission instead.',
+    // A common, low-stakes correction, made up to show the flow.
+    example: {
+      label: 'For example',
+      steps: [
+        'AI gives 3 of 5 to an answer that says "mutex" where the rubric says "lock".',
+        'The faculty member adds "mutex" to the rubric.',
+        'They re-grade that one question, and every answer to it is marked again.',
+      ],
+    },
     rows: [
       { title: 'Override a mark', body: 'A mark typed in by hand always wins, and is shown as "Evaluated manually".' },
       { title: 'Re-grade one question', body: 'Correct its rubric or key, and that one question is marked again across the class.' },
@@ -205,40 +221,52 @@ export const DECK = {
     notes: 'Expect the question here: what if the AI gets it wrong?',
   },
 
-  reading: {
+  results: {
     step: '04',
-    title: 'See where a class went wrong, by question and by topic.',
+    title: 'Results show which topics each section needs to revisit.',
     shot: {
-      fig: '2',
-      label: 'How the class performed',
+      label: 'How one class performed. Real screen.',
       src: '/product/cohort-results.webp',
       srcDark: '/product/cohort-results-dark.webp',
-      alt: 'Class results: mean, spread, range, students below average, and a histogram of scores in ten-point bands',
+      alt: "A histogram of a class's scores in ten-point bands, with the class mean marked",
+    },
+    // A topic-by-section grid, drawn. Sample data.
+    mastery: {
+      label: 'Topic mastery · CS2203 · this semester',
+      cols: ['Sec A', 'Sec B', 'Sec C'],
+      rows: [
+        { topic: 'Process scheduling', v: [78, 72, 81] },
+        { topic: 'Synchronisation', v: [64, 58, 69] },
+        { topic: 'Deadlocks', v: [52, 44, 57] },
+        { topic: 'Paging', v: [61, 52, 66] },
+        { topic: 'File systems', v: [74, 70, 77] },
+      ],
+      also: 'Also by course outcome, and against last semester.',
     },
     items: [
       { title: 'Students to follow up', body: 'Listed with why: far below the class average, blank answers, or an unusually quick finish.' },
       { title: 'Each question', body: 'How the class did on it. Fix a wrong key and the scores update.' },
-      { title: 'Topic mastery', body: 'Per topic and per course outcome, with sections and semesters side by side.' },
-      { title: 'Each student', body: "Every answer's mark and feedback, plus the topic they're strongest in and the topic to study next." },
     ],
     export: 'Everything exports to Excel.',
-    notes: 'Results come back by course outcome because every question was tagged when the paper was set.',
+    notes: 'This works because every question was tagged when the paper was set. Demo: ask the assistant which topics a section found hardest.',
   },
 
-  assistant: {
+  students: {
     step: '04',
-    label: 'Faculty assistant',
-    title: 'Ask about a class in plain words.',
-    // A drawn conversation. Sample data.
-    chat: [
-      { who: 'q', text: "How did CS-B do on last week's quiz, and which topics need work?" },
-      { who: 'a', text: 'Average 61%. Deadlocks (44%) and paging (52%) were the lowest. Six students left question 7 blank.' },
-      { who: 'q', text: 'Post an announcement about a revision class on Friday.' },
-      { who: 'a', confirm: true, text: 'Announcement to CS-B: "Revision class on deadlocks and paging, Friday 2 pm."', actions: ['Post it', 'Cancel'] },
+    title: 'Students see the reason behind every mark.',
+    shot: {
+      label: "One student's standing. Real screen.",
+      src: '/product/student-standing.webp',
+      srcDark: '/product/student-standing-dark.webp',
+      alt: "One student's standing: score, class average, rank, answers left blank, pacing, and marks by Bloom's level against the class",
+    },
+    items: [
+      { title: 'Feedback on every answer', body: 'Each question shows their mark and why, once faculty publish.' },
+      { title: 'Where they stand', body: "Their score next to the class average and their rank, plus how they did at each Bloom's level compared with the class." },
+      { title: 'What to work on next', body: 'The topic they handle best and the one to study next. It gets more reliable the more they answer.' },
+      { title: 'Everything for the course', body: 'Quizzes that are open, coming up, done or missed, plus announcements and polls.' },
     ],
-    note: 'nothing changes until you confirm',
-    can: 'It can also draft a quiz, publish one, start marking or create a poll. Every change waits for a confirmation, and it never writes questions.',
-    notes: 'Demo: ask it about a real class, live. Then ask it to post something and show the confirmation.',
+    notes: 'The faculty quote on the proof slide is about exactly this.',
   },
 
   running: {
@@ -263,15 +291,20 @@ export const DECK = {
   },
 
   proof: {
-    label: 'So far',
-    title: 'In use at Amrita on most weekdays.',
-    // Confirmed by the team, 2026-10-05.
-    midterm: {
-      label: 'One mid-term, 420 written papers',
-      before: { n: '50', unit: 'hr', label: 'By hand' },
-      after: { n: '14', unit: 'min', label: 'On Evolveus' },
+    title: 'About 500 students sit an exam on Evolveus most weekdays.',
+    figures: [
+      { n: '1,500+', l: 'students' },
+      { n: '2,000+', l: 'exams' },
+      { n: '200,000+', l: 'answers evaluated' },
+    ],
+    // §1 of the context doc: adopted, never "developed at" or "built for".
+    // An independent startup (confirmed by the team, 2026-10-11).
+    who: {
+      label: 'Who we are',
+      text: 'Evolveus is an independent startup. It began as a small student project, and the whole School of AI took it up as demand from its faculty grew. The team that built it supports every installation.',
     },
-    daily: 'About 500 students sit an exam on a typical weekday.',
+    // Confirmed by the team, 2026-10-05.
+    midterm: 'Those 420 mid-term papers: about 50 hours to mark by hand, 14 minutes on Evolveus.',
     // Confirmed 2026-10-05. Its middle sentence ("What used to take three
     // days now takes thirty minutes") is left out: it gives a second,
     // different time from the 50 hours to 14 minutes beside it.
@@ -279,13 +312,18 @@ export const DECK = {
       text: 'Evolveus replaced our existing system overnight, and the difference is stark. Students can actually reflect on their performance while it still matters.',
       by: 'Faculty member, School of AI, Amrita Vishwa Vidyapeetham',
     },
-    notes: 'The 50 hours is the faculty time to hand-mark that mid-term. Ask how long their last one took.',
+    notes: 'Nobody mandated it: faculty asked for it. The 14 minutes is the marking; faculty review the marks before publishing.',
   },
 
   close: {
-    kicker: 'Next step',
     headline: 'Send us a paper.',
-    body: 'Choose a paper from last semester. We set it up, a class of yours sits it, and we go through the marks and the reports together.',
+    body: 'Run a real exam on Evolveus with a class of yours.',
+    steps: [
+      { title: 'You send a paper', body: 'One you have already set, with whatever question types it has.' },
+      { title: 'We set it up', body: 'Questions, rubrics and the lab, with your faculty.' },
+      { title: 'A class sits it', body: 'In your lab, as a normal exam.' },
+      { title: 'We read the results together', body: 'The marks, their reasons and the reports.' },
+    ],
     qr: '/flyer/qr-evolveus.svg',
     notes: 'Agree on the paper and the class before leaving the room.',
   },
