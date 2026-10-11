@@ -80,29 +80,29 @@ function Title({ children }) {
 
 /* ── 1 · Cover ─────────────────────────────────────────── */
 
-/* A field of answer-sheet rows behind the cover, running off the edge:
-   question numbers with four bubbles each, some shaded. The same object
-   the whole brand is drawn from. The shading is fixed so it never
-   changes between showings. */
-const SHEET = Array.from({ length: 3 }, (_, c) =>
-  Array.from({ length: 18 }, (_, r) => {
-    const q = c * 18 + r + 1;
-    return { q, on: (q * 7 + c * 3) % 5 === 4 ? -1 : (q * 5 + r) % 4 };
-  }),
-);
+/* Answer-sheet bubbles across the whole cover, in groups of four like a
+   row of options, faint, and thinning out towards the middle so the
+   name sits on clear paper. The shading is fixed, so it is the same at
+   every showing. */
+const FIELD_COLS = 13;
+const FIELD_ROWS = 22;
+const FIELD = Array.from({ length: FIELD_ROWS * FIELD_COLS }, (_, i) => {
+  const r = Math.floor(i / FIELD_COLS);
+  const c = i % FIELD_COLS;
+  const dx = (c - (FIELD_COLS - 1) / 2) / (FIELD_COLS / 2);
+  const dy = (r - (FIELD_ROWS - 1) / 2) / (FIELD_ROWS / 2);
+  // Clear around the name in the middle, and under "In use at" below it.
+  const clear = dx * dx + dy * dy < 0.62 || (r >= FIELD_ROWS - 4 && Math.abs(dx) < 0.36);
+  return { clear, on: (i * 7 + r * 3) % 9 < 2 ? -1 : (i * 5 + c) % 4 };
+});
 
-function Bubbles() {
+function Field() {
   return (
     <div className="dk-field" aria-hidden="true">
-      {SHEET.map((col, c) => (
-        <div className="dk-field-col" key={c}>
-          {col.map((row) => (
-            <div className="dk-field-row" key={row.q}>
-              <span>{pad(row.q)}</span>
-              {[0, 1, 2, 3].map((o) => <i key={o} className={o === row.on ? "on" : ""} />)}
-            </div>
-          ))}
-        </div>
+      {FIELD.map((g, i) => (
+        <span key={i} className={g.clear ? "is-clear" : ""}>
+          {[0, 1, 2, 3].map((o) => <i key={o} className={o === g.on ? "on" : ""} />)}
+        </span>
       ))}
     </div>
   );
@@ -112,7 +112,7 @@ export function Cover({ dark }) {
   const c = DECK.cover;
   return (
     <div className="dk-cover">
-      <Bubbles />
+      <Field />
       <div className="dk-cover-main">
         <h1 className="dk-cover-name">
           <img src={dark ? BRAND_LOGO.markDark : BRAND_LOGO.mark} alt="" />
