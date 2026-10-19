@@ -89,7 +89,7 @@ function OrbitPanel({ slot, active, leaving }) {
 function FeatureCarousel() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
+  const [motionEnabled, setMotionEnabled] = useState(true);
   const [hidden, setHidden] = useState(() => document.hidden);
   useEffect(() => {
     const sync = () => setHidden(document.hidden);
@@ -101,7 +101,7 @@ function FeatureCarousel() {
   const order = [2, 0, 1, 3, 4, 5, 6];
   const feature = active < 7 ? FEATURES[order[active]] : active > 7 ? HERO_EXTRAS[active - 8] : null;
   useEffect(() => {
-    if (paused || hovered || hidden) return;
+    if (paused || !motionEnabled || hidden) return;
     let transition;
     const timer = window.setInterval(() => {
       setLeaving(true);
@@ -114,10 +114,15 @@ function FeatureCarousel() {
       window.clearInterval(timer);
       window.clearTimeout(transition);
     };
-  }, [paused, hovered, hidden]);
-  return <section className="hp-showcase" data-held={paused || hovered || hidden} onMouseEnter={(event) => { if (window.matchMedia('(hover: hover)').matches && event.buttons === 0) { setHovered(true); setLeaving(false); } }} onMouseLeave={() => { setHovered(false); setLeaving(false); }} data-feature={active} data-phase={leaving ? 'leaving' : 'showing'} aria-label="Explore Evolveus features" aria-roledescription="carousel" onFocusCapture={() => { setPaused(true); setLeaving(false); }} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) { setPaused(false); setLeaving(false); } }}>
+  }, [paused, motionEnabled, hidden]);
+  return <section className="hp-showcase" data-motion={motionEnabled ? 'on' : 'off'} data-held={paused || !motionEnabled || hidden} data-feature={active} data-phase={leaving ? 'leaving' : 'showing'} aria-label="Explore Evolveus features" aria-roledescription="carousel" onFocusCapture={(event) => { if (!event.target.closest('.hp-motion-control')) { setPaused(true); setLeaving(false); } }} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) { setPaused(false); setLeaving(false); } }}>
 
+    <button type="button" className="hp-motion-control" aria-pressed={motionEnabled} onClick={() => setMotionEnabled((enabled) => !enabled)}>{motionEnabled ? 'Pause animation' : 'Play animation'}</button>
     <div className="hp-stage">
+      <div className="hp-studio-halo" aria-hidden="true" />
+      <div className="hp-studio-track hp-studio-track--one" aria-hidden="true"><i /></div>
+      <div className="hp-studio-track hp-studio-track--two" aria-hidden="true"><i /></div>
+      <div className="hp-studio-track hp-studio-track--three" aria-hidden="true"><i /></div>
       <div className="hp-orbit hp-orbit--one" aria-hidden="true" /><div className="hp-orbit hp-orbit--two" aria-hidden="true" />
       <svg className="hp-connections" viewBox="0 0 1100 440" fill="none" aria-hidden="true">{[
         { d: 'M210 140C350 140 300 210 430 210', on: active % 4 === 0 },
