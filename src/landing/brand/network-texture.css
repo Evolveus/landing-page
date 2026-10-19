@@ -1,0 +1,30 @@
+/* Shared knowledge-network motif. Content always occupies a higher layer. */
+.kg-texture { position: absolute; inset: 0; overflow: hidden; pointer-events: none; color: var(--brand); opacity: .2; z-index: 0; mask-image: linear-gradient(90deg, #000, transparent 38%, transparent 65%, #000); -webkit-mask-image: linear-gradient(90deg, #000, transparent 38%, transparent 65%, #000); }
+.kg-texture svg { width: 100%; height: 100%; min-height: 240px; }
+.kg-texture path { stroke: currentColor; stroke-width: .65; stroke-opacity: .4; fill: none; vector-effect: non-scaling-stroke; }
+.kg-texture circle { fill: currentColor; opacity: .65; }
+.kg-texture-hub circle:last-child { fill: none; stroke: currentColor; stroke-width: .6; opacity: .35; }
+.kg-texture--hero { opacity: .2; mask-image: linear-gradient(transparent 12%, #000 75%, transparent); -webkit-mask-image: linear-gradient(transparent 12%, #000 75%, transparent); }
+.kg-texture--band { opacity: .16; mask-image: linear-gradient(90deg, transparent, #000 70%); -webkit-mask-image: linear-gradient(90deg, transparent, #000 70%); }
+.hp-hero > .rg-wrap, .hf-features > .rg-wrap { position: relative; z-index: 1; }
+.hf-features, .jy-handoff, .jy-brief, .kg-contact { position: relative; isolation: isolate; }
+.jy-handoff > .rg-wrap, .jy-brief > .rg-wrap, .kg-contact > section { position: relative; z-index: 1; }
+.jy-gate > .kg-texture { z-index: -1; opacity: .12; }
+.kg-contact > .kg-texture { z-index: 2; opacity: .12; mask-image: linear-gradient(90deg, #000, transparent 25%, transparent 80%, #000); -webkit-mask-image: linear-gradient(90deg, #000, transparent 25%, transparent 80%, #000); }
+.jy .hf-feature-grid { position: relative; }
+.jy .hf-feature-number { display: flex; align-items: center; gap: 10px; color: var(--brand); }
+.jy .hf-feature-number::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 0 4px var(--brand-wash); }
+.jy .hf-feature-number::after { content: ''; width: 44px; height: 1px; background: var(--rule); }
+.jy .hf-feature { position: relative; }
+.jy .hf-feature::after { content: ''; position: absolute; right: -3px; bottom: -3px; width: 5px; height: 5px; border-radius: 50%; background: var(--brand); opacity: .45; z-index: 1; }
+.jy .hf-section-heading .hf-eyebrow, .jy .jy-step-k { position: relative; padding-left: 18px; }
+.jy .hf-section-heading .hf-eyebrow::before, .jy .jy-step-k::before { content: ''; position: absolute; left: 0; top: 50%; width: 6px; height: 6px; border: 1px solid var(--brand); border-radius: 50%; transform: translateY(-50%); box-shadow: 0 0 0 4px var(--brand-wash); }
+.jy .jy-facts { position: relative; }
+.jy .jy-facts::before { content: ''; position: absolute; left: 4px; top: 12px; bottom: 12px; width: 1px; background: var(--rule); }
+.jy .jy-facts .rg-bub { position: relative; z-index: 1; flex-shrink: 0; }
+.jy .jy-brief-list { position: relative; }
+.jy .jy-brief-list li { position: relative; padding-left: 22px; }
+.jy .jy-brief-list li::before { content: ''; position: absolute; left: 0; top: 31px; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 0 4px var(--brand-wash); }
+.jy .jy-brief-list::before { content: ''; position: absolute; left: 3px; top: 30px; bottom: 30px; width: 1px; background: var(--rule); }
+@media (max-width: 600px) { .kg-texture { opacity: .1; }.kg-texture--hero { opacity: .13; }.kg-contact > .kg-texture { opacity: .07; } }
+@media (forced-colors: active) { .kg-texture { display: none; } }

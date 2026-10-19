@@ -161,20 +161,27 @@ export function useTheme() {
    target, stopping below the fixed nav. */
 export function useSmoothScroll() {
   useEffect(() => {
-    if (!motionOK()) return undefined;
-
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     let lenis;
-    try {
-      lenis = new Lenis({
-        autoRaf: true,
-        lerp: 0.075,
-        anchors: { offset: -64 },
-      });
-    } catch {
-      // Native scrolling remains fully functional when smooth scrolling is unsupported.
-      return undefined;
-    }
-
-    return () => lenis.destroy();
+    const sync = () => {
+      lenis?.destroy();
+      lenis = undefined;
+      if (preference.matches) return;
+      try {
+        lenis = new Lenis({
+          autoRaf: true,
+          lerp: 0.075,
+          anchors: { offset: -80 },
+        });
+      } catch {
+        // Keep native scrolling when smooth scrolling is unsupported.
+      }
+    };
+    sync();
+    preference.addEventListener('change', sync);
+    return () => {
+      preference.removeEventListener('change', sync);
+      lenis?.destroy();
+    };
   }, []);
 }

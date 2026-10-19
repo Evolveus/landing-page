@@ -4,10 +4,12 @@ import './journey.css';
 import { Icon } from '../_shared/Icon';
 import { Rv, Nav, Footer, ContactSection } from './chrome';
 import { motionOK, useReveal, useSmoothScroll } from './pageMotion';
-import { UsageFigures, ThemedImg, ShotBar } from './figures';
+import { UsageFigures } from './figures';
+import { AssessmentHero, AssessmentFeatures } from './HomeFeatures';
+import NetworkTexture from './NetworkTexture';
 import {
-  TRUST, MASTERY_SAMPLE,
-  JOURNEY_OPEN, JOURNEY_TOUR, BRAND_ROLES, JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
+  MASTERY_SAMPLE,
+  JOURNEY_INTRO, JOURNEY_STEPS, JOURNEY_PROOF, JOURNEY_BRIEF, JOURNEY_CTA,
 } from '../content';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -425,53 +427,6 @@ const SHADES = [
 const SHADE_PAD = 3.5;
 const shadePath = (pts) => `M${pts.map(([x, y]) => `${x} ${y}`).join('L')}`;
 
-/* ── The opening screen's bubbles ─────────────────────────────
-   Oversized answer bubbles drawn in faint pencil down both sides of the
-   opening screen, cropped by its edges: up close, the page's dot grid
-   becomes an answer sheet. A few are shaded, with the same strokes the
-   pencil uses in step 2, filled in one after another as the page loads.
-   Drawn on the 24 x 24 board of SHADES, the ring at radius about 8.5. */
-const RINGS = [
-  'M19.4 7.4 C 17.4 4.3, 12.6 3.1, 8.7 4.4 C 4.6 5.9, 3 10.4, 3.7 14.3 C 4.6 18.6, 9 21, 13.1 20.5 C 17.6 19.8, 20.8 16, 20.5 11.7 C 20.3 9.7, 19.4 7.9, 17.7 6.4',
-  'M6.2 5.8 C 9.4 3.4, 14.6 3.2, 17.8 5.9 C 20.9 8.6, 21.2 13.6, 18.9 17 C 16.4 20.6, 11.2 21.4, 7.6 19.4 C 4 17.3, 2.9 12.4, 4.3 8.9 C 4.8 7.7, 5.5 6.6, 6.6 5.6',
-  'M12.6 3.6 C 17.2 3.8, 20.6 7.6, 20.4 12.2 C 20.2 16.8, 16.4 20.6, 11.8 20.4 C 7.2 20.2, 3.6 16.2, 3.8 11.6 C 4 7.4, 7.4 4, 11.6 3.6 C 12.4 3.5, 13.4 3.6, 14.2 3.8',
-];
-const BUBBLE_ROWS = 9;
-const BUBBLE_COLS = 2;
-// The shaded bubbles, [row, column] per side; column 0 is the outer one.
-const BUBBLE_SHADED = {
-  l: [[1, 0], [3, 1], [4, 0], [6, 1], [8, 0]],
-  r: [[0, 1], [2, 0], [5, 1], [7, 0]],
-};
-
-function OpenBubbles() {
-  let n = 0;
-  return (
-    <div className="jy-bubbles" aria-hidden="true">
-      {['l', 'r'].map((side) => (
-        <div key={side} className={`jy-bubbles-col jy-bubbles-col--${side}`}>
-          {Array.from({ length: BUBBLE_ROWS * BUBBLE_COLS }, (_, k) => {
-            const row = Math.floor(k / BUBBLE_COLS);
-            // Column 0 is the outer one, at the screen's edge.
-            const col = side === 'l' ? k % BUBBLE_COLS : BUBBLE_COLS - 1 - (k % BUBBLE_COLS);
-            const shaded = BUBBLE_SHADED[side].some(([r, c]) => r === row && c === col);
-            const shade = SHADES[k % SHADES.length];
-            return (
-              <svg key={k} viewBox="0 0 24 24" className="jy-bb">
-                {shaded && <path className="jy-bb-wash" d={shade.wash} />}
-                {shaded && (
-                  <path className="jy-bb-fill" d={shadePath(shade.pts)} pathLength="1" style={{ '--k': n++ }} />
-                )}
-                <path className="jy-bb-ring" d={RINGS[(k + (side === 'r' ? 1 : 0)) % RINGS.length]} />
-              </svg>
-            );
-          })}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 /* A point a fraction u of the way along a polyline, by length. */
 function alongPath(pts, u) {
   const segs = [];
@@ -833,74 +788,6 @@ function Desk() {
 
 /* ═══════════════════════════════════════════════════════════════ */
 
-/* ── The product tour ─────────────────────────────────────────
-   The real screens, one role at a time, in /product's browser frame.
-   It moves on by itself every few seconds while it is on screen, a
-   line filling under the current tab to show when; pointing at the tabs
-   or tabbing to them pauses it, and a tab jumps to that role. With reduced
-   motion it stays put. */
-const TOUR_ROLES = ['faculty', 'student', 'admin']
-  .map((id) => BRAND_ROLES.find((r) => r.id === id))
-  .filter(Boolean);
-
-function Tour() {
-  const [at, setAt] = useState(0);
-  const [inView, setInView] = useState(false);
-  const ref = useRef(null);
-  const auto = motionOK();
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || !auto || !('IntersectionObserver' in window)) return;
-    // Play only once most of it is in view, so it starts on the first
-    // role rather than cycling while it only peeks in below the opening.
-    // "Most" is of what can fit: on a short screen the tour is taller
-    // than the view and its own ratio would never reach 0.6.
-    const io = new IntersectionObserver(([e]) => {
-      const fit = Math.min(e.boundingClientRect.height, window.innerHeight);
-      setInView(e.isIntersecting && e.intersectionRect.height >= fit * 0.6);
-    }, { threshold: Array.from({ length: 21 }, (_, i) => i / 20) });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [auto]);
-  const role = TOUR_ROLES[at];
-  const next = () => setAt((k) => (k + 1) % TOUR_ROLES.length);
-  return (
-    <div className={`rg-wrap jy-tour-in ${auto ? '' : 'is-still'} ${inView ? 'is-playing' : ''}`} ref={ref}>
-      <div className="jy-tour-head">
-        <div className="rg-tabs jy-tour-tabs" role="tablist">
-          {TOUR_ROLES.map((r, k) => (
-            <button
-              key={r.id}
-              role="tab"
-              aria-selected={k === at}
-              className={`rg-tab ${k === at ? 'is-on' : ''}`}
-              onClick={() => setAt(k)}
-            >
-              <span className="rg-bub" />
-              {r.label}
-              {k === at && <i key={at} className="jy-tour-bar" onAnimationEnd={next} />}
-            </button>
-          ))}
-        </div>
-        <p className="jy-tour-sum" key={role.id}>{role.summary}</p>
-      </div>
-      <div className="rg-shot jy-tour-shot">
-        <ShotBar path={role.id} />
-        <div className="jy-tour-stack">
-          {TOUR_ROLES.map((r, k) => (
-            <div key={r.id} className={`jy-tour-img ${k === at ? 'is-on' : ''}`} aria-hidden={k !== at}>
-              <ThemedImg src={r.src} alt={`The ${r.label.toLowerCase()} view in Evolveus`} />
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="jy-tour-foot">
-        <MoreLink href="/product#roles">{JOURNEY_TOUR.more}</MoreLink>
-      </div>
-    </div>
-  );
-}
-
 /* "More on this" style link: a label and a right arrow. */
 const MoreLink = ({ size = 14, children, ...rest }) => (
   <a className="jy-more" {...rest}>
@@ -940,28 +827,14 @@ export default function Journey() {
     <div className="rg jy" ref={root}>
       <Nav clear />
 
-      {/* ── THE STORY ───────────────────────────────────── */}
-      {/* ── OPENING: what it is, a greeting, where it is in use. The
-          top of the product frame below peeks in at the foot. ──── */}
-      <header className="jy-open" id="top">
-        <OpenBubbles />
-        <p className="jy-open-k">{JOURNEY_OPEN.line}</p>
-        <h1 className="jy-open-h">{JOURNEY_OPEN.title}</h1>
-        <p className="jy-open-org">
-          {JOURNEY_OPEN.inUse}
-          <img src={TRUST.logo} alt={TRUST.org} />
-        </p>
-      </header>
-
-      {/* ── THE PRODUCT: the real screens, one role at a time. ──── */}
-      <section className="jy-tour" aria-label="Evolveus, by role">
-        <Tour />
-      </section>
+      <AssessmentHero />
+      <AssessmentFeatures />
 
       {/* ── THE STORY: the gate (a pencil tin; scrolling opens it), then
           one sample exam, step by step. ─────────────────────── */}
       <section className="jy-story" data-active={active}>
         <div className="jy-gate" aria-hidden={active !== -1}>
+          <NetworkTexture />
           <span className="rg-mono jy-gate-k">{JOURNEY_INTRO.kicker}</span>
           <h2 className="rg-h2 jy-gate-h">{JOURNEY_INTRO.title}</h2>
           <a
@@ -1048,6 +921,7 @@ export default function Journey() {
           count, written the way a roll number is filled on an answer
           sheet; and the way to the real screens on /product. ──── */}
       <section className="rg-sec jy-handoff">
+        <NetworkTexture variant="band" />
         <div className="rg-wrap jy-handoff-grid">
           <div>
             <Rv as="p" className="jy-handoff-line">{JOURNEY_PROOF.line}</Rv>
@@ -1065,6 +939,7 @@ export default function Journey() {
       {/* ── WHERE IT RUNS: the short version; /product has the rest.
           (Who uses it is the tour at the top.) ──────────────── */}
       <section className="rg-sec jy-brief" id="deployment">
+        <NetworkTexture variant="band" />
         <div className="rg-wrap jy-brief-grid">
           <div>
             <Rv as="h2" className="rg-h2 jy-brief-h">{JOURNEY_BRIEF.deploy.title}</Rv>
@@ -1084,10 +959,13 @@ export default function Journey() {
       </section>
 
       {/* ── CONTACT ─────────────────────────────────────── */}
+      <div className="kg-contact">
+      <NetworkTexture />
       <ContactSection
         cta={JOURNEY_CTA}
         sub={<Underlined text={JOURNEY_CTA.sub} phrase={JOURNEY_CTA.underline} />}
       />
+      </div>
 
       <Footer />
     </div>
