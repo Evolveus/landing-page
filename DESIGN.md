@@ -211,25 +211,31 @@ told in order and leaves the detail to the speaker and the live demo.
 - **A fixed canvas.** Every slide is drawn at 1440×810 and scaled to the
   window as a whole, so a layout reads the same on a laptop and a
   projector. Sizes in `deck.css` are canvas pixels; no vw or clamp().
-  Body text at least 14px on the canvas, slide titles 38px, mono 11px+.
+  Body text at least 14px on the canvas, slide titles 36 to 38px, mono 11px+.
 - **Solid lines,** as on paper (§8): projectors wash out alpha lines.
-- **The exam is the spine.** Slides about a step carry the five steps in
-  the running head (01 Before, 02 During, 03 Marking, 04 Results, 05
-  Running it) as bubbles, the current one shaded. The deck's own control
-  bar is a row of answer bubbles too, one per slide.
-- **One idea per slide,** with a short plain sentence as its title.
+- **The customer's questions are the spine.** After the cover and a list
+  of what the exam office answers for, each slide is one question from
+  the room, in their words, numbered in the margin (Q1 to Q17) with who
+  tends to ask it and the short answer straight under it. The running
+  head is an answer sheet: a bubble per question, grouped into five parts
+  (Before, On the day, Marking, Results, Deciding), shaded as they are
+  answered and all shaded on the close. The deck's own control bar is a
+  row of answer bubbles too, one per slide.
+- **One idea per slide.** The question numbers on the worry list are links,
+  so the speaker can jump to whatever the room cares about first.
+- **It says what it does not do.** Q16 lists the limits from
+  `docs/evolveus-context.md` §5 and what to do about each.
 - **Real screens on the specimen mat,** with a plain caption under them
   ("Real screen."), no figure numbers. Screens not captured yet are drawn
   as cards with "Sample data" under them. Crop a real screen rather than
   show labels it cuts short.
 - **Fewer labels.** No spaced-out mono eyebrows above titles, no "AI"
-  badges scattered over cards: AI gets one slide that names each job it
-  does and who checks it. Mono stays for the step row, times and code.
+  badges scattered over cards: Q9 names each job AI does and who checks it. Mono stays for the step row, times and code.
 - **One pencil note in the deck,** where a person would mark the real
   screen. Repeated notes read as a template.
 - **The cover has no slogan:** the logo and name, one plain line of what
   it is, and "In use at" Amrita, over a faint field of answer-sheet rows.
-- **Pacing:** the forest panel for the faculty-control slide and the
+- **Pacing:** the forest panel for "who answers for the AI" (Q9) and the
   close, paper for the rest.
 - **Light and dark** follow the site's theme (T toggles it). Save as PDF
   prints every slide on a 16:9 page in the theme on screen; the page size

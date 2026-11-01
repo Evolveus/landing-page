@@ -1,5 +1,5 @@
-import { BRAND, BRAND_LOGO, TRUST } from "../landing/content";
-import { DECK, STEPS } from "./content";
+import { BRAND, BRAND_LOGO, COMPARE_COLUMNS, COMPARE_ROWS, TRUST, WATCHED } from "../landing/content";
+import { DECK, PARTS, slideOfQuestion } from "./content";
 
 /* The deck's slides, in order. Each is drawn on a fixed 1440×810 canvas
    (see deck.css) and takes `dark` for the screenshots and logos that
@@ -9,21 +9,26 @@ const pad = (n) => String(n).padStart(2, "0");
 
 /* ── Shared pieces ─────────────────────────────────────── */
 
-/* The running head: the brand, and on a step slide the row of five
-   steps with the current one shaded, like a filled answer on a sheet. */
-function Head({ dark, step }) {
+/* The running head: the brand, and the paper as an answer sheet. One
+   bubble per question, grouped into the paper's parts; the ones already
+   answered are shaded, so the sheet fills in as the deck goes on. */
+function Head({ dark, q, done }) {
   return (
     <header className="dk-head">
       <span className="dk-brand">
         <img src={dark ? BRAND_LOGO.markDark : BRAND_LOGO.mark} alt="" />
         {BRAND.name}
       </span>
-      {step && (
-        <ol className="dk-steps" aria-label="The exam, in five steps">
-          {STEPS.map((s) => (
-            <li key={s.n} className={s.n === step ? "on" : ""} aria-current={s.n === step ? "step" : undefined}>
-              <i />
-              <span>{s.n}</span> {s.name}
+      {(q || done) && (
+        <ol className="dk-sheetrow" aria-label={done ? "All questions answered" : `Question ${q}`}>
+          {PARTS.map((p) => (
+            <li key={p.name} className={p.qs.includes(q) ? "on" : ""}>
+              <span>{p.name}</span>
+              <span className="dk-sheetrow-b">
+                {p.qs.map((n) => (
+                  <i key={n} className={n === q ? "now" : done || n < q ? "done" : ""} />
+                ))}
+              </span>
             </li>
           ))}
         </ol>
@@ -32,16 +37,31 @@ function Head({ dark, step }) {
   );
 }
 
-export function Frame({ n, total, dark, step, panel, bare, className = "", children }) {
+export function Frame({ n, total, dark, q, done, panel, bare, className = "", children }) {
   return (
     <section className={`dk-slide${panel ? " dk-slide--panel" : ""} ${className}`}>
-      {!bare && <Head dark={dark || panel} step={step} />}
+      {!bare && <Head dark={dark || panel} q={q} done={done} />}
       <div className="dk-body">{children}</div>
       <footer className="dk-foot">
         <span>{BRAND.domain}</span>
         <span>{n} / {total}</span>
       </footer>
     </section>
+  );
+}
+
+/* A question from the room, numbered in the margin as on a paper, with
+   who tends to ask it and the short answer straight under it. */
+function Ask({ c }) {
+  return (
+    <header className="dk-ask">
+      <span className="dk-ask-n">Q{c.q}</span>
+      <div>
+        <h2 className="dk-h2">{c.title}</h2>
+        <p className="dk-answer-line">{c.answer}</p>
+      </div>
+      <span className="dk-ask-who">Asked by<b>{c.asks}</b></span>
+    </header>
   );
 }
 
@@ -74,11 +94,22 @@ function Mat({ label, children, className = "" }) {
 
 const Sample = () => <span className="dk-cap dk-sample">{DECK.sample}</span>;
 
-function Title({ children }) {
-  return <h2 className="dk-h2">{children}</h2>;
+/* Title and text rows, numbered in the margin. */
+function Rows({ items, className = "" }) {
+  return (
+    <ol className={`dk-stu-list ${className}`}>
+      {items.map((it, i) => (
+        <li key={it.title}>
+          <span className="dk-n">{pad(i + 1)}</span>
+          <h3 className="dk-h3">{it.title}</h3>
+          <p>{it.body}</p>
+        </li>
+      ))}
+    </ol>
+  );
 }
 
-/* ── 1 · Cover ─────────────────────────────────────────── */
+/* ── Cover ─────────────────────────────────────────────── */
 
 /* Answer-sheet bubbles across the whole cover, in groups of four like a
    row of options, faint, and thinning out towards the middle so the
@@ -128,145 +159,40 @@ export function Cover({ dark }) {
   );
 }
 
-/* ── 2 · Four tools, one system ────────────────────────── */
-export function Tools({ dark }) {
-  const t = DECK.tools;
+/* ── What the office answers for ───────────────────────── */
+export function Worries() {
+  const w = DECK.worries;
   return (
     <>
-      <Title>{t.title}</Title>
-      <p className="dk-pain">{t.pain}</p>
-      <div className="dk-tools-map">
-        <ol className="dk-tool-list">
-          {t.rows.map((r) => (
-            <li key={r.tool}>
-              <div>
-                <h3 className="dk-h3">{r.tool}</h3>
-                <span className="dk-eg">{r.eg}</span>
-              </div>
-              <p>for {r.job}</p>
-            </li>
-          ))}
-        </ol>
-        {/* Four lines drawn into one: what the slide says. */}
-        <svg className="dk-merge" viewBox="0 0 120 400" preserveAspectRatio="none" aria-hidden="true">
-          {[50, 150, 250, 350].map((y) => (
-            <path key={y} d={`M0 ${y} C 60 ${y}, 60 200, 120 200`} />
-          ))}
-        </svg>
-        <div className="dk-one">
-          <span className="dk-brand dk-one-name">
-            <img src={dark ? BRAND_LOGO.markDark : BRAND_LOGO.mark} alt="" />
-            {t.one}
-          </span>
-          <ul>
-            {t.gets.map((g) => <li key={g}>{g}</li>)}
-          </ul>
+      <h2 className="dk-h2">{w.title}</h2>
+      <div className="dk-table dk-worries" role="table">
+        <div className="dk-tr dk-th" role="row">
+          {w.head.map((h) => <span key={h} role="columnheader">{h}</span>)}
         </div>
-      </div>
-    </>
-  );
-}
-
-/* ── 3 · The whole paper ───────────────────────────────── */
-export function Paper() {
-  const p = DECK.paper;
-  const s = p.sheet;
-  return (
-    <div className="dk-paper">
-      <div className="dk-paper-text">
-        <Title>{p.title}</Title>
-        <p className="dk-lede">{p.sub}</p>
-        <ol className="dk-parts">
-          {p.parts.map((x) => (
-            <li key={x.part}>
-              <span className="dk-part">{x.part}</span>
-              <h3 className="dk-h3">{x.kind}</h3>
-              <p>{x.how}</p>
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      {/* One student's paper, drawn as a marked answer sheet. */}
-      <figure className="dk-sheet">
-        <div className="dk-card">
-          <div className="dk-card-head">
-            <span>{s.head}</span>
-          </div>
-          <div className="dk-sheet-part">
-            <div className="dk-sheet-row">
-              <span>Part A · {s.a.q}</span>
-              <b className="dk-mk">{s.a.marks}</b>
-            </div>
-            <div className="dk-grid" aria-hidden="true">
-              {s.a.key.map((k, q) => (
-                <span key={q} className={`dk-grid-q${q === s.a.wrong ? " dk-grid-q--x" : ""}`}>
-                  <span className="dk-grid-n">{q + 1}</span>
-                  {[0, 1, 2, 3].map((o) => <i key={o} className={o === (q === s.a.wrong ? (k + 1) % 4 : k) ? "on" : ""} />)}
-                </span>
+        {w.rows.map((r) => (
+          <div className="dk-tr" role="row" key={r.when}>
+            <span className="dk-worry-when" role="cell">{r.when}</span>
+            <span role="cell">{r.what}</span>
+            <span className="dk-worry-who" role="cell">{r.who}</span>
+            <span className="dk-qlinks" role="cell">
+              {r.qs.map((n) => (
+                <a key={n} href={`#${slideOfQuestion(n)}`} aria-label={`Go to question ${n}`}>{n}</a>
               ))}
-            </div>
-          </div>
-          <div className="dk-sheet-part">
-            <div className="dk-sheet-row">
-              <span>Part B · {s.b.n}</span>
-              <b className="dk-mk">{s.b.marks}</b>
-            </div>
-            <p className="dk-sheet-q">{s.b.q}</p>
-            <p className="dk-answer">{s.b.answer}</p>
-            <p className="dk-reason"><b>Reason:</b> {s.b.reason}</p>
-          </div>
-          <div className="dk-sheet-part">
-            <div className="dk-sheet-row">
-              <span>Part C · {s.c.n}</span>
-              <b className="dk-mk">{s.c.marks}</b>
-            </div>
-            <p className="dk-sheet-q">{s.c.q}</p>
-            <p className="dk-tests"><span className="dk-ok" /> {s.c.tests}</p>
-            <p className="dk-reason"><b>Method check:</b> {s.c.check}</p>
-          </div>
-          <div className="dk-card-foot">
-            <span>Total</span>
-            <b>{s.total}</b>
-          </div>
-        </div>
-        <Sample />
-      </figure>
-    </div>
-  );
-}
-
-/* ── 4 · Where AI does the work ────────────────────────── */
-export function Ai() {
-  const a = DECK.ai;
-  return (
-    <>
-      <Title>{a.title}</Title>
-      <div className="dk-ai-table" role="table">
-        <div className="dk-ai-tr dk-ai-th" role="row">
-          {a.head.map((h) => <span key={h} role="columnheader">{h}</span>)}
-        </div>
-        {a.rows.map((r) => (
-          <div className="dk-ai-tr" role="row" key={r.in}>
-            <span className="dk-ai-step" role="cell">{r.step}</span>
-            <span role="cell">{r.in}</span>
-            <span className="dk-ai-out" role="cell">{r.out}</span>
-            <span className="dk-ai-check" role="cell">{r.check}</span>
+            </span>
           </div>
         ))}
       </div>
-      <p className="dk-ai-models">{a.models}</p>
     </>
   );
 }
 
-/* ── 5 · 01 Before: questions from your notes ──────────── */
+/* ── Q1 · Papers on time ───────────────────────────────── */
 export function Setting() {
   const st = DECK.setting;
-  const { pdf, rubric } = st;
+  const { pdf } = st;
   return (
     <>
-      <Title>{st.title}</Title>
+      <Ask c={st} />
       <div className="dk-set">
         <figure className="dk-pdf">
           <div className="dk-card">
@@ -293,83 +219,138 @@ export function Setting() {
           </div>
           <Sample />
         </figure>
-
         <div className="dk-set-side">
-          <div className="dk-card dk-rubric">
-            <div className="dk-card-head">
-              <span>{rubric.label}</span>
-            </div>
-            <p className="dk-rubric-q">{pdf.drafts[2].q}</p>
-            <ul>
-              {rubric.lines.map((l) => (
-                <li key={l.t}><span>{l.t}</span><b>{l.m}</b></li>
-              ))}
-            </ul>
-            <div className="dk-card-foot">{rubric.foot}</div>
-          </div>
-          <div className="dk-facts">
-            {st.facts.map((f) => (
-              <div key={f.n}>
-                <b>{f.n}</b>
-                <p>{f.l}</p>
-              </div>
-            ))}
-          </div>
-          <p className="dk-small">{st.tags}</p>
+          <Rows items={st.items} className="dk-rows-tight" />
         </div>
       </div>
     </>
   );
 }
 
-/* ── 6 · 02 During: the lab and the replay ─────────────── */
-export function During() {
-  const d = DECK.during;
-  const { log, replay } = d;
+/* ── Q2 · Every department ─────────────────────────────── */
+
+/* A small drawing of what each kind of answer looks like on screen. */
+function TypeSketch({ id }) {
+  switch (id) {
+    case "objective":
+      return (
+        <span className="dk-ts-bubs" aria-hidden="true">
+          {[1, 3, 0].map((on, r) => (
+            <span key={r}>{[0, 1, 2, 3].map((o) => <i key={o} className={o === on ? "on" : ""} />)}</span>
+          ))}
+        </span>
+      );
+    case "written":
+      return <span className="dk-ts-lines" aria-hidden="true"><i /><i /><i /></span>;
+    case "code":
+      return <span className="dk-ts-code" aria-hidden="true">{"def solve(n):\n  return n * 2"}</span>;
+    case "file":
+      return <span className="dk-pdf-icon dk-ts-file" aria-hidden="true">FILE</span>;
+    case "canvas":
+      return (
+        <svg className="dk-ts-canvas" viewBox="0 0 120 56" aria-hidden="true">
+          <rect x="46" y="18" width="28" height="20" rx="2" />
+          <path d="M60 18V3m-4 5 4-5 4 5M60 38v15m-4-5 4 5 4-5M74 28h26m-5-4 5 4-5 4M46 28H24m5-4-5 4 5 4" />
+        </svg>
+      );
+    default:
+      return (
+        <span className="dk-ts-chat" aria-hidden="true">
+          <i>Walk me through it.</i>
+          <i>First, supply falls...</i>
+        </span>
+      );
+  }
+}
+
+export function Types() {
+  const t = DECK.types;
   return (
     <>
-      <Title>{d.title}</Title>
-      <div className="dk-during">
-        <ol className="dk-controls">
-          {d.controls.map((c, i) => (
-            <li key={c.title}>
-              <span className="dk-n">{pad(i + 1)}</span>
-              <h3 className="dk-h3">{c.title}</h3>
-              <p>{c.body}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="dk-card dk-log">
-          <div className="dk-card-head">
-            <span>{log.label}</span>
-          </div>
-          <table>
-            <tbody>
-              {log.rows.map((r) => (
-                <tr key={r.t}>
-                  <td className="dk-time">{r.t}</td>
-                  <td>{r.who}</td>
-                  <td><span className="dk-flag" />{r.kind}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <Ask c={t} />
+      <ul className="dk-types">
+        {t.cells.map((c) => (
+          <li key={c.id}>
+            <div className="dk-ts"><TypeSketch id={c.id} /></div>
+            <h3 className="dk-h3">{c.kind}</h3>
+            <p>{c.eg}</p>
+            <p className="dk-types-how">{c.how}</p>
+          </li>
+        ))}
+      </ul>
+      <p className="dk-footline">{t.foot}</p>
+    </>
+  );
+}
+
+/* ── Q3 · Fits the university ──────────────────────────── */
+export function Structure({ dark }) {
+  const s = DECK.structure;
+  return (
+    <>
+      <Ask c={s} />
+      <div className="dk-structure">
+        <div>
+          <ol className="dk-tree">
+            {s.tree.map((x) => <li key={x}>{x}</li>)}
+          </ol>
+          <p className="dk-tree-note">{s.assign}</p>
+          <Mat label={s.shot.label}>
+            <img src={dark ? s.shot.srcDark : s.shot.src} alt={s.shot.alt} />
+          </Mat>
+        </div>
+        <div>
+          <Rows items={s.roles} className="dk-rows-tight" />
+          <p className="dk-footline dk-footline--rule">{s.audit}</p>
         </div>
       </div>
+    </>
+  );
+}
+
+/* ── Q4 · Copying ──────────────────────────────────────── */
+export function Security() {
+  const s = DECK.security;
+  return (
+    <>
+      <Ask c={s} />
+      <div className="dk-during">
+        <Rows items={s.locks} className="dk-rows-tight" />
+        <div>
+          <div className="dk-card dk-watched">
+            <div className="dk-card-head"><span>{s.watched}</span></div>
+            <ul>
+              {WATCHED.map((x) => <li key={x}><span className="dk-flag" />{x}</li>)}
+            </ul>
+          </div>
+          <p className="dk-it-caveat dk-plain">{s.plain}</p>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ── Q5 · A disputed flag ──────────────────────────────── */
+export function Replay({ dark }) {
+  const r = DECK.replay;
+  const { log, shot, track } = r;
+  return (
+    <>
+      <Ask c={r} />
       <figure className="dk-track">
         <div className="dk-card">
           <div className="dk-card-head">
-            <span>{replay.head}</span>
+            <span>{track.head}</span>
             <span className="dk-track-at">
-              {replay.steps[replay.now].t} · {replay.steps[replay.now].l}
+              {track.steps[track.now].t} · {track.steps[track.now].l}
             </span>
           </div>
           <div className="dk-track-line">
-            <span className="dk-track-done" style={{ width: `${replay.steps[replay.now].at}%` }} />
-            {replay.steps.map((s, i) => (
+            <span className="dk-track-done" style={{ width: `${track.steps[track.now].at}%` }} />
+            {track.steps.map((s, i) => (
               <span
                 key={s.l}
-                className={`dk-tick${s.flag ? " dk-tick--flag" : ""}${i % 2 ? " dk-tick--low" : ""}${i === replay.now ? " dk-tick--now" : ""}`}
+                className={`dk-tick${s.flag ? " dk-tick--flag" : ""}${i % 2 ? " dk-tick--low" : ""}${i === track.now ? " dk-tick--now" : ""}`}
                 style={{ left: `${s.at}%` }}
               >
                 <i />
@@ -379,22 +360,153 @@ export function During() {
           </div>
         </div>
         <figcaption className="dk-track-cap">
-          <span>{replay.plain}</span>
+          <span>{track.plain}</span>
           <span className="dk-cap">{DECK.sample}</span>
         </figcaption>
       </figure>
+      <div className="dk-replay-low">
+        <div className="dk-card dk-log">
+          <div className="dk-card-head"><span>{log.label}</span></div>
+          <table>
+            <tbody>
+              {log.rows.map((x) => (
+                <tr key={x.t}>
+                  <td className="dk-time">{x.t}</td>
+                  <td>{x.who}</td>
+                  <td><span className="dk-flag" />{x.kind}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="dk-card-foot">{log.foot}</div>
+        </div>
+        <Mat label={shot.label} className="dk-replay-shot">
+          <div className="dk-crop dk-crop--attempt">
+            <img src={dark ? shot.srcDark : shot.src} alt={shot.alt} />
+          </div>
+        </Mat>
+      </div>
     </>
   );
 }
 
-/* ── 7 · 03 Marking ────────────────────────────────────── */
+/* ── Q6 · When something goes wrong ────────────────────── */
+export function Failure() {
+  const f = DECK.failure;
+  return (
+    <>
+      <Ask c={f} />
+      <div className="dk-failure">
+        <div className="dk-table dk-ifthen" role="table">
+          <div className="dk-tr dk-th" role="row">
+            {f.head.map((h) => <span key={h} role="columnheader">{h}</span>)}
+          </div>
+          {f.rows.map((r) => (
+            <div className="dk-tr" role="row" key={r.if}>
+              <span className="dk-if" role="cell">{r.if}</span>
+              <span role="cell">{r.then}</span>
+            </div>
+          ))}
+        </div>
+        <aside className="dk-one">
+          <b className="dk-big">{f.load.n}</b>
+          <p className="dk-big-l">{f.load.l}</p>
+          <p>{f.load.body}</p>
+        </aside>
+      </div>
+    </>
+  );
+}
+
+/* ── Q7 · How soon ─────────────────────────────────────── */
+export function Speed() {
+  const p = DECK.speed;
+  const s = p.sheet;
+  const longest = Math.max(...p.bars.rows.map((r) => r.min));
+  return (
+    <>
+      <Ask c={p} />
+      <div className="dk-paper">
+        <div>
+          {/* Drawn to scale, so the short bar is as short as it should be. */}
+          <div className="dk-hours">
+            <span className="dk-hours-l">{p.bars.label}</span>
+            {p.bars.rows.map((r) => (
+              <div className="dk-hours-row" key={r.who}>
+                <span>{r.who}</span>
+                <span className="dk-hours-bar"><i style={{ width: `${(r.min / longest) * 100}%` }} /></span>
+                <b>{r.t}</b>
+              </div>
+            ))}
+          </div>
+          <ol className="dk-parts">
+            {p.parts.map((x) => (
+              <li key={x.part}>
+                <span className="dk-part">{x.part}</span>
+                <h3 className="dk-h3">{x.kind}</h3>
+                <p>{x.how}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* One student's paper, drawn as a marked answer sheet. */}
+        <figure className="dk-sheet">
+          <div className="dk-card">
+            <div className="dk-card-head">
+              <span>{s.head}</span>
+              <Sample />
+            </div>
+            <div className="dk-sheet-part">
+              <div className="dk-sheet-row">
+                <span>Part A · {s.a.q}</span>
+                <b className="dk-mk">{s.a.marks}</b>
+              </div>
+              <div className="dk-grid" aria-hidden="true">
+                {s.a.key.map((k, q) => (
+                  <span key={q} className={`dk-grid-q${q === s.a.wrong ? " dk-grid-q--x" : ""}`}>
+                    <span className="dk-grid-n">{q + 1}</span>
+                    {[0, 1, 2, 3].map((o) => <i key={o} className={o === (q === s.a.wrong ? (k + 1) % 4 : k) ? "on" : ""} />)}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="dk-sheet-part">
+              <div className="dk-sheet-row">
+                <span>Part B · {s.b.n}</span>
+                <b className="dk-mk">{s.b.marks}</b>
+              </div>
+              <p className="dk-sheet-q">{s.b.q}</p>
+              <p className="dk-reason"><b>Reason:</b> {s.b.reason}</p>
+            </div>
+            <div className="dk-sheet-part">
+              <div className="dk-sheet-row">
+                <span>Part C · {s.c.n}</span>
+                <b className="dk-mk">{s.c.marks}</b>
+              </div>
+              <p className="dk-sheet-q">{s.c.q}</p>
+              <p className="dk-tests"><span className="dk-ok" /> {s.c.tests}</p>
+              <p className="dk-reason"><b>Method check:</b> {s.c.check}</p>
+            </div>
+            <div className="dk-card-foot">
+              <span>Total</span>
+              <b>{s.total}</b>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </>
+  );
+}
+
+/* ── Q8 · Marking fairly ───────────────────────────────── */
 export function Marking({ dark }) {
   const m = DECK.marking;
   const { shot, code } = m;
   const c = code.card;
   return (
     <>
-      <Title>{m.title}</Title>
+      <Ask c={m} />
       <div className="dk-mark">
         <div className="dk-mark-shot">
           {/* Cropped below the student's name row, to the question, the
@@ -428,50 +540,64 @@ export function Marking({ dark }) {
   );
 }
 
-/* ── 8 · 03 Faculty decide (on the panel) ──────────────── */
+/* ── Q9 · Who answers for the AI (on the panel) ────────── */
 export function Control() {
   const c = DECK.control;
   return (
-    <div className="dk-control">
-      <h2 className="dk-h2 dk-h2--big">{c.title}</h2>
-      <p className="dk-lede">{c.sub}</p>
-      <figure className="dk-example">
-        <span className="dk-example-k">{c.example.label}</span>
-        <ol>
-          {c.example.steps.map((x, i) => (
-            <li key={x}><span className="dk-n">{i + 1}</span>{x}</li>
-          ))}
-        </ol>
-      </figure>
-      <ol className="dk-rows">
-        {c.rows.map((r, i) => (
-          <li key={r.title}>
-            <span className="dk-n">{pad(i + 1)}</span>
-            <h3 className="dk-h3">{r.title}</h3>
-            <p>{r.body}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
+    <>
+      <Ask c={c} />
+      <div className="dk-control">
+        <div>
+          <h3 className="dk-h3 dk-col-h">{c.aiLabel}</h3>
+          <div className="dk-table dk-aijobs" role="table">
+            <div className="dk-tr dk-th" role="row">
+              {c.aiHead.map((h) => <span key={h} role="columnheader">{h}</span>)}
+            </div>
+            {c.ai.map((r) => (
+              <div className="dk-tr" role="row" key={r.job}>
+                <span className="dk-ai-out" role="cell">{r.job}</span>
+                <span className="dk-ai-check" role="cell">{r.check}</span>
+              </div>
+            ))}
+          </div>
+          <p className="dk-footline">{c.models}</p>
+        </div>
+        <div>
+          <h3 className="dk-h3 dk-col-h">{c.controlLabel}</h3>
+          <Rows items={c.controls} className="dk-rows-tight" />
+        </div>
+      </div>
+    </>
   );
 }
 
-/* ── 9 · 04 Results for the class and the department ───── */
+/* ── Q10 · What a department learns ────────────────────── */
 export function Results({ dark }) {
   const r = DECK.results;
-  const m = r.mastery;
+  const f = r.follow;
   return (
     <>
-      <Title>{r.title}</Title>
+      <Ask c={r} />
       <div className="dk-results">
+        {/* The chart part of the real screen; its header row of stats
+            is cropped away. */}
+        <Mat label={r.shot.label} className="dk-chart">
+          <div className="dk-crop">
+            <img src={dark ? r.shot.srcDark : r.shot.src} alt={r.shot.alt} />
+          </div>
+        </Mat>
         <div>
-          {/* The chart part of the real screen; its header row of stats
-              is cropped away. */}
-          <Mat label={r.shot.label} className="dk-chart">
-            <div className="dk-crop">
-              <img src={dark ? r.shot.srcDark : r.shot.src} alt={r.shot.alt} />
+          <figure className="dk-follow">
+            <div className="dk-card">
+              <div className="dk-card-head"><span>{f.label}</span></div>
+              <ul>
+                {f.rows.map((x) => (
+                  <li key={x.who}><b>{x.who}</b><span>{x.why}</span></li>
+                ))}
+              </ul>
             </div>
-          </Mat>
+            <Sample />
+          </figure>
           <div className="dk-results-items">
             {r.items.map((it) => (
               <div key={it.title}>
@@ -481,11 +607,38 @@ export function Results({ dark }) {
             ))}
           </div>
         </div>
+      </div>
+    </>
+  );
+}
+
+/* ── Q11 · Outcomes ────────────────────────────────────── */
+function Graph({ g }) {
+  return (
+    <div className="dk-graph" aria-hidden="true">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        {g.nodes.map((n) => <path key={n.name} d={`M50 50 L${n.x} ${n.y}`} />)}
+        <path d={`M${g.nodes[0].x} ${g.nodes[0].y} L${g.nodes[2].x} ${g.nodes[2].y}`} />
+        <path d={`M${g.nodes[3].x} ${g.nodes[3].y} L${g.nodes[4].x} ${g.nodes[4].y}`} />
+      </svg>
+      <span className="dk-graph-node is-hub" style={{ left: "50%", top: "50%" }}><i />{g.hub}</span>
+      {g.nodes.map((n) => (
+        <span key={n.name} className="dk-graph-node" style={{ left: `${n.x}%`, top: `${n.y}%` }}><i />{n.name}</span>
+      ))}
+    </div>
+  );
+}
+
+export function Outcomes() {
+  const o = DECK.outcomes;
+  const m = o.mastery;
+  return (
+    <>
+      <Ask c={o} />
+      <div className="dk-outcomes">
         <figure className="dk-mastery">
           <div className="dk-card">
-            <div className="dk-card-head">
-              <span>{m.label}</span>
-            </div>
+            <div className="dk-card-head"><span>{m.label}</span></div>
             <table>
               <thead>
                 <tr>
@@ -508,43 +661,88 @@ export function Results({ dark }) {
             </table>
             <div className="dk-card-foot">{m.also}</div>
           </div>
-          <span className="dk-cap dk-sample">{DECK.sample} · {r.export}</span>
         </figure>
+        <div className="dk-outcomes-side">
+          <div className="dk-card dk-co">
+            <div className="dk-card-head"><span>{o.co.label}</span><span>{o.co.foot}</span></div>
+            <ul>
+              {o.co.rows.map((r) => (
+                <li key={r.co}>
+                  <b>{r.co}</b>
+                  <span>{r.l}</span>
+                  <span className="dk-co-bar"><i style={{ width: `${r.v}%` }} /></span>
+                  <b>{r.v}%</b>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="dk-card">
+            <div className="dk-card-head"><span>{o.graph.label}</span></div>
+            <Graph g={o.graph} />
+            <div className="dk-card-foot">{o.graph.body}</div>
+          </div>
+          <Sample />
+        </div>
       </div>
     </>
   );
 }
 
-/* ── 10 · 04 What students get back ────────────────────── */
+/* ── Q12 · Just ask ────────────────────────────────────── */
+export function Assistant() {
+  const a = DECK.assistant;
+  return (
+    <>
+      <Ask c={a} />
+      <div className="dk-assistant">
+        <figure>
+          <div className="dk-card">
+            <div className="dk-card-head"><span>{a.chat.label}</span></div>
+            <ul className="dk-chat">
+              {a.chat.turns.map((t) => (
+                <li key={t.text} className={t.from === "you" ? "is-you" : ""}>
+                  <p>{t.text}</p>
+                  {t.confirm && (
+                    <span className="dk-acts">
+                      {t.confirm.map((x) => <span key={x}>{x}</span>)}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <Sample />
+        </figure>
+        <Rows items={a.can} />
+      </div>
+    </>
+  );
+}
+
+/* ── Q13 · What students get ───────────────────────────── */
 export function Students({ dark }) {
   const s = DECK.students;
   return (
     <>
-      <Title>{s.title}</Title>
+      <Ask c={s} />
       <div className="dk-students">
         <Mat label={s.shot.label}>
-          <img src={dark ? s.shot.srcDark : s.shot.src} alt={s.shot.alt} />
+          <div className="dk-crop dk-crop--standing">
+            <img src={dark ? s.shot.srcDark : s.shot.src} alt={s.shot.alt} />
+          </div>
         </Mat>
-        <ol className="dk-stu-list">
-          {s.items.map((it, i) => (
-            <li key={it.title}>
-              <span className="dk-n">{pad(i + 1)}</span>
-              <h3 className="dk-h3">{it.title}</h3>
-              <p>{it.body}</p>
-            </li>
-          ))}
-        </ol>
+        <Rows items={s.items} className="dk-rows-tight" />
       </div>
     </>
   );
 }
 
-/* ── 11 · 05 Running it ────────────────────────────────── */
+/* ── Q14 · Data and IT ─────────────────────────────────── */
 export function Running() {
   const t = DECK.running;
   return (
     <>
-      <Title>{t.title}</Title>
+      <Ask c={t} />
       <div className="dk-pair">
         {t.hosting.map((h) => (
           <div key={h.title}>
@@ -570,15 +768,86 @@ export function Running() {
   );
 }
 
-/* ── 12 · In use ───────────────────────────────────────── */
+/* ── Q15 · What we already have ────────────────────────── */
+export function Compare() {
+  const c = DECK.compare;
+  return (
+    <>
+      <Ask c={c} />
+      <div className="dk-compare">
+        <div>
+          <table className="dk-grid-table">
+            <thead>
+              <tr>
+                <th />
+                {COMPARE_COLUMNS.map((col) => (
+                  <th key={col.id} className={col.id === "evolveus" ? "is-own" : ""}>{col.label}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {COMPARE_ROWS.map((row) => (
+                <tr key={row.id}>
+                  <th>{row.criterion}</th>
+                  {COMPARE_COLUMNS.map((col) => (
+                    <td key={col.id} className={col.id === "evolveus" ? "is-own" : ""}>
+                      <span className={`dk-v is-${row.cells[col.id].v}`} role="img" aria-label={c.key[row.cells[col.id].v]} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="dk-grid-key">
+            {Object.entries(c.key).map(([k, label]) => (
+              <span key={k}><i className={`dk-v is-${k}`} />{label}</span>
+            ))}
+          </p>
+        </div>
+        <aside className="dk-keep">
+          <h3 className="dk-h3 dk-col-h">{c.keep.label}</h3>
+          <ul>
+            {c.keep.rows.map((r) => (
+              <li key={r.title}>
+                <b>{r.title}</b>
+                <p>{r.body}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="dk-small dk-keep-foot">{c.foot}</p>
+        </aside>
+      </div>
+    </>
+  );
+}
+
+/* ── Q16 · What not to expect ──────────────────────────── */
+export function Limits() {
+  const l = DECK.limits;
+  return (
+    <>
+      <Ask c={l} />
+      <div className="dk-table dk-limits" role="table">
+        <div className="dk-tr dk-th" role="row">
+          {l.head.map((h) => <span key={h} role="columnheader">{h}</span>)}
+        </div>
+        {l.rows.map((r) => (
+          <div className="dk-tr" role="row" key={r.no}>
+            <span className="dk-limit-no" role="cell">{r.no}</span>
+            <span role="cell">{r.so}</span>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/* ── Q17 · Who uses it ─────────────────────────────────── */
 export function Proof({ dark }) {
   const p = DECK.proof;
   return (
     <>
-      <div className="dk-proof-top">
-        <Title>{p.title}</Title>
-        <img className={`dk-proof-logo${dark ? " dk-logo-dark" : ""}`} src={TRUST.logo} alt={TRUST.org} />
-      </div>
+      <Ask c={p} />
       <div className="dk-figs">
         {p.figures.map((f) => (
           <div key={f.l}>
@@ -586,10 +855,10 @@ export function Proof({ dark }) {
             <span>{f.l}</span>
           </div>
         ))}
+        <img className={`dk-proof-logo${dark ? " dk-logo-dark" : ""}`} src={TRUST.logo} alt={TRUST.org} />
       </div>
       <div className="dk-proof">
         <div className="dk-proof-facts">
-          <p className="dk-midterm">{p.midterm}</p>
           <h3 className="dk-h3">{p.who.label}</h3>
           <p>{p.who.text}</p>
         </div>
@@ -602,7 +871,7 @@ export function Proof({ dark }) {
   );
 }
 
-/* ── 13 · Send us a paper (on the panel) ───────────────── */
+/* ── Send us a paper (on the panel) ────────────────────── */
 export function Close() {
   const c = DECK.close;
   const site = `https://${BRAND.domain}`;

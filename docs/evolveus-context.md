@@ -291,7 +291,7 @@ don't.
 | /compare | "Why not what we have?" | The alternatives, honestly | Walkthrough offer |
 | Flyer (1 page A4) | Handed over or emailed; a few seconds | The whole paper marked (MCQ, written, code), by AI, faculty approve | Offer + QR code |
 | Brochure (8-page A4 booklet) | Dean takes it away, passes to HoDs and IT; ten minutes | The case: what it replaces, AI at each stage, safeguards, a page for IT | Offer |
-| Deck | A room, presented in person; half an hour | The story told live: problem, demo flow, AI, trust, deployment | "Send us a paper" |
+| Deck | A room, presented in person; half an hour | The questions an exam office asks, in the order an exam raises them, each with a short answer and evidence, including what it does not do | "Send us a paper" |
 
 Flyer range line (added 2026-10-05): one mono line teasing high-value
 features the flyer doesn't cover, "Plus: Class insights after each exam ·
@@ -368,10 +368,13 @@ existing steps, layout unchanged), then deck.
 - `/brochure`, `/flyer` and `/ppt` stay, linked from the footer's
   Resources column.
 - /compare says "colleges"; the home page says "universities".
-- Flyer and brochure redone. Deck redone on 2026-10-11 (`/ppt`, 13 slides,
-  copy in `src/presentation/content.js`). Its title headline, "Marked
-  before the class leaves the lab.", leans on "usually within about ten
-  minutes"; the owner should confirm it.
+- Flyer and brochure redone. Deck redone on 2026-11-01 from the customer's
+  side (`/ppt`, 20 slides, one per question from the room, copy in
+  `src/presentation/content.js`).
+- The home page lists canvas and conversational questions, WebMCP and a
+  knowledge-connections view; none is in §4 yet. The deck carries them
+  because the home page does, with a speaker note to check before demoing.
+  Confirm they are live, then add them to §4 or take them off both.
 
 ## 9. How the screenshots were made
 

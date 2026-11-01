@@ -314,30 +314,32 @@ body.is-deck{
   font-size: 16px; font-weight: 700; font-stretch: 108%; letter-spacing: -0.02em;
 }
 .dk-brand img{ height: 26px; width: auto; }
-.dk-steps{ display: flex; gap: 22px; }
-.dk-steps li{
-  display: inline-flex; align-items: center; gap: 7px;
+/* The paper as an answer sheet: a bubble per question, grouped by part,
+   filling in as the deck goes on. */
+.dk-sheetrow{ display: flex; gap: 26px; }
+.dk-sheetrow li{
+  display: inline-flex; align-items: center; gap: 9px;
   font-family: var(--mono); font-size: 12px; font-weight: 500;
-  letter-spacing: 0.12em; text-transform: uppercase;
+  letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--ink-45);
 }
-.dk-steps li span{ color: var(--ink-45); }
-.dk-steps i{
+.dk-sheetrow li.on{ color: var(--ink); }
+.dk-sheetrow-b{ display: inline-flex; gap: 4px; }
+.dk-sheetrow i{
   width: 11px; height: 11px; border-radius: 50%;
-  box-shadow: inset 0 0 0 1px var(--brand);
+  box-shadow: inset 0 0 0 1px var(--ink-25);
 }
-.dk-steps li.on{ color: var(--ink); }
-.dk-steps li.on span{ color: var(--brand); }
-.dk-steps li.on i{ background: var(--brand); }
+.dk-sheetrow i.done{ background: var(--brand); box-shadow: none; }
+.dk-sheetrow i.now{ background: var(--brand); box-shadow: 0 0 0 2px var(--paper), 0 0 0 3px var(--brand); }
 .dk-body{
   position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding-top: 40px;
+  padding-top: 26px;
 }
-.dk-body > .dk-h2{ margin-bottom: 32px; }
+.dk-body > .dk-h2{ margin-bottom: 24px; }
 .dk-foot{
   display: flex;
   justify-content: space-between;
@@ -442,93 +444,78 @@ body.is-deck{
 .dk-org img{ height: 40px; width: auto; }
 .dk-logo-dark{ filter: brightness(0) invert(1); opacity: 0.9; }
 
-/* ── 2 · Four tools, one system ───────────────────────── */
-.dk-slide--tools .dk-body > .dk-h2{ margin-bottom: 14px; }
-.dk-pain{ max-width: 760px; font-size: 19px; line-height: 1.4; color: var(--ink-70); }
-.dk-tools-map{
-  flex: 1;
+/* ── The question at the head of a slide ──────────────── */
+.dk-ask{
   display: grid;
-  grid-template-columns: 600px 120px minmax(0, 1fr);
-  align-items: center;
+  grid-template-columns: 76px minmax(0, 1fr) 190px;
+  column-gap: 8px;
+  align-items: start;
+  margin-bottom: 24px;
 }
-.dk-tool-list li{
-  height: 100px;
-  display: grid;
-  grid-template-columns: 250px minmax(0, 1fr);
-  align-items: center;
-  gap: 20px;
-  border-top: 1px solid var(--rule);
+.dk-ask-n{
+  padding-top: 3px;
+  font-family: var(--mono);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--brand);
 }
-.dk-tool-list li:last-child{ border-bottom: 1px solid var(--rule); }
-.dk-eg{ display: block; margin-top: 4px; font-size: 13.5px; color: var(--ink-45); }
-.dk-tool-list p{ font-size: 16px; color: var(--ink-70); }
-.dk-merge{ width: 120px; height: 400px; overflow: visible; }
-.dk-merge path{ fill: none; stroke: var(--rule); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.dk-one{
-  padding: 28px 32px 30px;
-  border: 1px solid var(--brand);
-  border-radius: 3px;
-  background: var(--brand-wash);
-}
-.dk-one-name{ font-size: 26px; gap: 12px; margin-bottom: 14px; }
-.dk-one-name img{ height: 32px; }
-.dk-one li{ padding: 11px 0; border-top: 1px solid var(--rule-soft); font-size: 16.5px; }
-
-/* ── 3 · The whole paper ──────────────────────────────── */
-.dk-paper{ flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 580px; gap: 64px; }
-.dk-paper-text .dk-h2{ margin-bottom: 18px; }
-.dk-parts{ margin-top: 26px; }
-.dk-parts li{
-  display: grid;
-  grid-template-columns: 74px minmax(0, 1fr);
-  column-gap: 16px;
-  padding: 14px 0;
-  border-top: 1px solid var(--rule);
-}
-.dk-part{ grid-row: span 2; padding-top: 2px; font-size: 13px; font-weight: 600; color: var(--brand); }
-.dk-parts p{ margin-top: 2px; font-size: 14.5px; color: var(--ink-70); }
-
-.dk-sheet-part{ padding: 11px 16px 13px; border-bottom: 1px solid var(--rule-soft); }
-.dk-sheet-row{ display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 6px; }
-.dk-sheet-row span{ font-size: 12.5px; font-weight: 600; color: var(--ink-45); }
-.dk-sheet-row .dk-mk{ font-size: 17px; }
-.dk-sheet-q{ margin-bottom: 7px; font-size: 14.5px; font-weight: 600; line-height: 1.35; }
-.dk-grid{ display: flex; justify-content: space-between; }
-.dk-grid-q{ display: flex; flex-direction: column; align-items: center; gap: 3px; }
-.dk-grid-n{ font-family: var(--mono); font-size: 10px; color: var(--ink-45); margin-bottom: 2px; }
-.dk-grid-q i{ width: 11px; height: 11px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--ink-25); }
-.dk-grid-q i.on{ background: var(--brand); box-shadow: none; }
-.dk-grid-q--x i.on{ background: var(--flag); }
-.dk-grid-q--x .dk-grid-n{ color: var(--flag); }
-.dk-answer{
-  margin-bottom: 7px;
-  padding-left: 10px;
-  border-left: 2px solid var(--rule);
-  font-size: 13.5px;
-  line-height: 1.4;
-}
-.dk-sheet .dk-tests{ margin-bottom: 4px; }
-.dk-sheet .dk-card-foot b{ font-size: 20px; color: var(--brand); }
-
-/* ── 4 · Where AI does the work ───────────────────────── */
-.dk-ai-tr{
-  display: grid;
-  grid-template-columns: 110px minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: 28px;
-  padding: 15px 0;
-  border-top: 1px solid var(--rule);
-  font-size: 17px;
+.dk-ask .dk-h2{ max-width: 900px; font-size: 36px; }
+.dk-answer-line{
+  margin-top: 10px;
+  max-width: 900px;
+  font-size: 19px;
   line-height: 1.38;
+  color: var(--ink-70);
 }
-.dk-ai-tr:last-child{ border-bottom: 1px solid var(--rule); }
-.dk-ai-th{ padding: 0 0 10px; border-top: 0; font-size: 14px; font-weight: 600; color: var(--ink-45); }
-.dk-ai-step{ font-weight: 600; color: var(--brand); }
-.dk-ai-out{ font-weight: 500; }
-.dk-ai-check{ color: var(--ink-70); }
-.dk-ai-models{ margin-top: 18px; font-size: 16px; color: var(--ink-70); }
+.dk-ask-who{ padding-top: 6px; text-align: right; font-size: 13px; color: var(--ink-45); }
+.dk-ask-who b{ display: block; margin-top: 2px; font-size: 14px; font-weight: 600; color: var(--ink-70); }
+.dk-col-h{ margin-bottom: 10px; color: var(--brand); }
+.dk-footline{ margin-top: 16px; font-size: 15px; color: var(--ink-70); }
+.dk-footline--rule{ padding-top: 14px; border-top: 1px solid var(--rule); }
 
-/* ── 5 · 01 Questions from notes ──────────────────────── */
-.dk-set{ flex: 1; display: grid; grid-template-columns: 700px minmax(0, 1fr); gap: 56px; }
+/* Ruled tables, shared by the worry list and the if-then lists. */
+.dk-tr{
+  display: grid;
+  gap: 28px;
+  padding: 13px 0;
+  border-top: 1px solid var(--rule);
+  font-size: 16.5px;
+  line-height: 1.36;
+}
+.dk-tr:last-child{ border-bottom: 1px solid var(--rule); }
+.dk-th{ padding: 0 0 9px; border-top: 0; font-size: 14px; font-weight: 600; color: var(--ink-45); }
+
+/* Title and text rows, numbered in the margin. */
+.dk-stu-list li{
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  padding: 16px 0 18px;
+  border-top: 1px solid var(--rule);
+}
+.dk-stu-list .dk-n{ grid-row: span 2; padding-top: 3px; }
+.dk-stu-list p{ margin-top: 4px; font-size: 15.5px; color: var(--ink-70); }
+.dk-rows-tight li{ padding: 12px 0 13px; }
+
+/* ── What your office answers for ─────────────────────── */
+.dk-worries .dk-tr{ grid-template-columns: 170px minmax(0, 1fr) 230px 170px; align-items: center; }
+.dk-worries .dk-tr:not(.dk-th){ min-height: 74px; padding: 10px 0; }
+.dk-worry-when{ font-weight: 600; font-stretch: 104%; }
+.dk-worry-who{ font-size: 15px; color: var(--ink-70); }
+.dk-qlinks{ display: flex; gap: 6px; }
+.dk-qlinks a{
+  display: grid; place-items: center;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--brand);
+  font-family: var(--mono); font-size: 13px; font-weight: 500;
+  color: var(--brand);
+}
+.dk-qlinks a:hover{ background: var(--brand); color: var(--paper); }
+
+/* ── Q1 · Papers on time ──────────────────────────────── */
+.dk-set{ flex: 1; display: grid; grid-template-columns: 730px minmax(0, 1fr); gap: 48px; }
 .dk-pdf{ margin: 0; }
 .dk-pdf-file{
   display: grid;
@@ -553,7 +540,7 @@ body.is-deck{
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   column-gap: 16px;
-  padding: 11px 16px;
+  padding: 13px 16px;
   border-bottom: 1px solid var(--rule-soft);
 }
 .dk-draft-n{ font-size: 12.5px; color: var(--ink-45); }
@@ -567,41 +554,72 @@ body.is-deck{
   color: var(--ink-70);
 }
 .dk-acts span:first-child{ border-color: var(--brand); color: var(--brand); }
-.dk-set-side{ display: flex; flex-direction: column; gap: 22px; }
-.dk-rubric-q{ padding: 11px 16px 4px; font-size: 14.5px; font-weight: 600; line-height: 1.35; }
-.dk-rubric ul{ padding: 4px 16px 10px; }
-.dk-rubric li{
-  display: flex; justify-content: space-between; gap: 12px;
-  padding: 6px 0;
-  border-bottom: 1px dashed var(--rule);
-  font-size: 14px;
-  color: var(--ink-70);
-}
-.dk-rubric li:last-child{ border-bottom: 0; }
-.dk-rubric li b{ color: var(--brand); font-family: var(--mono); font-weight: 500; }
-.dk-facts{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.dk-facts div{ padding-top: 10px; border-top: 1px solid var(--rule); }
-.dk-facts b{
-  display: block;
-  font-size: 40px; font-weight: 700; font-stretch: 110%; letter-spacing: -0.03em; line-height: 1;
-  color: var(--brand);
-}
-.dk-facts p{ margin-top: 6px; font-size: 14px; line-height: 1.35; color: var(--ink-70); }
+.dk-set-side .dk-stu-list li:first-child{ border-top: 0; padding-top: 0; }
 
-/* ── 6 · 02 The lab and the replay ────────────────────── */
-.dk-during{ display: grid; grid-template-columns: minmax(0, 1fr) 500px; gap: 56px; align-items: start; }
-.dk-controls{ display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; }
-.dk-controls li{ padding: 14px 0 16px; border-top: 1px solid var(--rule); }
-.dk-controls .dk-n{ display: block; margin-bottom: 6px; }
-.dk-controls p{ margin-top: 4px; font-size: 14.5px; color: var(--ink-70); }
-.dk-log table{ width: 100%; border-collapse: collapse; }
-.dk-log td{ padding: 11px 16px; border-bottom: 1px solid var(--rule-soft); font-size: 14.5px; }
-.dk-log tr:last-child td{ border-bottom: 0; }
-.dk-time{ font-family: var(--mono); font-size: 12px !important; color: var(--ink-45); }
+/* ── Q2 · Every department ────────────────────────────── */
+.dk-types{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 28px; }
+.dk-types li{ padding: 14px 0 18px; border-top: 1px solid var(--rule); }
+.dk-ts{ height: 66px; display: flex; align-items: center; margin-bottom: 10px; }
+.dk-types p{ margin-top: 4px; font-size: 15px; line-height: 1.38; color: var(--ink-70); }
+.dk-types .dk-types-how{ font-size: 14px; font-weight: 500; color: var(--brand); }
+.dk-ts-bubs{ display: flex; flex-direction: column; gap: 6px; }
+.dk-ts-bubs > span{ display: flex; gap: 6px; }
+.dk-ts-bubs i{ width: 13px; height: 13px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--ink-25); }
+.dk-ts-bubs i.on{ background: var(--brand); box-shadow: none; }
+.dk-ts-lines{ display: flex; flex-direction: column; gap: 10px; width: 230px; }
+.dk-ts-lines i{ height: 2px; background: var(--ink-25); }
+.dk-ts-lines i:last-child{ width: 62%; }
+.dk-ts-code{
+  padding: 8px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--card);
+  font-family: var(--mono); font-size: 13px; line-height: 1.4;
+  white-space: pre;
+}
+.dk-ts-file{ height: 58px; width: 46px; }
+.dk-ts-canvas{ height: 66px; width: 140px; overflow: visible; }
+.dk-ts-canvas rect, .dk-ts-canvas path{ fill: none; stroke: var(--graphite); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.dk-ts-chat{ display: flex; flex-direction: column; gap: 5px; font-size: 13px; }
+.dk-ts-chat i{ font-style: normal; align-self: flex-start; padding: 3px 10px; border: 1px solid var(--rule); border-radius: 3px; }
+.dk-ts-chat i + i{ margin-left: 24px; background: var(--brand-wash); }
 
-.dk-track{ margin: auto 0 0; }
+/* ── Q3 · Fits the university ─────────────────────────── */
+.dk-structure{ flex: 1; min-height: 0; display: grid; grid-template-columns: 720px minmax(0, 1fr); gap: 48px; }
+.dk-tree{ display: flex; }
+.dk-tree li{
+  flex: 1;
+  padding: 9px 12px;
+  border: 1px solid var(--rule);
+  border-left-width: 0;
+  background: var(--card);
+  font-size: 14.5px;
+  font-weight: 500;
+  text-align: center;
+}
+.dk-tree li:first-child{ border-left-width: 1px; border-radius: 3px 0 0 3px; }
+.dk-tree li:last-child{ border-color: var(--brand); border-left: 1px solid var(--brand); margin-left: -1px; background: var(--brand-wash); color: var(--brand); font-weight: 600; border-radius: 0 3px 3px 0; }
+.dk-tree-note{ margin: 10px 0 14px; font-size: 15px; color: var(--ink-70); }
+.dk-structure .dk-mat-body{ padding: 6px; }
+.dk-structure .dk-mat img{ max-height: 268px; object-fit: cover; object-position: top; }
+.dk-structure .dk-stu-list li:first-child{ border-top: 0; padding-top: 0; }
+
+/* ── Q4 · Copying ─────────────────────────────────────── */
+.dk-during{ display: grid; grid-template-columns: minmax(0, 1fr) 520px; gap: 56px; align-items: start; }
+.dk-during .dk-stu-list li:first-child{ border-top: 0; padding-top: 0; }
+.dk-watched ul{ display: grid; grid-template-columns: 1fr; padding: 4px 16px 6px; }
+.dk-watched li{ padding: 7px 0; border-bottom: 1px solid var(--rule-soft); font-size: 14.5px; line-height: 1.3; }
+.dk-watched li:last-child{ border-bottom: 0; }
+.dk-flag{
+  display: inline-block; width: 8px; height: 8px; margin-right: 10px;
+  border-radius: 50%; background: var(--flag);
+}
+.dk-plain{ margin-top: 16px; color: var(--ink); }
+
+/* ── Q5 · A disputed flag ─────────────────────────────── */
+.dk-track{ margin: 0; }
 .dk-track-at{ color: var(--flag); }
-.dk-track-line{ position: relative; height: 150px; margin: 0 70px; }
+.dk-track-line{ position: relative; height: 128px; margin: 0 70px; }
 .dk-track-line::before, .dk-track-done{
   content: '';
   position: absolute;
@@ -625,79 +643,158 @@ body.is-deck{
 .dk-tick > span{
   position: absolute;
   left: 0;
-  bottom: 18px;
+  bottom: 16px;
   transform: translateX(-50%);
   width: 150px;
   text-align: center;
   font-size: 14px;
-  line-height: 1.25;
+  line-height: 1.2;
 }
-.dk-tick--low > span{ bottom: auto; top: 18px; }
-.dk-tick > span b{ display: block; margin-bottom: 2px; font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--ink-45); }
+.dk-tick--low > span{ bottom: auto; top: 16px; }
+.dk-tick > span b{ display: block; margin-bottom: 1px; font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--ink-45); }
 .dk-tick--flag > span{ color: var(--flag); }
-.dk-track-cap{ display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-top: 10px; font-size: 15px; color: var(--ink-70); }
+.dk-track-cap{ display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-top: 8px; font-size: 15px; color: var(--ink-70); }
 .dk-track-cap .dk-cap{ margin: 0; }
+.dk-replay-low{ flex: 1; min-height: 0; margin-top: 16px; display: grid; grid-template-columns: minmax(0, 1fr) 560px; gap: 40px; align-items: start; }
+.dk-log table{ width: 100%; border-collapse: collapse; }
+.dk-log td{ padding: 9px 16px; border-bottom: 1px solid var(--rule-soft); font-size: 14.5px; }
+.dk-log tr:last-child td{ border-bottom: 0; }
+.dk-time{ font-family: var(--mono); font-size: 12px !important; color: var(--ink-45); }
+.dk-replay-shot .dk-mat{ padding: 8px 10px 8px 30px; }
+.dk-replay-shot .dk-mat-body{ padding: 4px; }
+.dk-replay-shot .dk-cap{ margin-top: 5px; }
+.dk-crop--attempt{ max-height: 120px; }
 
-/* ── 7 · 03 Marking ───────────────────────────────────── */
+/* ── Q6 · When something goes wrong ───────────────────── */
+.dk-failure{ flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 48px; align-items: start; }
+.dk-ifthen .dk-tr{ grid-template-columns: 340px minmax(0, 1fr); }
+.dk-if{ font-weight: 600; }
+.dk-one{
+  padding: 24px 26px 26px;
+  border: 1px solid var(--brand);
+  border-radius: 3px;
+  background: var(--brand-wash);
+}
+.dk-big{
+  display: block;
+  font-size: 72px; font-weight: 700; font-stretch: 110%; letter-spacing: -0.035em; line-height: 1;
+  color: var(--brand);
+}
+.dk-big-l{ margin: 6px 0 16px; font-size: 17px; font-weight: 500; line-height: 1.3; }
+.dk-one p:last-child{ padding-top: 14px; border-top: 1px solid var(--rule); font-size: 15px; color: var(--ink-70); }
+
+/* ── Q7 · How soon ────────────────────────────────────── */
+.dk-paper{ flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 560px; gap: 52px; }
+.dk-hours-l{ display: block; margin-bottom: 14px; font-size: 15px; font-weight: 600; }
+.dk-hours-row{
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: 15px;
+  color: var(--ink-70);
+}
+.dk-hours-bar{ display: block; height: 30px; background: var(--paper-2); }
+.dk-hours-bar i{ display: block; min-width: 3px; height: 100%; background: var(--ink-25); }
+.dk-hours-row:last-of-type .dk-hours-bar i{ background: var(--brand); }
+.dk-hours-row b{
+  grid-column: 2;
+  margin-top: 3px;
+  font-size: 26px; font-weight: 700; font-stretch: 108%; letter-spacing: -0.025em; line-height: 1.1;
+  color: var(--ink);
+}
+.dk-hours-row:last-of-type b{ color: var(--brand); }
+.dk-parts{ margin-top: 14px; }
+.dk-parts li{
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  column-gap: 16px;
+  padding: 9px 0;
+  border-top: 1px solid var(--rule);
+}
+.dk-part{ grid-row: span 2; padding-top: 2px; font-size: 13px; font-weight: 600; color: var(--brand); }
+.dk-parts p{ margin-top: 1px; font-size: 14.5px; color: var(--ink-70); }
+.dk-sheet{ margin: 0; }
+.dk-sheet .dk-card-head .dk-cap{ margin: 0; font-weight: 500; }
+.dk-sheet-part{ padding: 9px 16px 11px; border-bottom: 1px solid var(--rule-soft); }
+.dk-sheet-row{ display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 4px; }
+.dk-sheet-row span{ font-size: 12.5px; font-weight: 600; color: var(--ink-45); }
+.dk-sheet-row .dk-mk{ font-size: 17px; }
+.dk-sheet-q{ margin-bottom: 5px; font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+.dk-grid{ display: flex; justify-content: space-between; }
+.dk-grid-q{ display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.dk-grid-n{ font-family: var(--mono); font-size: 10px; color: var(--ink-45); margin-bottom: 2px; }
+.dk-grid-q i{ width: 11px; height: 11px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--ink-25); }
+.dk-grid-q i.on{ background: var(--brand); box-shadow: none; }
+.dk-grid-q--x i.on{ background: var(--flag); }
+.dk-grid-q--x .dk-grid-n{ color: var(--flag); }
+.dk-sheet .dk-tests{ margin-bottom: 4px; }
+.dk-sheet .dk-card-foot b{ font-size: 20px; color: var(--brand); }
+
+/* ── Q8 · Marking fairly ──────────────────────────────── */
 .dk-mark{ flex: 1; min-height: 0; display: grid; grid-template-columns: 780px minmax(0, 1fr); gap: 36px; }
 .dk-mark-shot{ position: relative; }
 .dk-mark-shot .dk-mat-fig{ width: 630px; }
-.dk-note--remark{ position: absolute; left: 638px; top: 330px; width: 142px; transform: rotate(-3deg); }
-.dk-mark-written{ margin-bottom: 22px; font-size: 16.5px; line-height: 1.45; }
-.dk-mark-side > p:not(.dk-mark-written){ margin-top: 6px; font-size: 14.5px; color: var(--ink-70); }
-.dk-code{ margin: 16px 0 0; }
+.dk-note--remark{ position: absolute; left: 638px; top: 250px; width: 142px; transform: rotate(-3deg); }
+.dk-mark-written{ margin-bottom: 12px; font-size: 15.5px; line-height: 1.4; }
+.dk-mark-side > p:not(.dk-mark-written){ margin-top: 4px; font-size: 14.5px; color: var(--ink-70); }
+.dk-code{ margin: 10px 0 0; }
+.dk-code .dk-cap{ margin-top: 4px; }
+.dk-code .dk-card-head{ padding: 7px 16px; }
 .dk-code pre{
-  padding: 10px 16px;
+  padding: 7px 16px;
   font-family: var(--mono);
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 12.5px;
+  line-height: 1.35;
   color: var(--ink);
   border-bottom: 1px solid var(--rule-soft);
 }
-.dk-code .dk-tests{ padding: 8px 16px 0; }
-.dk-code .dk-reason{ padding: 6px 16px 12px; }
+.dk-code .dk-tests{ padding: 6px 16px 0; }
+.dk-code .dk-reason{ padding: 3px 16px 8px; }
 
-/* ── 8 · 03 Faculty decide (panel) ────────────────────── */
-.dk-control{ flex: 1; display: flex; flex-direction: column; padding-top: 12px; }
-.dk-control .dk-lede{ margin-top: 22px; }
-.dk-example{
-  margin: 34px 0 0;
-  max-width: 900px;
-  padding: 18px 22px 20px;
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-  background: var(--card);
-}
-.dk-example-k{ display: block; margin-bottom: 10px; font-size: 13px; font-weight: 600; color: var(--brand); }
-.dk-example li{ display: flex; gap: 14px; padding: 5px 0; font-size: 16.5px; }
-.dk-example .dk-n{ width: 14px; padding-top: 2px; }
-.dk-rows{
-  margin-top: auto;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 28px;
-}
-.dk-rows li{ padding-top: 16px; border-top: 1px solid var(--rule); }
-.dk-rows .dk-n{ display: block; margin-bottom: 10px; }
-.dk-rows p{ margin-top: 8px; font-size: 15px; color: var(--ink-70); }
+/* ── Q9 · Who answers for the AI (panel) ──────────────── */
+.dk-control{ flex: 1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 56px; }
+.dk-aijobs .dk-tr{ grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 10px 0; gap: 20px; font-size: 16px; }
+.dk-aijobs .dk-th{ padding: 0 0 7px; font-size: 14px; }
+.dk-ai-out{ font-weight: 500; }
+.dk-ai-check{ color: var(--ink-70); }
 
-/* ── 9 · 04 Results ───────────────────────────────────── */
-.dk-results{ flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 500px; gap: 56px; }
+/* ── Q10 · What a department learns ───────────────────── */
+.dk-results{ flex: 1; min-height: 0; display: grid; grid-template-columns: 700px minmax(0, 1fr); gap: 48px; align-items: start; }
 /* Only the chart of the real screen: its header row of stats has labels
    cut short at this size. */
 .dk-crop{ overflow: hidden; border-radius: 6px; }
 .dk-crop img{ margin-top: -25%; }
-.dk-crop--remark{ max-height: 420px; }
+.dk-crop--remark{ max-height: 390px; }
 .dk-crop--remark img{ margin-top: -12.5%; }
-.dk-results-items{ margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.dk-crop--attempt img{ margin-top: -8%; }
+.dk-crop--standing{ max-height: 450px; }
+.dk-crop--standing img{ margin-top: 0; }
+.dk-follow{ margin: 0; }
+.dk-follow li{
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--rule-soft);
+  font-size: 14.5px;
+}
+.dk-follow li:last-child{ border-bottom: 0; }
+.dk-follow b{ font-weight: 600; }
+.dk-follow span{ color: var(--ink-70); }
+.dk-results-items{ margin-top: 16px; display: grid; grid-template-columns: 1fr; gap: 14px; }
 .dk-results-items > div{ padding-top: 12px; border-top: 1px solid var(--rule); }
-.dk-results-items p{ margin-top: 4px; font-size: 14px; color: var(--ink-70); }
+.dk-results-items p{ margin-top: 4px; font-size: 15px; color: var(--ink-70); }
+
+/* ── Q11 · Outcomes ───────────────────────────────────── */
+.dk-outcomes{ flex: 1; min-height: 0; display: grid; grid-template-columns: 660px minmax(0, 1fr); gap: 40px; align-items: start; }
 .dk-mastery{ margin: 0; }
 .dk-mastery table{ width: 100%; border-collapse: separate; border-spacing: 4px; padding: 8px 12px 10px; }
 .dk-mastery th{ font-size: 13px; font-weight: 600; color: var(--ink-45); }
 .dk-mastery tbody th{ padding-right: 8px; text-align: left; font-size: 14.5px; font-weight: 500; color: var(--ink); }
 /* Each cell is shaded by its value; the ones below 55% in the flag colour. */
-.dk-mastery td{ position: relative; height: 46px; text-align: center; }
+.dk-mastery td{ position: relative; height: 54px; text-align: center; }
 .dk-mastery td::before{
   content: '';
   position: absolute; inset: 0;
@@ -707,30 +804,69 @@ body.is-deck{
 }
 .dk-mastery td.low::before{ background: var(--flag); opacity: 0.32; }
 .dk-mastery td span{ position: relative; font-size: 14.5px; font-weight: 600; }
-
-/* ── 10 · 04 For students ─────────────────────────────── */
-.dk-students{ flex: 1; min-height: 0; display: grid; grid-template-columns: 500px minmax(0, 1fr); gap: 64px; }
-.dk-stu-list li{
+.dk-outcomes-side{ display: flex; flex-direction: column; gap: 14px; }
+.dk-outcomes-side .dk-cap{ margin-top: -6px; }
+.dk-co ul{ padding: 4px 16px 6px; }
+.dk-co li{
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  padding: 16px 0 18px;
-  border-top: 1px solid var(--rule);
+  grid-template-columns: 38px 76px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 14px;
 }
-.dk-stu-list .dk-n{ grid-row: span 2; padding-top: 3px; }
-.dk-stu-list p{ margin-top: 4px; font-size: 15.5px; color: var(--ink-70); }
+.dk-co b{ font-weight: 600; }
+.dk-co li b:last-child{ text-align: right; }
+.dk-co-bar{ display: block; height: 10px; background: var(--paper-2); }
+.dk-co-bar i{ display: block; height: 100%; background: var(--brand); }
+.dk-graph{ position: relative; height: 132px; margin: 12px 56px 14px; }
+.dk-graph svg{ position: absolute; inset: 0; width: 100%; height: 100%; }
+.dk-graph path{ fill: none; stroke: var(--rule); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.dk-graph-node{
+  position: absolute;
+  display: inline-flex; align-items: center; gap: 5px;
+  transform: translate(-50%, -50%);
+  padding: 1px 4px;
+  background: var(--card);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.dk-graph-node i{ width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+.dk-graph-node.is-hub{ font-size: 15px; font-weight: 600; color: var(--brand); }
 
-/* ── 11 · 05 Running it ───────────────────────────────── */
+/* ── Q12 · Just ask ───────────────────────────────────── */
+.dk-assistant{ flex: 1; display: grid; grid-template-columns: 660px minmax(0, 1fr); gap: 56px; align-items: start; }
+.dk-assistant figure{ margin: 0; }
+.dk-chat{ display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.dk-chat li{
+  max-width: 82%;
+  align-self: flex-start;
+  padding: 11px 15px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-size: 16px;
+  line-height: 1.38;
+}
+.dk-chat li.is-you{ align-self: flex-end; background: var(--brand-wash); border-color: var(--brand); }
+.dk-chat .dk-acts{ margin-top: 10px; }
+.dk-assistant .dk-stu-list li:first-child{ border-top: 0; padding-top: 0; }
+
+/* ── Q13 · What students get ──────────────────────────── */
+.dk-students{ flex: 1; min-height: 0; display: grid; grid-template-columns: 480px minmax(0, 1fr); gap: 60px; align-items: start; }
+.dk-students .dk-stu-list li:first-child{ border-top: 0; padding-top: 0; }
+
+/* ── Q14 · Data and IT ────────────────────────────────── */
 .dk-pair{
   display: grid;
   grid-template-columns: 1fr 1fr;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
 }
-.dk-pair > div{ padding: 34px 32px 36px 0; }
+.dk-pair > div{ padding: 24px 32px 26px 0; }
 /* Two of equal weight: the second on the wash (DESIGN.md §6). */
 .dk-pair > div + div{ padding-left: 32px; border-left: 1px solid var(--rule); background: var(--brand-wash); }
 .dk-pair p{ margin-top: 8px; font-size: 17px; color: var(--ink-70); }
-.dk-it{ margin-top: 52px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+.dk-it{ margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
 .dk-it .dk-h3{ margin-bottom: 10px; }
 .dk-it-ai{ font-size: 17px; line-height: 1.45; }
 .dk-it-caveat{
@@ -740,18 +876,48 @@ body.is-deck{
   font-size: 15px;
   color: var(--ink-70);
 }
-.dk-list li{ padding: 9px 0; border-top: 1px solid var(--rule-soft); font-size: 15px; color: var(--ink-70); }
+.dk-list li{ padding: 8px 0; border-top: 1px solid var(--rule-soft); font-size: 15px; color: var(--ink-70); }
 .dk-list li:first-child{ border-top: 0; padding-top: 0; }
 
-/* ── 12 · In use ──────────────────────────────────────── */
-.dk-proof-top{ display: flex; justify-content: space-between; align-items: center; gap: 32px; margin-bottom: 30px; }
-.dk-proof-top .dk-h2{ margin: 0; }
-.dk-proof-logo{ height: 44px; width: auto; }
+/* ── Q15 · What we already have ───────────────────────── */
+.dk-compare{ flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 44px; align-items: start; }
+.dk-grid-table{ width: 100%; border-collapse: collapse; }
+.dk-grid-table th, .dk-grid-table td{ border-bottom: 1px solid var(--rule); }
+.dk-grid-table thead th{ padding: 0 6px 8px; font-size: 13.5px; font-weight: 600; color: var(--ink-45); text-align: center; line-height: 1.2; }
+.dk-grid-table tbody th{ padding: 7px 12px 7px 0; text-align: left; font-size: 14.5px; font-weight: 500; line-height: 1.25; }
+.dk-grid-table td{ width: 84px; text-align: center; vertical-align: middle; }
+.dk-grid-table .is-own{ background: var(--brand-wash); color: var(--brand); }
+.dk-v{
+  display: inline-block;
+  position: relative;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1.5px var(--ink-25);
+  vertical-align: middle;
+}
+.dk-v.is-full{ background: var(--brand); box-shadow: none; }
+.dk-v.is-part{ box-shadow: inset 0 0 0 1.5px var(--brand); }
+.dk-v.is-part::after{ content: ''; position: absolute; inset: 0 50% 0 0; background: var(--brand); }
+.dk-grid-key{ display: flex; gap: 24px; margin-top: 10px; font-size: 13px; color: var(--ink-70); }
+.dk-grid-key span{ display: inline-flex; align-items: center; gap: 7px; }
+.dk-keep li{ padding: 10px 0 12px; border-top: 1px solid var(--rule); }
+.dk-keep b{ display: block; font-size: 15.5px; font-weight: 600; line-height: 1.25; }
+.dk-keep p{ margin-top: 3px; font-size: 14.5px; line-height: 1.38; color: var(--ink-70); }
+.dk-keep-foot{ padding-top: 12px; border-top: 1px solid var(--rule); color: var(--ink-45); }
+
+/* ── Q16 · What not to expect ─────────────────────────── */
+.dk-limits .dk-tr{ grid-template-columns: 500px minmax(0, 1fr); padding: 17px 0; font-size: 18px; }
+.dk-limits .dk-th{ padding: 0 0 9px; font-size: 14px; }
+.dk-limit-no{ font-weight: 600; }
+
+/* ── Q17 · Who uses it ────────────────────────────────── */
+.dk-proof-logo{ height: 44px; width: auto; margin-left: auto; align-self: center; }
 .dk-figs{
   display: flex;
   align-items: flex-end;
   gap: 72px;
-  padding: 24px 0 26px;
+  padding: 22px 0 24px;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
 }
@@ -761,22 +927,19 @@ body.is-deck{
   color: var(--brand);
 }
 .dk-figs span{ display: block; margin-top: 8px; font-size: 15px; color: var(--ink-70); }
-.dk-daily{ margin-left: auto; max-width: 280px; font-size: 15.5px; color: var(--ink-70); }
-.dk-proof{ margin: auto 0; display: grid; grid-template-columns: minmax(0, 1fr) 640px; gap: 64px; align-items: start; }
-.dk-proof-facts p{ font-size: 16px; line-height: 1.45; color: var(--ink-70); }
-.dk-proof-facts .dk-midterm{ margin-bottom: 26px; font-size: 19px; color: var(--ink); }
-.dk-proof-facts .dk-h3{ margin-bottom: 6px; }
+.dk-proof{ margin: auto 0; display: grid; grid-template-columns: minmax(0, 1fr) 680px; gap: 64px; align-items: start; }
+.dk-proof-facts p{ margin-top: 6px; font-size: 17px; line-height: 1.45; color: var(--ink-70); }
 .dk-quote{ padding-left: 24px; border-left: 2px solid var(--brand); }
-.dk-quote p{ font-size: 21px; line-height: 1.38; letter-spacing: -0.01em; }
+.dk-quote p{ font-size: 23px; line-height: 1.36; letter-spacing: -0.01em; }
 .dk-quote footer{ margin-top: 12px; font-size: 13px; color: var(--ink-45); }
 
-/* ── 13 · Send us a paper (panel) ─────────────────────── */
-.dk-close{ flex: 1; display: flex; flex-direction: column; padding-top: 24px; }
-.dk-next{ margin-top: 44px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+/* ── Send us a paper (panel) ──────────────────────────── */
+.dk-close{ flex: 1; display: flex; flex-direction: column; padding-top: 18px; }
+.dk-next{ margin-top: 40px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
 .dk-next li{ padding-top: 14px; border-top: 1px solid var(--rule); }
 .dk-next .dk-n{ display: block; margin-bottom: 8px; }
 .dk-next p{ margin-top: 6px; font-size: 15px; color: var(--ink-70); }
-.dk-close .dk-lede{ margin-top: 28px; max-width: 640px; }
+.dk-close .dk-lede{ margin-top: 24px; max-width: 640px; font-size: 19px; }
 .dk-contact{
   margin-top: auto;
   display: flex;
@@ -791,6 +954,66 @@ body.is-deck{
 .dk-qr img{ display: block; width: 120px; height: 120px; }
 /* The site is already in the contact; the footer keeps the page number. */
 .dk-slide--close .dk-foot span:first-child{ visibility: hidden; }
+
+/* ── Sizes for the slides with less on them, so each fills its canvas ── */
+.dk-worries .dk-tr:not(.dk-th){ min-height: 80px; font-size: 17px; }
+.dk-drafts li{ padding: 20px 16px; }
+.dk-drafts p{ font-size: 16.5px; }
+.dk-set-side .dk-stu-list li{ padding: 15px 0 17px; }
+.dk-set-side .dk-stu-list p{ font-size: 16px; }
+.dk-types li{ padding: 18px 0 30px; }
+.dk-ts{ height: 80px; }
+.dk-types .dk-h3{ font-size: 21px; }
+.dk-types p{ font-size: 16.5px; }
+.dk-types .dk-types-how{ font-size: 15.5px; }
+.dk-during .dk-stu-list li{ padding: 15px 0 18px; }
+.dk-during .dk-stu-list p{ font-size: 16.5px; }
+.dk-watched li{ padding: 8px 0; }
+.dk-ifthen .dk-tr{ padding: 20px 0; font-size: 18px; }
+.dk-ifthen .dk-th{ padding: 0 0 9px; font-size: 14px; }
+.dk-aijobs .dk-tr{ padding: 14px 0; font-size: 17px; }
+.dk-aijobs .dk-th{ padding: 0 0 7px; font-size: 14px; }
+.dk-control .dk-stu-list li{ padding: 17px 0 19px; }
+.dk-control .dk-stu-list p{ font-size: 16.5px; }
+.dk-chat{ gap: 16px; padding: 20px; }
+.dk-chat li{ font-size: 18px; }
+.dk-assistant .dk-stu-list li{ padding: 22px 0 26px; }
+.dk-assistant .dk-stu-list p{ font-size: 17px; }
+.dk-students .dk-stu-list li{ padding: 20px 0 24px; }
+.dk-students .dk-stu-list p{ font-size: 17px; }
+.dk-pair > div{ padding: 34px 32px 36px 0; }
+.dk-pair .dk-h3--big{ font-size: 25px; }
+.dk-pair p{ font-size: 18.5px; }
+.dk-it{ margin-top: 44px; }
+.dk-it-ai{ font-size: 18.5px; }
+.dk-it-caveat{ font-size: 16.5px; }
+.dk-list li{ padding: 11px 0; font-size: 16.5px; }
+.dk-grid-table tbody th{ padding: 10px 12px 10px 0; font-size: 15.5px; }
+.dk-limits .dk-tr{ padding: 27px 0; font-size: 20px; }
+.dk-limits .dk-th{ padding: 0 0 9px; font-size: 14px; }
+.dk-quote p{ font-size: 26px; }
+.dk-proof-facts p{ font-size: 18px; }
+
+.dk-hours-bar{ height: 42px; }
+.dk-hours-row{ margin-bottom: 18px; }
+.dk-parts{ margin-top: 20px; }
+.dk-parts li{ padding: 14px 0; }
+.dk-parts p{ font-size: 16px; }
+.dk-sheet-part{ padding: 14px 16px 16px; }
+.dk-sheet-q{ font-size: 15.5px; }
+.dk-sheet .dk-reason{ font-size: 15px; }
+.dk-results{ grid-template-columns: 790px minmax(0, 1fr); gap: 44px; }
+.dk-follow li{ grid-template-columns: 100px minmax(0, 1fr); padding: 15px 16px; font-size: 15px; }
+.dk-results-items{ margin-top: 20px; gap: 18px; }
+.dk-results-items p{ font-size: 16px; }
+.dk-structure .dk-mat img{ max-height: 340px; }
+.dk-structure .dk-stu-list li{ padding: 20px 0 22px; }
+.dk-structure .dk-stu-list p{ font-size: 16.5px; }
+.dk-crop--attempt{ max-height: 172px; }
+.dk-aijobs .dk-tr{ padding: 17px 0; }
+.dk-control .dk-stu-list li{ padding: 22px 0 24px; }
+.dk-grid-table tbody th{ padding: 12px 12px 12px 0; }
+.dk-chat li{ padding: 15px 18px; }
 
 /* ── Save as PDF: every slide, one per page ───────────── */
 .dk-print{ display: none; }

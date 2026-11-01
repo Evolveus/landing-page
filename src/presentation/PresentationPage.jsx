@@ -4,7 +4,8 @@ import { useTheme } from "../landing/brand/pageMotion";
 import { BRAND, BRAND_LOGO } from "../landing/content";
 import { DECK } from "./content";
 import {
-  Ai, Close, Control, Cover, During, Frame, Marking, Paper, Proof, Results, Running, Setting, Students, Tools,
+  Assistant, Close, Compare, Control, Cover, Failure, Frame, Limits, Marking, Outcomes, Proof, Replay, Results,
+  Running, Security, Setting, Speed, Structure, Students, Types, Worries,
 } from "./slides";
 import "../landing/brand/register.css";
 import "./deck.css";
@@ -20,22 +21,36 @@ import "./deck.css";
 
    It follows the site's theme (the nav's Light/Dark). Save as PDF prints
    every slide, one per page, in the theme on screen. */
-/* The deck in order. `step` puts a slide in the exam's five steps;
-   `panel` draws it on the forest panel; `bare` drops the running head. */
+/* The deck in order. `content` holds a question's number (`q`) and its
+   notes; `panel` draws a slide on the forest panel; `bare` drops the
+   running head; `done` shows the answer sheet with every question shaded. */
+const QUESTIONS = [
+  ["setting", "Papers on time", Setting],
+  ["types", "Every department", Types],
+  ["structure", "Fits the university", Structure],
+  ["security", "Stopping copying", Security],
+  ["replay", "A disputed flag", Replay],
+  ["failure", "When something goes wrong", Failure],
+  ["speed", "How soon", Speed],
+  ["marking", "Marking fairly", Marking],
+  ["control", "Who answers for the AI", Control],
+  ["results", "What a department learns", Results],
+  ["outcomes", "Course outcomes", Outcomes],
+  ["assistant", "Just ask", Assistant],
+  ["students", "What students get", Students],
+  ["running", "Data and IT", Running],
+  ["compare", "What we already have", Compare],
+  ["limits", "What not to expect", Limits],
+  ["proof", "Who uses it", Proof],
+];
+
 const SLIDES = [
   { id: "cover", name: "Cover", Slide: Cover, bare: true, notes: DECK.cover.notes },
-  { id: "tools", name: "Four tools, one system", Slide: Tools, notes: DECK.tools.notes },
-  { id: "paper", name: "The whole paper", Slide: Paper, notes: DECK.paper.notes },
-  { id: "ai", name: "Where AI does the work", Slide: Ai, notes: DECK.ai.notes },
-  { id: "setting", name: "Questions from notes", Slide: Setting, step: "01", notes: DECK.setting.notes },
-  { id: "during", name: "The lab and replay", Slide: During, step: "02", notes: DECK.during.notes },
-  { id: "marking", name: "Marking", Slide: Marking, step: "03", notes: DECK.marking.notes },
-  { id: "faculty", name: "Faculty decide", Slide: Control, step: "03", panel: true, notes: DECK.control.notes },
-  { id: "results", name: "Results", Slide: Results, step: "04", notes: DECK.results.notes },
-  { id: "students", name: "For students", Slide: Students, step: "04", notes: DECK.students.notes },
-  { id: "running", name: "Running it", Slide: Running, step: "05", notes: DECK.running.notes },
-  { id: "proof", name: "In use", Slide: Proof, notes: DECK.proof.notes },
-  { id: "close", name: "Send us a paper", Slide: Close, panel: true, notes: DECK.close.notes },
+  { id: "worries", name: "What your office answers for", Slide: Worries, notes: DECK.worries.notes },
+  ...QUESTIONS.map(([id, name, Slide]) => ({
+    id, name, Slide, q: DECK[id].q, notes: DECK[id].notes, panel: id === "control",
+  })),
+  { id: "close", name: "Send us a paper", Slide: Close, panel: true, done: true, notes: DECK.close.notes },
 ];
 
 const W = 1440;
@@ -103,6 +118,16 @@ export default function PresentationPage({ onHome }) {
   useEffect(() => {
     window.history.replaceState({}, "", `#${current + 1}`);
   }, [current]);
+
+  // The question numbers on the worry list are links to their slides.
+  useEffect(() => {
+    const follow = () => {
+      setDir("next");
+      setCurrent(fromHash());
+    };
+    window.addEventListener("hashchange", follow);
+    return () => window.removeEventListener("hashchange", follow);
+  }, []);
 
   // Fit the canvas to the window, leaving room for the control bar.
   useEffect(() => {
@@ -202,7 +227,7 @@ export default function PresentationPage({ onHome }) {
   const deckClass = `dk${dark ? " dk--dark" : ""}`;
 
   const slide = (x, i) => (
-    <Frame n={i + 1} total={total} dark={dark} step={x.step} panel={x.panel} bare={x.bare} className={`dk-slide--${x.id}`}>
+    <Frame n={i + 1} total={total} dark={dark} q={x.q} done={x.done} panel={x.panel} bare={x.bare} className={`dk-slide--${x.id}`}>
       <x.Slide dark={dark} />
     </Frame>
   );
